@@ -1,0 +1,187 @@
+// ---- Minimal slideshow engine ----
+(function () {
+  'use strict';
+
+  const deck = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const total = slides.length;
+
+  const progressBar = document.getElementById('progressBar');
+  const currentEl = document.getElementById('current');
+  const totalEl = document.getElementById('total');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsWrap = document.getElementById('dots');
+  const helpToggle = document.getElementById('helpToggle');
+  const helpPanel = document.getElementById('helpPanel');
+
+  let index = 0;
+
+  // Build navigation dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot';
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  totalEl.textContent = total;
+
+  function render() {
+    slides.forEach((slide, i) => {
+      slide.classList.remove('is-active', 'is-prev');
+      if (i === index) slide.classList.add('is-active');
+      else if (i < index) slide.classList.add('is-prev');
+    });
+    dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+
+    const pct = total > 1 ? (index / (total - 1)) * 100 : 100;
+    progressBar.style.width = pct + '%';
+    currentEl.textContent = index + 1;
+
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === total - 1;
+
+    // Keep the URL hash in sync so a slide is shareable / refresh-safe
+    history.replaceState(null, '', '#' + (index + 1));
+  }
+
+  function go(i) {
+    index = Math.max(0, Math.min(total - 1, i));
+    render();
+  }
+  const next = () => go(index + 1);
+  const prev = () => go(index - 1);
+
+  // Buttons
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case ' ':
+      case 'PageDown':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault(); prev(); break;
+      case 'Home':
+        e.preventDefault(); go(0); break;
+      case 'End':
+        e.preventDefault(); go(total - 1); break;
+      case 'f':
+      case 'F':
+        toggleFullscreen(); break;
+      case '?':
+        toggleHelp(); break;
+      case 'Escape':
+        if (!helpPanel.hidden) toggleHelp();
+        break;
+    }
+  });
+
+  // Touch / swipe
+  let touchX = null;
+  deck.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  deck.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) (dx < 0 ? next : prev)();
+    touchX = null;
+  }, { passive: true });
+
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  }
+
+  // Help panel
+  function toggleHelp() { helpPanel.hidden = !helpPanel.hidden; }
+  helpToggle.addEventListener('click', toggleHelp);
+
+  // ---- Lesson sidebar menu ----
+  const LESSONS = [
+    { n: 'S1', file: 'swift-1.html', title: 'Nền tảng: Kiểu dữ liệu & Hàm' },
+    { n: 'S2', file: 'swift-2.html', title: 'Nền tảng: Optionals' },
+    { n: 'S3', file: 'swift-3.html', title: 'Nền tảng: Collections & Control flow' },
+    { n: 'S4', file: 'swift-4.html', title: 'Nền tảng: Closure, Struct & Protocol' },
+    { n: '01', file: 'bai-1.html', title: 'Bắt đầu' },
+    { n: '02', file: 'bai-2.html', title: 'Cài đặt & Làm quen Xcode 26' },
+    { n: '03', file: 'bai-3.html', title: 'App tương tác đầu tiên' },
+    { n: '04', file: 'bai-4.html', title: 'Bố cục & Danh sách' },
+    { n: '05', file: 'bai-5.html', title: 'Điều hướng nhiều màn hình' },
+    { n: '06', file: 'bai-6.html', title: 'Lưu dữ liệu với @AppStorage' },
+    { n: '07', file: 'bai-7.html', title: 'Model dữ liệu với struct' },
+    { n: '08', file: 'bai-8.html', title: 'Gọi API mạng' },
+    { n: '09', file: 'bai-9.html', title: 'MVVM với @Observable' },
+    { n: '10', file: 'bai-10.html', title: 'Lưu trữ với SwiftData' },
+    { n: '11', file: 'bai-11.html', title: 'Chạy trên iPhone thật & xuất bản' },
+    { n: '12', file: 'bai-12.html', title: 'Combine với SwiftUI' },
+    { n: '13', file: 'bai-13.html', title: 'Animations & hiệu ứng' },
+    { n: '14', file: 'bai-14.html', title: 'Đa ngôn ngữ (Localization)' },
+    { n: '15', file: 'bai-15.html', title: 'Push Notifications' },
+    { n: '16', file: 'bai-16.html', title: 'Concurrency & Actors' },
+    { n: '17', file: 'bai-17.html', title: 'Vòng đời ứng dụng' },
+    { n: '18', file: 'bai-18.html', title: 'Quản lý bộ nhớ (ARC)' },
+    { n: '✓', file: 'tong-ket.html', title: 'Tổng kết & Lộ trình' },
+  ];
+
+  (function buildMenu() {
+    const here = location.pathname.split('/').pop();
+
+    // The floating home button is replaced by this menu
+    const oldHome = document.querySelector('.home-link');
+    if (oldHome) oldHome.remove();
+
+    const btn = document.createElement('button');
+    btn.className = 'menu-toggle';
+    btn.setAttribute('aria-label', 'Danh sách bài học');
+    btn.innerHTML = '☰';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'sidebar-overlay';
+
+    const aside = document.createElement('aside');
+    aside.className = 'sidebar';
+    aside.innerHTML =
+      '<div class="sidebar-head">Bài học</div>' +
+      '<nav class="sidebar-list">' +
+      LESSONS.map(function (l) {
+        const active = l.file === here ? ' is-active' : '';
+        return '<a class="sidebar-item' + active + '" href="' + l.file + '">' +
+          '<span class="sidebar-num">' + l.n + '</span>' +
+          '<span>' + l.title + '</span></a>';
+      }).join('') +
+      '</nav>' +
+      '<a class="sidebar-home" href="../index.html">⌂ Trang chủ</a>';
+
+    document.body.appendChild(btn);
+    document.body.appendChild(overlay);
+    document.body.appendChild(aside);
+
+    function openMenu() { aside.classList.add('is-open'); overlay.classList.add('is-open'); }
+    function closeMenu() { aside.classList.remove('is-open'); overlay.classList.remove('is-open'); }
+    function toggleMenu() { aside.classList.contains('is-open') ? closeMenu() : openMenu(); }
+
+    btn.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMenu();
+      else if (e.key === 'm' || e.key === 'M') toggleMenu();
+    });
+  })();
+
+  // Start at hash if present
+  const fromHash = parseInt(location.hash.replace('#', ''), 10);
+  if (!isNaN(fromHash) && fromHash >= 1 && fromHash <= total) index = fromHash - 1;
+
+  render();
+})();

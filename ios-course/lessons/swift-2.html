@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nền tảng Swift — S2: Optionals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Nền tảng Swift · Phần 0</div>
+      <h1 class="hero-title"><span class="grad">Optionals</span> — có thể có, có thể không</h1>
+      <p class="hero-sub">Khái niệm "gây vấp" nhất với người mới — nhưng cũng là siêu năng lực giúp Swift an toàn. Nắm chắc nó, mọi bài sau sẽ dễ thở.</p>
+      <div class="hero-meta">
+        <span class="pill">Nền tảng · S2</span>
+        <span class="pill pill--ghost">nil · if let · ??</span>
+        <span class="pill pill--ghost">~25 phút</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. Learn -->
+    <section class="slide">
+      <div class="kicker">Trong bài này</div>
+      <h2>Bạn sẽ học được gì</h2>
+      <ul class="checklist">
+        <li><strong><code>nil</code></strong> là gì &amp; vì sao cần Optional</li>
+        <li>Khai báo Optional với <strong><code>?</code></strong></li>
+        <li>Mở khoá an toàn: <strong><code>if let</code></strong>, <strong><code>guard let</code></strong></li>
+        <li>Giá trị mặc định với <strong><code>??</code></strong></li>
+        <li>Optional chaining <code>?.</code> &amp; vì sao tránh <code>!</code></li>
+      </ul>
+      <p class="note">Optional xuất hiện khắp khóa (Bài 5, 8, 9…). Hiểu ở đây = không còn hoang mang về sau.</p>
+    </section>
+
+    <!-- 3. The problem -->
+    <section class="slide">
+      <div class="kicker">Vấn đề</div>
+      <h2>Khi giá trị "không có"</h2>
+      <p class="lead">Đôi khi một giá trị <em>có thể không tồn tại</em>: ô tên người dùng để trống, tìm không thấy kết quả, đổi chữ "abc" sang số…</p>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> so = <span class="t">Int</span>(<span class="s">"abc"</span>)   <span class="c">// đổi "abc" thành số? → không được!</span>
+<span class="c">// so sẽ là "nil" — nghĩa là "không có giá trị"</span></code></pre>
+      <p class="note">Nhiều ngôn ngữ để giá trị "rỗng" gây crash bất ngờ. Swift buộc bạn <strong>xử lý trường hợp rỗng</strong> ngay từ đầu.</p>
+    </section>
+
+    <!-- 4. Optional type -->
+    <section class="slide">
+      <div class="kicker">Dấu hỏi</div>
+      <h2>Optional với <span class="grad">?</span></h2>
+      <pre class="code" data-lang="swift"><code><span class="k">var</span> ten: <span class="t">String</span> = <span class="s">"An"</span>   <span class="c">// LUÔN phải có chữ</span>
+<span class="k">var</span> biet: <span class="t">String</span>?        <span class="c">// CÓ THỂ là chữ, hoặc nil</span>
+
+biet = <span class="s">"iOS"</span>            <span class="c">// có giá trị</span>
+biet = <span class="k">nil</span>              <span class="c">// không có gì — hợp lệ</span></code></pre>
+      <p class="note"><code>String?</code> (có dấu <code>?</code>) = "một chiếc hộp <strong>có thể trống</strong>". <code>String</code> (không <code>?</code>) thì luôn phải có chữ bên trong.</p>
+    </section>
+
+    <!-- 5. Why safe -->
+    <section class="slide">
+      <div class="kicker">Vì sao hay</div>
+      <h2>Swift bắt bạn kiểm tra</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> biet: <span class="t">String</span>? = <span class="s">"iOS"</span>
+
+<span class="c">// ⚠️ Dùng thẳng → in ra cả lớp "Optional"</span>
+<span class="fn">print</span>(<span class="s">"Học \(biet)"</span>)   <span class="c">// Học Optional("iOS") — không phải thứ ta muốn</span>
+
+<span class="c">// ✅ Phải "mở hộp" ra trước khi dùng</span></code></pre>
+      <p class="note">Đây là điều kỳ diệu: Swift <strong>cảnh báo ngay lúc viết code</strong> (và báo <em>lỗi</em> nếu bạn dùng optional ở chỗ cần giá trị chắc chắn) — thay vì để app crash trên máy người dùng. Vì vậy ta nên "mở hộp" trước khi dùng.</p>
+    </section>
+
+    <!-- 6. if let -->
+    <section class="slide">
+      <div class="kicker">Mở khoá an toàn</div>
+      <h2><span class="grad">if let</span> — nếu có thì dùng</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> biet: <span class="t">String</span>? = <span class="s">"iOS"</span>
+
+<span class="k">if let</span> mon = biet {
+    <span class="fn">print</span>(<span class="s">"Bạn học \(mon)"</span>)   <span class="c">// mon là String (đã có)</span>
+} <span class="k">else</span> {
+    <span class="fn">print</span>(<span class="s">"Chưa chọn môn"</span>)     <span class="c">// trường hợp nil</span>
+}</code></pre>
+      <p class="note"><code>if let mon = biet</code>: "nếu <code>biet</code> có giá trị, gán vào <code>mon</code> rồi chạy khối trong". Bên trong, <code>mon</code> chắc chắn không nil.</p>
+    </section>
+
+    <!-- 7. guard let -->
+    <section class="slide">
+      <div class="kicker">Thoát sớm</div>
+      <h2><span class="grad">guard let</span> — không có thì dừng</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">func</span> <span class="fn">chao</span>(_ ten: <span class="t">String</span>?) {
+    <span class="k">guard let</span> ten = ten <span class="k">else</span> {
+        <span class="fn">print</span>(<span class="s">"Không có tên"</span>)
+        <span class="k">return</span>                  <span class="c">// thoát luôn nếu nil</span>
+    }
+    <span class="fn">print</span>(<span class="s">"Xin chào, \(ten)!"</span>)   <span class="c">// ten dùng được tới cuối hàm</span>
+}</code></pre>
+      <p class="note"><code>guard let</code> hợp khi muốn "không hợp lệ thì thoát ngay". Bạn đã thấy nó ở Bài 8 (kiểm tra response). Sau <code>guard</code>, biến dùng được ở phần còn lại.</p>
+    </section>
+
+    <!-- 8. ?? -->
+    <section class="slide">
+      <div class="kicker">Giá trị dự phòng</div>
+      <h2>Toán tử <span class="grad">??</span></h2>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> ten: <span class="t">String</span>? = <span class="k">nil</span>
+
+<span class="k">let</span> hienThi = ten ?? <span class="s">"Khách"</span>
+<span class="c">// ten có giá trị → dùng nó; nil → dùng "Khách"</span>
+<span class="fn">print</span>(hienThi)   <span class="c">// "Khách"</span></code></pre>
+      <p class="note"><code>??</code> (nil-coalescing) = "nếu nil thì dùng giá trị này thay thế". Cách ngắn gọn nhất để có giá trị mặc định.</p>
+    </section>
+
+    <!-- 9. Optional chaining & ! -->
+    <section class="slide">
+      <div class="kicker">Hai thứ nữa</div>
+      <h2>Chuỗi <code>?.</code> &amp; cảnh báo <code>!</code></h2>
+      <div class="two-col">
+        <div>
+          <pre class="code" data-lang="swift"><code><span class="c">// Optional chaining</span>
+<span class="k">let</span> doDai = ten?.count
+<span class="c">// ten nil → doDai cũng nil,</span>
+<span class="c">// không crash</span></code></pre>
+          <p class="note"><code>?.</code> = "nếu có thì đi tiếp, không thì trả nil".</p>
+        </div>
+        <div>
+          <pre class="code" data-lang="swift"><code><span class="c">// Force unwrap — NGUY HIỂM</span>
+<span class="k">let</span> chac = ten!
+<span class="c">// nếu ten nil → app CRASH 💥</span></code></pre>
+          <p class="note"><code>!</code> ép mở hộp. Chỉ dùng khi <strong>chắc chắn 100%</strong> có giá trị.</p>
+        </div>
+      </div>
+      <p class="note">Người mới: hãy quen <code>if let</code> / <code>guard let</code> / <code>??</code>. Tránh <code>!</code> trừ khi thật sự chắc chắn.</p>
+    </section>
+
+    <!-- 10. Complete sample -->
+    <section class="slide">
+      <div class="kicker">Code hoàn chỉnh</div>
+      <h2>Chạy trong Playground ✅</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">func</span> <span class="fn">doiSangSo</span>(_ chu: <span class="t">String</span>) -&gt; <span class="t">String</span> {
+    <span class="k">if let</span> so = <span class="t">Int</span>(chu) {
+        <span class="k">return</span> <span class="s">"Số hợp lệ: \(so)"</span>
+    } <span class="k">else</span> {
+        <span class="k">return</span> <span class="s">"\"\(chu)\" không phải số"</span>
+    }
+}
+
+<span class="fn">print</span>(<span class="fn">doiSangSo</span>(<span class="s">"42"</span>))    <span class="c">// Số hợp lệ: 42</span>
+<span class="fn">print</span>(<span class="fn">doiSangSo</span>(<span class="s">"abc"</span>))   <span class="c">// "abc" không phải số</span>
+
+<span class="k">let</span> tuoi: <span class="t">Int</span>? = <span class="k">nil</span>
+<span class="fn">print</span>(<span class="s">"Tuổi: \(tuoi ?? 0)"</span>)   <span class="c">// Tuổi: 0</span></code></pre>
+    </section>
+
+    <!-- 11. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Những gì bạn đã biết</h2>
+      <ul class="checklist checklist--done">
+        <li><code>nil</code> = "không có giá trị"; <code>Kiểu?</code> = có thể nil</li>
+        <li>Swift bắt bạn xử lý nil <strong>lúc viết code</strong> (an toàn)</li>
+        <li><code>if let</code> / <code>guard let</code> để "mở hộp" an toàn</li>
+        <li><code>??</code> cho giá trị mặc định</li>
+        <li><code>?.</code> đi tiếp an toàn; <code>!</code> nguy hiểm — hạn chế</li>
+      </ul>
+      <p class="note">Đây là khái niệm "khó nhằn" nhất. Vượt qua nó, bạn đã qua được rào cản lớn nhất của Swift! 🎉</p>
+    </section>
+
+    <!-- 12. End -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc S2</div>
+      <h1 class="hero-title">Bạn đã thuần phục <span class="grad">Optionals</span>. 🔓</h1>
+      <p class="hero-sub">Tiếp theo: chứa nhiều giá trị (mảng, từ điển) và điều khiển luồng (if, switch, vòng lặp).</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="swift-1.html">‹ S1</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="swift-3.html">S3 · Collections ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">12</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

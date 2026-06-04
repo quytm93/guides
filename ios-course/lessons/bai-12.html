@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lập trình iOS — Bài 12: Combine với SwiftUI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Slide deck -->
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Lập trình iOS · Khóa học · Nâng cao</div>
+      <h1 class="hero-title">Phản ứng với <span class="grad">Combine</span></h1>
+      <p class="hero-sub">Xử lý các luồng sự kiện theo thời gian — như ô tìm kiếm "đợi gõ xong mới chạy" — một cách gọn gàng và mạnh mẽ.</p>
+      <div class="hero-meta">
+        <span class="pill">Bài 12</span>
+        <span class="pill pill--ghost">Combine · debounce</span>
+        <span class="pill pill--ghost">~30 phút</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. What you'll learn -->
+    <section class="slide">
+      <div class="kicker">Trong bài này</div>
+      <h2>Bạn sẽ học được gì</h2>
+      <ul class="checklist">
+        <li>Combine <strong>dùng khi nào</strong> trên iOS 17+ (so với <code>@Observable</code>)</li>
+        <li>Bộ ba <strong>Publisher → Operator → Subscriber</strong></li>
+        <li>Cầu nối vào SwiftUI bằng <strong><code>.onReceive</code></strong></li>
+        <li>Làm <strong>ô tìm kiếm debounce</strong> — ví dụ kinh điển</li>
+        <li>Giữ subscription với <strong><code>AnyCancellable</code></strong> &amp; chọn luồng đúng</li>
+      </ul>
+      <p class="note">Đây là bài nâng cao. Cần nắm <code>@Observable</code> (Bài 9). Đặt deployment target <strong>iOS 17+</strong>.</p>
+    </section>
+
+    <!-- 3. When to use Combine -->
+    <section class="slide">
+      <div class="kicker">Định vị</div>
+      <h2>Combine dùng khi nào?</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>🧠 State thường → @Observable</h3>
+          <ul>
+            <li>Dữ liệu của màn hình (Bài 9)</li>
+            <li>Đây vẫn là cách mặc định trên iOS 17+</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>🌊 Luồng sự kiện → Combine</h3>
+          <ul>
+            <li>Theo thời gian: timer, gõ phím, thông báo</li>
+            <li>Cần <strong>debounce</strong>, gộp, lọc trùng…</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Mẹo: khi cần <em>pipeline phản ứng</em>, <code>@Published</code> cho bạn sẵn một publisher qua dấu <code>$</code> — đó là lúc dùng <code>ObservableObject</code> + Combine.</p>
+    </section>
+
+    <!-- 4. Publisher / Operator / Subscriber -->
+    <section class="slide">
+      <div class="kicker">Bộ ba cốt lõi</div>
+      <h2>Publisher → Operator → Subscriber</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">📡</div><h3>Publisher</h3><p>Nguồn <strong>phát</strong> giá trị theo thời gian (vd <code>$query</code>).</p></div>
+        <div class="card"><div class="card-emoji">🔧</div><h3>Operator</h3><p><strong>Biến đổi</strong> dòng: <code>map</code>, <code>filter</code>, <code>debounce</code>, <code>removeDuplicates</code>.</p></div>
+        <div class="card"><div class="card-emoji">🎯</div><h3>Subscriber</h3><p>Nơi <strong>nhận</strong> kết quả cuối: <code>sink</code> hoặc <code>.onReceive</code>.</p></div>
+      </div>
+      <p class="note">Hình dung như một dây chuyền: dữ liệu phát ra → đi qua các bộ lọc → tới đích để bạn xử lý.</p>
+    </section>
+
+    <!-- 4b. FRP concept -->
+    <section class="slide">
+      <div class="kicker">Triết lý phía sau</div>
+      <h2>Cái này gọi là <span class="grad">FRP</span></h2>
+      <p class="lead">Những gì bạn vừa thấy có một cái tên: <strong>Functional Reactive Programming</strong> — lập trình <em>phản ứng</em> bằng công cụ của lập trình <em>hàm</em>.</p>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🌊</div><h3>Reactive</h3><p>Dữ liệu là <strong>dòng biến đổi theo thời gian</strong>, không phải giá trị tĩnh.</p></div>
+        <div class="card"><div class="card-emoji">🧮</div><h3>Functional</h3><p>Biến đổi dòng bằng <strong>hàm thuần</strong>: <code>map</code>, <code>filter</code>, <code>debounce</code>…</p></div>
+        <div class="card"><div class="card-emoji">📝</div><h3>Khai báo</h3><p>Bạn <strong>mô tả</strong> pipeline, thay vì viết callback lồng nhau rối rắm.</p></div>
+      </div>
+      <p class="note">Lưu ý nhỏ: về mặt kỹ thuật, Combine theo phong cách <strong>Rx</strong> ("dòng sự kiện rời rạc") chứ không phải FRP "thuần" học thuật — nhưng giới iOS vẫn quen gọi chung là FRP. <code>@Observable</code> &amp; SwiftUI ("giao diện là hàm của state") cũng mang tinh thần này.</p>
+    </section>
+
+    <!-- 5. .onReceive + Timer -->
+    <section class="slide">
+      <div class="kicker">Cầu nối đơn giản</div>
+      <h2>Lắng nghe publisher với <span class="grad">.onReceive</span></h2>
+      <p>Ví dụ một đồng hồ "sống" với <code>Timer.publish</code>:</p>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> dongHo = <span class="t">Timer</span>.<span class="fn">publish</span>(every: <span class="n">1</span>, on: .main, in: .common)
+    .<span class="fn">autoconnect</span>()
+
+<span class="t">Text</span>(<span class="s">"Giây: \(dem)"</span>)
+    .<span class="fn">onReceive</span>(dongHo) { _ <span class="k">in</span>
+        dem += <span class="n">1</span>     <span class="c">// chạy mỗi giây</span>
+    }</code></pre>
+      <p class="note"><code>.onReceive</code> là cách nhẹ nhất để nối một publisher vào View — không cần tự quản lý subscription.</p>
+    </section>
+
+    <!-- 6. The problem: search -->
+    <section class="slide">
+      <div class="kicker">Vấn đề</div>
+      <h2>Ô tìm kiếm gọi API… mỗi ký tự</h2>
+      <p class="lead">Người dùng gõ "iphone" = 6 ký tự → nếu mỗi ký tự gọi mạng, ta bắn <strong>6 request</strong> liên tiếp. Lãng phí &amp; chậm!</p>
+      <pre class="code" data-lang="swift"><code><span class="c">// i → ip → iph → ipho → iphon → iphone</span>
+<span class="c">// 😱 6 lần tìm kiếm chỉ để gõ 1 từ</span></code></pre>
+      <p class="note">Ta muốn: <strong>đợi người dùng ngừng gõ</strong> (vd 0.4 giây) rồi mới tìm <em>một lần</em>. Đó chính là <code>debounce</code>.</p>
+    </section>
+
+    <!-- 7. @Published + debounce pipeline -->
+    <section class="slide">
+      <div class="kicker">Lời giải</div>
+      <h2>Pipeline <span class="grad">debounce</span></h2>
+      <pre class="code" data-lang="swift"><code><span class="k">import</span> Combine
+
+<span class="k">class</span> <span class="t">SearchVM</span>: <span class="t">ObservableObject</span> {
+    <span class="k">@Published</span> <span class="k">var</span> query = <span class="s">""</span>          <span class="c">// $query là publisher</span>
+    <span class="k">@Published</span> <span class="k">var</span> ketQua: [<span class="t">String</span>] = []
+    <span class="k">private</span> <span class="k">var</span> bag = <span class="t">Set</span>&lt;<span class="t">AnyCancellable</span>&gt;()
+
+    <span class="k">init</span>() {
+        $query
+            .<span class="fn">debounce</span>(for: .seconds(<span class="n">0.4</span>), scheduler: <span class="t">RunLoop</span>.main)
+            .<span class="fn">removeDuplicates</span>()
+            .<span class="fn">sink</span> { [<span class="k">weak</span> <span class="k">self</span>] text <span class="k">in</span>
+                <span class="k">self</span>?.<span class="fn">tim</span>(text)
+            }
+            .<span class="fn">store</span>(in: &amp;bag)
+    }
+}</code></pre>
+      <p class="note"><code>debounce</code> đợi 0.4s im lặng mới phát; <code>removeDuplicates</code> bỏ lần lặp; <code>sink</code> nhận kết quả cuối để gọi <code>tim()</code>.</p>
+    </section>
+
+    <!-- 8. AnyCancellable + threading -->
+    <section class="slide">
+      <div class="kicker">Hai bẫy thường gặp</div>
+      <h2>Giữ subscription &amp; chọn luồng</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>🔗 AnyCancellable</h3>
+          <ul>
+            <li>Phải <code>.store(in: &amp;bag)</code></li>
+            <li>Không giữ → subscription <strong>chết ngay</strong></li>
+            <li>Dùng <code>[weak self]</code> tránh rò rỉ</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>🧵 Luồng (thread)</h3>
+          <ul>
+            <li>Publisher có thể phát ở nền</li>
+            <li>Chạm UI phải ở <strong>main</strong></li>
+            <li><code>.receive(on: RunLoop.main)</code></li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Lỗi #1 của người mới: quên <code>store(in:)</code> → "sao pipeline không chạy?". Vì nó đã bị huỷ ngay lập tức. <em>Trong ví dụ của ta, <code>debounce(scheduler: RunLoop.main)</code> đã đưa kết quả về main, nên <code>.sink</code> chạm UI an toàn — không cần thêm <code>.receive(on:)</code>.</em></p>
+    </section>
+
+    <!-- 9. Combine vs async/await -->
+    <section class="slide">
+      <div class="kicker">Chọn đúng công cụ</div>
+      <h2>Combine hay async/await?</h2>
+      <div class="req-grid">
+        <div class="req">
+          <h3>⚡️ async/await</h3>
+          <ul>
+            <li>Lấy dữ liệu <strong>một lần</strong> (Bài 8)</li>
+            <li>Tải API, đọc file</li>
+          </ul>
+        </div>
+        <div class="req req--need">
+          <h3>🌊 Combine</h3>
+          <ul>
+            <li>Luồng <strong>liên tục</strong> theo thời gian</li>
+            <li>debounce gõ phím, timer, sự kiện</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Đừng dùng Combine cho một cú gọi API đơn lẻ — async/await gọn hơn. Combine toả sáng khi có <em>nhiều sự kiện theo dòng thời gian</em>.</p>
+    </section>
+
+    <!-- 10. Complete sample -->
+    <section class="slide">
+      <div class="kicker">Code hoàn chỉnh</div>
+      <h2>Ô tìm kiếm debounce — chép là chạy ✅</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">import</span> SwiftUI
+<span class="k">import</span> Combine
+
+<span class="k">class</span> <span class="t">SearchVM</span>: <span class="t">ObservableObject</span> {
+    <span class="k">@Published</span> <span class="k">var</span> query = <span class="s">""</span>
+    <span class="k">@Published</span> <span class="k">var</span> ketQua: [<span class="t">String</span>] = []
+    <span class="k">private</span> <span class="k">var</span> bag = <span class="t">Set</span>&lt;<span class="t">AnyCancellable</span>&gt;()
+
+    <span class="k">init</span>() {
+        $query
+            .<span class="fn">debounce</span>(for: .seconds(<span class="n">0.4</span>), scheduler: <span class="t">RunLoop</span>.main)
+            .<span class="fn">removeDuplicates</span>()
+            .<span class="fn">sink</span> { [<span class="k">weak</span> <span class="k">self</span>] text <span class="k">in</span> <span class="k">self</span>?.<span class="fn">tim</span>(text) }
+            .<span class="fn">store</span>(in: &amp;bag)
+    }
+
+    <span class="k">func</span> <span class="fn">tim</span>(_ text: <span class="t">String</span>) {
+        ketQua = text.isEmpty ? [] : [<span class="s">"Kết quả cho '\(text)'"</span>]
+    }
+}
+
+<span class="c">// View hiển thị thuần — dễ xem trước bằng mock</span>
+<span class="k">struct</span> <span class="t">ResultList</span>: <span class="t">View</span> {
+    <span class="k">let</span> ketQua: [<span class="t">String</span>]
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">List</span>(ketQua, id: \.self) { <span class="t">Text</span>($0) }
+    }
+}
+
+<span class="k">struct</span> <span class="t">SearchView</span>: <span class="t">View</span> {
+    <span class="k">@StateObject</span> <span class="k">private</span> <span class="k">var</span> vm = <span class="t">SearchVM</span>()
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">NavigationStack</span> {
+            <span class="t">ResultList</span>(ketQua: vm.ketQua)
+                .<span class="fn">navigationTitle</span>(<span class="s">"Tìm kiếm"</span>)
+                .<span class="fn">searchable</span>(text: $vm.query)
+        }
+    }
+}
+
+<span class="k">#Preview</span> {
+    <span class="t">ResultList</span>(ketQua: [<span class="s">"Kết quả mẫu A"</span>, <span class="s">"Kết quả mẫu B"</span>])  <span class="c">// 👈 mock</span>
+}</code></pre>
+    </section>
+
+    <!-- 11. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Những gì bạn đã biết</h2>
+      <ul class="checklist checklist--done">
+        <li>iOS 17+: <code>@Observable</code> cho state · <strong>Combine</strong> cho luồng sự kiện</li>
+        <li>Bộ ba <strong>Publisher → Operator → Subscriber</strong></li>
+        <li><code>@Published</code> cho publisher <code>$</code>; <code>.debounce</code> + <code>.removeDuplicates</code> + <code>.sink</code></li>
+        <li>Phải <code>.store(in: &amp;bag)</code>, chạm UI ở <strong>main thread</strong></li>
+        <li>Một lần → async/await; liên tục → Combine</li>
+      </ul>
+      <p class="note">Ô tìm kiếm thông minh chỉ với vài dòng pipeline — sức mạnh của Combine.</p>
+    </section>
+
+    <!-- 12. Homework -->
+    <section class="slide">
+      <div class="kicker">Trước buổi sau</div>
+      <h2>Nhiệm vụ của bạn 🚀</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🔎</div><h3>Tìm kiếm debounce</h3><p>Chạy app mẫu, gõ nhanh và quan sát chỉ tìm sau khi ngừng gõ.</p></div>
+        <div class="card"><div class="card-emoji">🌐</div><h3>Nối với API</h3><p>Trong <code>tim()</code>, gọi API thật (Bài 8) thay cho kết quả giả.</p></div>
+        <div class="card"><div class="card-emoji">⏱</div><h3>Đồng hồ live</h3><p>Làm một bộ đếm giây bằng <code>Timer.publish</code> + <code>.onReceive</code>.</p></div>
+      </div>
+      <p class="note">Thử thách: đổi thời gian debounce và cảm nhận sự khác biệt về số lần tìm kiếm.</p>
+    </section>
+
+    <!-- 13. End -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc Bài 12</div>
+      <h1 class="hero-title">Bạn đã biết "<span class="grad">phản ứng</span>" với dữ liệu. 🌊</h1>
+      <p class="hero-sub">Combine mở ra cả một thế giới xử lý sự kiện. Xem lại toàn bộ hành trình &amp; bước tiếp theo ở trang Tổng kết.</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="bai-11.html">‹ Bài 11</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="bai-13.html">Bài 13 · Animations ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Controls -->
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">14</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <!-- Slide dots -->
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lập trình iOS — Bài 6: Lưu dữ liệu với @AppStorage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Slide deck -->
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Lập trình iOS · Khóa học</div>
+      <h1 class="hero-title">Lưu dữ liệu với <span class="grad">@AppStorage</span></h1>
+      <p class="hero-sub">Cho dữ liệu "ở lại" sau khi tắt app: lưu lựa chọn, điểm số, tên người dùng… và tự khôi phục khi mở lại.</p>
+      <div class="hero-meta">
+        <span class="pill">Bài 6</span>
+        <span class="pill pill--ghost">@AppStorage · UserDefaults</span>
+        <span class="pill pill--ghost">~20 phút</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. What you'll learn -->
+    <section class="slide">
+      <div class="kicker">Trong bài này</div>
+      <h2>Bạn sẽ học được gì</h2>
+      <ul class="checklist">
+        <li>Vì sao dữ liệu <code>@State</code> <strong>biến mất</strong> khi tắt app</li>
+        <li>Dùng <strong><code>@AppStorage</code></strong> để lưu lại lâu dài</li>
+        <li>Lưu &amp; khôi phục <strong>tên, điểm số, lựa chọn</strong></li>
+        <li>Hiểu <strong><code>UserDefaults</code></strong> phía sau</li>
+        <li>Biết khi nào <strong>không</strong> nên dùng nó</li>
+      </ul>
+      <p class="note">Cần xong Bài 1–5. Bạn sẽ thấy <code>@AppStorage</code> dùng <em>y hệt</em> <code>@State</code> — chỉ khác là nó nhớ mãi.</p>
+    </section>
+
+    <!-- 3. The problem -->
+    <section class="slide">
+      <div class="kicker">Vấn đề</div>
+      <h2>Dữ liệu "bốc hơi" khi tắt app</h2>
+      <p class="lead">Ở Bài 3, app đếm số dùng <code>@State</code>. Thử bấm lên 10 rồi… tắt app mở lại:</p>
+      <pre class="code" data-lang="swift"><code><span class="k">@State</span> <span class="k">private</span> <span class="k">var</span> soLan = <span class="n">0</span>
+<span class="c">// Bấm tới 10... tắt app... mở lại → về 0 😢</span></code></pre>
+      <p class="note"><code>@State</code> chỉ sống trong <strong>bộ nhớ tạm</strong>. Tắt app là mất. Ta cần nơi cất giữ <strong>lâu dài</strong> trên máy.</p>
+    </section>
+
+    <!-- 4. @AppStorage -->
+    <section class="slide">
+      <div class="kicker">Lời giải</div>
+      <h2>Gặp gỡ <span class="grad">@AppStorage</span></h2>
+      <p class="lead">Đổi <code>@State</code> thành <code>@AppStorage</code> và đặt cho nó một "chìa khoá" (key) — thế là xong!</p>
+      <pre class="code" data-lang="swift"><code><span class="k">@AppStorage</span>(<span class="s">"soLan"</span>) <span class="k">var</span> soLan = <span class="n">0</span>
+<span class="c">//          ↑ chìa khoá lưu trữ   ↑ giá trị mặc định</span></code></pre>
+      <p class="note">Mỗi lần <code>soLan</code> đổi, nó <strong>tự lưu</strong> xuống máy. Mở lại app → tự đọc lên đúng giá trị cũ. Giao diện vẫn cập nhật y như <code>@State</code>.</p>
+    </section>
+
+    <!-- 5. Full example -->
+    <section class="slide">
+      <div class="kicker">Ghép lại</div>
+      <h2>App đếm số… biết nhớ</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">struct</span> <span class="t">CounterView</span>: <span class="t">View</span> {
+    <span class="k">@AppStorage</span>(<span class="s">"soLan"</span>) <span class="k">var</span> soLan = <span class="n">0</span>
+
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">VStack</span>(spacing: <span class="n">20</span>) {
+            <span class="t">Text</span>(<span class="s">"\(soLan)"</span>)
+                .<span class="fn">font</span>(.system(size: <span class="n">80</span>, weight: .bold))
+            <span class="t">Button</span>(<span class="s">"Bấm +1"</span>) { soLan += <span class="n">1</span> }
+                .<span class="fn">buttonStyle</span>(.borderedProminent)
+        }
+    }
+}</code></pre>
+      <p class="note">Giống hệt Bài 3, chỉ đổi 1 dòng! Giờ bấm tới 10, tắt app, mở lại → vẫn là <strong>10</strong>. 🎉</p>
+    </section>
+
+    <!-- 6. Under the hood -->
+    <section class="slide">
+      <div class="kicker">Phía sau hậu trường</div>
+      <h2>Nó cất ở đâu? <span class="grad">UserDefaults</span></h2>
+      <p class="lead"><code>@AppStorage</code> ghi vào <strong>UserDefaults</strong> — một "sổ tay" nhỏ của app để lưu các thiết lập đơn giản.</p>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🔑</div><h3>Dạng key–value</h3><p>Mỗi giá trị gắn với một "chìa khoá" chữ, như từ điển.</p></div>
+        <div class="card"><div class="card-emoji">💾</div><h3>Tự lưu xuống đĩa</h3><p>Tồn tại qua các lần mở/tắt app.</p></div>
+        <div class="card"><div class="card-emoji">⚡️</div><h3>Nhanh &amp; nhẹ</h3><p>Hợp cho dữ liệu nhỏ, không hợp dữ liệu lớn.</p></div>
+      </div>
+      <p class="note">Trùng key = trùng ô lưu. Dùng <code>"soLan"</code> ở nhiều nơi → chúng chia sẻ <em>cùng một</em> giá trị.</p>
+    </section>
+
+    <!-- 7. Settings example -->
+    <section class="slide">
+      <div class="kicker">Ví dụ thực tế</div>
+      <h2>Ghi nhớ lựa chọn người dùng</h2>
+      <p><code>@AppStorage</code> tuyệt cho phần "Cài đặt" — lưu được cả chữ lẫn lựa chọn:</p>
+      <div class="two-col">
+        <div>
+          <pre class="code" data-lang="swift"><code><span class="c">// Nhớ tên (String)</span>
+<span class="k">@AppStorage</span>(<span class="s">"ten"</span>) <span class="k">var</span> ten = <span class="s">""</span>
+
+<span class="t">TextField</span>(<span class="s">"Tên"</span>, text: <span class="k">$</span>ten)</code></pre>
+        </div>
+        <div>
+          <pre class="code" data-lang="swift"><code><span class="c">// Chế độ tối (Bool)</span>
+<span class="k">@AppStorage</span>(<span class="s">"choDoToi"</span>) <span class="k">var</span> choDoToi = <span class="k">false</span>
+
+<span class="t">Toggle</span>(<span class="s">"Chế độ tối"</span>, isOn: <span class="k">$</span>choDoToi)</code></pre>
+        </div>
+      </div>
+      <p class="note">Nhớ dấu <code>$</code> (Bài 3) để <code>TextField</code>/<code>Toggle</code> đọc–ghi được. Gõ tên hay bật chế độ tối → lần sau mở app vẫn nhớ.</p>
+    </section>
+
+    <!-- 8. What you can store -->
+    <section class="slide">
+      <div class="kicker">Lưu được gì?</div>
+      <h2>Các kiểu dữ liệu hợp lệ</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>✅ Dùng tốt</h3>
+          <ul>
+            <li><code>String</code> — chữ (tên, ghi chú ngắn)</li>
+            <li><code>Int</code>, <code>Double</code> — số</li>
+            <li><code>Bool</code> — bật/tắt</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>⚠️ Tránh</h3>
+          <ul>
+            <li>Danh sách lớn, ảnh, file</li>
+            <li>Dữ liệu phức tạp (mảng <code>struct</code>…)</li>
+            <li>→ để dành cho bài sau (file / cơ sở dữ liệu)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Quy tắc: <strong>thiết lập nhỏ → <code>@AppStorage</code></strong>; dữ liệu lớn → công cụ mạnh hơn (học sau).</p>
+    </section>
+
+    <!-- 9. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Những gì bạn đã biết</h2>
+      <ul class="checklist checklist--done">
+        <li><code>@State</code> mất khi tắt app; <code>@AppStorage</code> thì <strong>nhớ mãi</strong></li>
+        <li>Cú pháp: <code>@AppStorage("key") var x = mặcĐịnh</code></li>
+        <li>Dùng <em>y hệt</em> <code>@State</code> — giao diện vẫn tự cập nhật</li>
+        <li>Lưu vào <strong>UserDefaults</strong> dạng key–value</li>
+        <li>Hợp dữ liệu <strong>nhỏ</strong>: String, Int, Double, Bool</li>
+      </ul>
+      <p class="note">Chỉ một thay đổi nhỏ mà app của bạn đã "thông minh" hơn hẳn.</p>
+    </section>
+
+    <!-- 10. Homework -->
+    <section class="slide">
+      <div class="kicker">Trước buổi sau</div>
+      <h2>Nhiệm vụ của bạn 🚀</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🔢</div><h3>Đếm số biết nhớ</h3><p>Đổi app đếm ở Bài 3 sang <code>@AppStorage</code> và thử tắt/mở lại.</p></div>
+        <div class="card"><div class="card-emoji">👤</div><h3>Nhớ tên</h3><p><code>TextField</code> nhập tên, lưu bằng <code>@AppStorage</code>, mở lại vẫn còn.</p></div>
+        <div class="card"><div class="card-emoji">🌙</div><h3>Công tắc chế độ tối</h3><p>Một <code>Toggle</code> ghi nhớ lựa chọn của người dùng.</p></div>
+      </div>
+      <p class="note">Thử thách: dùng <code>choDoToi</code> để đổi <code>.preferredColorScheme(...)</code> cho cả app.</p>
+    </section>
+
+    <!-- 11. End -->
+    <!-- Complete sample -->
+    <section class="slide">
+      <div class="kicker">Code hoàn chỉnh</div>
+      <h2>Chép là chạy ✅</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">import</span> SwiftUI
+
+<span class="k">struct</span> <span class="t">SettingsView</span>: <span class="t">View</span> {
+    <span class="k">@AppStorage</span>(<span class="s">"soLan"</span>) <span class="k">var</span> soLan = <span class="n">0</span>
+    <span class="k">@AppStorage</span>(<span class="s">"choDoToi"</span>) <span class="k">var</span> choDoToi = <span class="k">false</span>
+
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">VStack</span>(spacing: <span class="n">20</span>) {
+            <span class="t">Text</span>(<span class="s">"\(soLan)"</span>)
+                .<span class="fn">font</span>(.system(size: <span class="n">80</span>, weight: .bold))
+            <span class="t">Button</span>(<span class="s">"Bấm +1"</span>) { soLan += <span class="n">1</span> }
+                .<span class="fn">buttonStyle</span>(.borderedProminent)
+            <span class="t">Toggle</span>(<span class="s">"Chế độ tối"</span>, isOn: <span class="k">$</span>choDoToi)
+                .<span class="fn">padding</span>(.horizontal)
+        }
+        .<span class="fn">padding</span>()
+        .<span class="fn">preferredColorScheme</span>(choDoToi ? .dark : .light)
+    }
+}
+
+<span class="k">#Preview</span> {
+    <span class="t">SettingsView</span>()
+}</code></pre>
+      <p class="note">Bấm vài lần, bật chế độ tối, tắt app rồi mở lại — mọi thứ vẫn được giữ nguyên. 💾</p>
+    </section>
+
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc Bài 6</div>
+      <h1 class="hero-title">App của bạn giờ <span class="grad">biết nhớ</span>. 💾</h1>
+      <p class="hero-sub">Bài sau: tách dữ liệu thành model riêng với struct &amp; Identifiable — nền tảng cho mọi app lớn hơn.</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="bai-5.html">‹ Bài 5</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="bai-7.html">Bài 7 · Model dữ liệu ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Controls -->
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">12</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <!-- Slide dots -->
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

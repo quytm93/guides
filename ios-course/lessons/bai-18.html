@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lập trình iOS — Bài 18: Quản lý bộ nhớ (ARC)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Slide deck -->
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Lập trình iOS · Khóa học · Nâng cao</div>
+      <h1 class="hero-title">Quản lý <span class="grad">bộ nhớ</span></h1>
+      <p class="hero-sub">Swift tự dọn bộ nhớ cho bạn — nhưng có một cái bẫy: "chu trình giữ nhau". Hiểu nó để app không bị rò rỉ bộ nhớ.</p>
+      <div class="hero-meta">
+        <span class="pill">Bài 18</span>
+        <span class="pill pill--ghost">ARC · weak · [weak self]</span>
+        <span class="pill pill--ghost">~25 phút</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. What you'll learn -->
+    <section class="slide">
+      <div class="kicker">Trong bài này</div>
+      <h2>Bạn sẽ học được gì</h2>
+      <ul class="checklist">
+        <li><strong>ARC</strong> — vì sao bạn không phải tự "giải phóng" bộ nhớ</li>
+        <li>Khác biệt <strong>kiểu giá trị</strong> (struct) vs <strong>kiểu tham chiếu</strong> (class)</li>
+        <li><strong>Retain cycle</strong> — chu trình giữ nhau gây rò rỉ</li>
+        <li><strong><code>weak</code> / <code>unowned</code></strong> để phá vòng lặp</li>
+        <li>Vì sao có <strong><code>[weak self]</code></strong> (Bài 12) trong closure</li>
+      </ul>
+      <p class="note">Bài nâng cao, thiên khái niệm. Giải thích trọn vẹn cái <code>[weak self]</code> đã gặp ở Bài 12.</p>
+    </section>
+
+    <!-- 3. ARC -->
+    <section class="slide">
+      <div class="kicker">Nền tảng</div>
+      <h2><span class="grad">ARC</span> — Swift tự dọn dẹp</h2>
+      <p class="lead"><strong>Automatic Reference Counting</strong>: Swift <em>đếm</em> số nơi đang giữ một object. Đếm về <strong>0</strong> → object được giải phóng tự động.</p>
+      <pre class="code" data-lang="swift"><code><span class="k">class</span> <span class="t">TaiKhoan</span> {
+    <span class="k">let</span> ten: <span class="t">String</span>
+    <span class="k">init</span>(ten: <span class="t">String</span>) { <span class="k">self</span>.ten = ten }
+    <span class="k">deinit</span> { <span class="fn">print</span>(<span class="s">"\(ten) đã được giải phóng"</span>) }
+}</code></pre>
+      <p class="note"><code>deinit</code> chạy đúng lúc object bị dọn. Bạn <strong>không</strong> gọi <code>free()</code> thủ công như nhiều ngôn ngữ khác.</p>
+    </section>
+
+    <!-- 4. Value vs reference -->
+    <section class="slide">
+      <div class="kicker">Mấu chốt</div>
+      <h2>Giá trị vs Tham chiếu</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>📦 Giá trị — struct / enum</h3>
+          <ul>
+            <li>Được <strong>sao chép</strong> khi gán/truyền</li>
+            <li>Không bị ARC đếm → <strong>không lo rò rỉ</strong></li>
+            <li>SwiftUI <code>View</code> là struct</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>🔗 Tham chiếu — class / actor</h3>
+          <ul>
+            <li>Nhiều nơi <strong>cùng trỏ</strong> tới một object</li>
+            <li>Bị ARC đếm → <strong>có thể</strong> rò rỉ</li>
+            <li>vd <code>@Observable</code> ViewModel</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Mẹo lớn: ưu tiên <code>struct</code> khi được. Phần lớn SwiftUI là struct nên an toàn sẵn — chỉ cẩn thận với <code>class</code> + closure.</p>
+    </section>
+
+    <!-- 5. Retain cycle -->
+    <section class="slide">
+      <div class="kicker">Cái bẫy</div>
+      <h2>Retain cycle — chu trình giữ nhau</h2>
+      <p class="lead">Hai object giữ <strong>strong</strong> lẫn nhau → số đếm không bao giờ về 0 → <strong>không được giải phóng</strong> = rò rỉ bộ nhớ.</p>
+      <pre class="code" data-lang="swift"><code><span class="k">class</span> <span class="t">NguoiDung</span> { <span class="k">var</span> the: <span class="t">The</span>? }
+<span class="k">class</span> <span class="t">The</span>      { <span class="k">var</span> chu: <span class="t">NguoiDung</span>? }   <span class="c">// trỏ ngược lại</span>
+
+<span class="c">// A giữ B, B giữ A → cả hai kẹt lại mãi 😱</span></code></pre>
+      <p class="note">Hay gặp nhất: <strong>closure</strong> bắt giữ <code>self</code>, mà <code>self</code> lại giữ closure đó (vd subscription Combine — Bài 12).</p>
+    </section>
+
+    <!-- 6. weak / unowned -->
+    <section class="slide">
+      <div class="kicker">Lời giải</div>
+      <h2>Phá vòng với <span class="grad">weak</span> / <span class="grad">unowned</span></h2>
+      <pre class="code" data-lang="swift"><code><span class="k">class</span> <span class="t">The</span> {
+    <span class="k">weak</span> <span class="k">var</span> chu: <span class="t">NguoiDung</span>?   <span class="c">// không tăng số đếm</span>
+}</code></pre>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3><code>weak</code></h3>
+          <ul><li>Có thể thành <code>nil</code> → luôn là Optional</li><li>Dùng khi đối tượng kia <em>có thể</em> biến mất trước</li></ul>
+        </div>
+        <div class="req">
+          <h3><code>unowned</code></h3>
+          <ul><li>Không Optional, không tăng đếm</li><li>Dùng khi chắc chắn nó <em>sống cùng hoặc lâu hơn</em></li></ul>
+        </div>
+      </div>
+      <p class="note">Một bên dùng <code>weak</code>/<code>unowned</code> là đủ phá vòng. Người mới: phân vân thì chọn <code>weak</code> cho an toàn.</p>
+    </section>
+
+    <!-- 7. [weak self] -->
+    <section class="slide">
+      <div class="kicker">Quay lại Bài 12</div>
+      <h2>Vì sao có <span class="grad">[weak self]</span></h2>
+      <pre class="code" data-lang="swift"><code>$query
+    .<span class="fn">debounce</span>(...)
+    .<span class="fn">sink</span> { [<span class="k">weak</span> <span class="k">self</span>] text <span class="k">in</span>
+        <span class="k">self</span>?.<span class="fn">tim</span>(text)     <span class="c">// self là Optional ở đây</span>
+    }
+    .<span class="fn">store</span>(in: &amp;bag)</code></pre>
+      <p class="note">VM giữ subscription, subscription (closure) lại giữ VM → vòng lặp. <code>[weak self]</code> cắt một chiều → không rò rỉ. Đây chính là lý do Bài 12 viết vậy!</p>
+    </section>
+
+    <!-- 8. SwiftUI specifics -->
+    <section class="slide">
+      <div class="kicker">Trong SwiftUI</div>
+      <h2>Khi nào thực sự phải lo?</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">✅</div><h3>Thường an toàn</h3><p>View (struct), <code>@State</code>, dữ liệu kiểu giá trị — không cần nghĩ về ARC.</p></div>
+        <div class="card"><div class="card-emoji">⚠️</div><h3>Cẩn thận</h3><p><code>class</code>/<code>@Observable</code> + <strong>closure</strong> bắt <code>self</code> (Combine, Task, completion).</p></div>
+        <div class="card"><div class="card-emoji">🧰</div><h3>Công cụ</h3><p><strong>Memory Graph Debugger</strong> &amp; Instruments (Leaks) để soi rò rỉ.</p></div>
+      </div>
+      <p class="note">Đừng rải <code>[weak self]</code> khắp nơi vì sợ — chỉ cần khi có nguy cơ vòng lặp (closure được lưu lại trong chính object).</p>
+    </section>
+
+    <!-- 9. Complete sample -->
+    <section class="slide">
+      <div class="kicker">Code hoàn chỉnh</div>
+      <h2>Thấy ARC tận mắt — chép là chạy ✅</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">import</span> SwiftUI
+
+<span class="k">class</span> <span class="t">TaiKhoan</span> {
+    <span class="k">let</span> ten: <span class="t">String</span>
+    <span class="k">init</span>(ten: <span class="t">String</span>) { <span class="k">self</span>.ten = ten }
+    <span class="k">deinit</span> { <span class="fn">print</span>(<span class="s">"🗑 \(ten) đã được giải phóng"</span>) }
+}
+
+<span class="k">struct</span> <span class="t">ARCDemo</span>: <span class="t">View</span> {
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">Button</span>(<span class="s">"Tạo & huỷ tài khoản"</span>) {
+            <span class="k">var</span> tk: <span class="t">TaiKhoan</span>? = <span class="t">TaiKhoan</span>(ten: <span class="s">"An"</span>)
+            <span class="fn">print</span>(<span class="s">"Đang dùng: \(tk!.ten)"</span>)
+            tk = <span class="k">nil</span>      <span class="c">// số đếm về 0 → deinit chạy ngay</span>
+        }
+    }
+}
+
+<span class="k">#Preview</span> {
+    <span class="t">ARCDemo</span>()
+}</code></pre>
+      <p class="note">Bấm nút &amp; xem Console: gán <code>nil</code> → in ngay "đã được giải phóng". Đó là ARC làm việc. Nếu có retain cycle, dòng đó sẽ <strong>không</strong> bao giờ in.</p>
+    </section>
+
+    <!-- 10. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Những gì bạn đã biết</h2>
+      <ul class="checklist checklist--done">
+        <li><strong>ARC</strong> đếm tham chiếu, về 0 thì tự giải phóng (xem qua <code>deinit</code>)</li>
+        <li><code>struct</code> được copy (an toàn); <code>class</code>/<code>actor</code> mới bị đếm</li>
+        <li><strong>Retain cycle</strong>: hai bên giữ strong nhau → rò rỉ</li>
+        <li><code>weak</code> / <code>unowned</code> phá vòng; <code>weak</code> an toàn hơn</li>
+        <li><code>[weak self]</code> trong closure được-lưu-lại (Combine, Task)</li>
+      </ul>
+      <p class="note">SwiftUI phần lớn an toàn nhờ struct — chỉ cảnh giác ở <code>class</code> + closure giữ <code>self</code>.</p>
+    </section>
+
+    <!-- 11. Homework -->
+    <section class="slide">
+      <div class="kicker">Trước buổi sau</div>
+      <h2>Nhiệm vụ của bạn 🚀</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🗑</div><h3>Xem deinit</h3><p>Chạy app mẫu, bấm nút &amp; quan sát log "đã được giải phóng".</p></div>
+        <div class="card"><div class="card-emoji">🔁</div><h3>Tạo retain cycle</h3><p>Cho 2 class trỏ strong nhau → thấy <code>deinit</code> KHÔNG chạy.</p></div>
+        <div class="card"><div class="card-emoji">✂️</div><h3>Phá vòng</h3><p>Đổi một bên thành <code>weak</code> → <code>deinit</code> chạy trở lại.</p></div>
+      </div>
+      <p class="note">Thử thách: mở <em>Debug → Memory Graph</em> trong Xcode để nhìn các object &amp; tham chiếu trực quan.</p>
+    </section>
+
+    <!-- 12. End -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc Bài 18</div>
+      <h1 class="hero-title">Bạn đã hiểu <span class="grad">bộ nhớ</span> hoạt động ra sao. 🧠</h1>
+      <p class="hero-sub">Không còn rò rỉ bí ẩn, không còn <code>[weak self]</code> "thần chú". Cùng nhìn lại toàn bộ hành trình!</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="bai-17.html">‹ Bài 17</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="tong-ket.html">Tổng kết &amp; Lộ trình ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Controls -->
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">12</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <!-- Slide dots -->
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

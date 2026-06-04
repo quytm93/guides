@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lập trình iOS — Bài 11: Chạy trên iPhone thật &amp; xuất bản app</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Slide deck -->
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Lập trình iOS · Khóa học</div>
+      <h1 class="hero-title">Đưa app <span class="grad">ra đời</span></h1>
+      <p class="hero-sub">Chạy app trên chính chiếc iPhone của bạn, gửi cho bạn bè thử qua TestFlight, và xuất bản lên App Store.</p>
+      <div class="hero-meta">
+        <span class="pill">Bài 11</span>
+        <span class="pill pill--ghost">iPhone thật · TestFlight · App Store</span>
+        <span class="pill pill--ghost">~25 phút</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. What you'll learn -->
+    <section class="slide">
+      <div class="kicker">Trong bài này</div>
+      <h2>Bạn sẽ học được gì</h2>
+      <ul class="checklist">
+        <li>Khác biệt giữa <strong>Apple ID miễn phí</strong> &amp; <strong>tài khoản trả phí</strong></li>
+        <li>Chạy app trên <strong>iPhone thật</strong> của bạn</li>
+        <li>Hiểu <strong>ký số (signing)</strong> &amp; Bundle ID</li>
+        <li>Cho người khác thử app qua <strong>TestFlight</strong></li>
+        <li>Quy trình đưa app lên <strong>App Store</strong></li>
+      </ul>
+      <p class="note">Đây là bước "ra biển lớn" — từ project trong Xcode thành app người khác cài được.</p>
+    </section>
+
+    <!-- 3. Simulator vs real device -->
+    <section class="slide">
+      <div class="kicker">Vì sao máy thật?</div>
+      <h2>Simulator là chưa đủ</h2>
+      <div class="req-grid">
+        <div class="req">
+          <h3>📱 Simulator</h3>
+          <ul>
+            <li>Nhanh, tiện lúc lập trình</li>
+            <li>Thiếu: camera, cảm biến, rung, hiệu năng thật</li>
+          </ul>
+        </div>
+        <div class="req req--need">
+          <h3>🤳 iPhone thật</h3>
+          <ul>
+            <li>Cảm nhận đúng như người dùng</li>
+            <li>Thử camera, GPS, thông báo, tốc độ thật</li>
+            <li>Bắt buộc trước khi phát hành</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Tin vui: chạy app trên iPhone <em>của chính bạn</em> chỉ cần một <strong>Apple ID miễn phí</strong>.</p>
+    </section>
+
+    <!-- 4. Apple Developer account -->
+    <section class="slide">
+      <div class="kicker">Tài khoản</div>
+      <h2>Miễn phí hay trả phí?</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>🆓 Apple ID miễn phí</h3>
+          <ul>
+            <li>Chạy app trên thiết bị <strong>của bạn</strong></li>
+            <li>App hết hạn sau <strong>7 ngày</strong> (cài lại được)</li>
+            <li>Không TestFlight, không App Store</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>💳 Developer Program · 99$/năm</h3>
+          <ul>
+            <li>Dùng <strong>TestFlight</strong> &amp; <strong>App Store</strong></li>
+            <li>App không hết hạn</li>
+            <li>Cần để phát hành cho người khác</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Mới học → dùng Apple ID miễn phí là đủ. Khi muốn chia sẻ rộng → đăng ký Developer Program.</p>
+    </section>
+
+    <!-- 5. Run on your iPhone -->
+    <section class="slide">
+      <div class="kicker">Thực hành</div>
+      <h2>Chạy app trên iPhone của bạn</h2>
+      <ol class="steps">
+        <li><span class="step-n">1</span><div><strong>Đăng nhập Apple ID</strong>: Xcode → <em>Settings → Accounts</em> → bấm <strong>+</strong> → <em>Apple ID</em> (làm một lần).</div></li>
+        <li><span class="step-n">2</span><div><strong>Cắm iPhone</strong> vào Mac bằng cáp; trên iPhone bấm <em>Trust / Tin cậy</em>.</div></li>
+        <li><span class="step-n">3</span><div>Trên thanh thiết bị của Xcode 26, <strong>chọn iPhone</strong> của bạn (thay vì Simulator).</div></li>
+        <li><span class="step-n">4</span><div>Vào <strong>Signing &amp; Capabilities</strong> → chọn <strong>Team</strong> (Apple ID vừa thêm).</div></li>
+        <li><span class="step-n">5</span><div>Bấm <strong>▶︎ Run</strong>.</div></li>
+        <li><span class="step-n">6</span><div>Lần đầu, iOS yêu cầu bật <strong>Developer Mode</strong>: iPhone → <em>Settings → Privacy &amp; Security → Developer Mode</em> → bật &amp; <strong>khởi động lại máy</strong>.</div></li>
+        <li><span class="step-n">7</span><div>Rồi tin cậy nhà phát triển: <em>Settings → General → VPN &amp; Device Management</em> → <strong>Trust</strong>.</div></li>
+      </ol>
+      <p class="note">Nếu Run báo lỗi <em>"failed to register bundle identifier"</em> (hay gặp với Apple ID miễn phí), đổi <strong>Bundle ID</strong> thành chuỗi độc nhất (vd <code>com.tenban.MyApp</code>). Xong xuôi, app hiện như một icon thật trên màn hình chính iPhone. 🎉</p>
+    </section>
+
+    <!-- 6. Signing & Bundle ID -->
+    <section class="slide">
+      <div class="kicker">Hiểu thêm</div>
+      <h2>Ký số &amp; Bundle ID là gì?</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🪪</div><h3>Bundle ID</h3><p>"Địa chỉ" duy nhất của app, vd <code>com.tenban.MyApp</code>.</p></div>
+        <div class="card"><div class="card-emoji">✍️</div><h3>Signing (ký số)</h3><p>Chữ ký xác nhận app đến từ bạn — Apple yêu cầu để chạy trên máy thật.</p></div>
+        <div class="card"><div class="card-emoji">🤖</div><h3>Automatically manage</h3><p>Bật ô này để Xcode 26 lo hết phần chứng chỉ &amp; hồ sơ.</p></div>
+      </div>
+      <p class="note">Người mới: cứ bật <strong>"Automatically manage signing"</strong> và chọn Team — Xcode lo phần còn lại.</p>
+    </section>
+
+    <!-- 7. TestFlight -->
+    <section class="slide">
+      <div class="kicker">Cho người khác thử</div>
+      <h2>Chia sẻ qua <span class="grad">TestFlight</span></h2>
+      <p class="lead">TestFlight là cách chính thức để gửi bản thử cho người khác <em>trước khi</em> lên App Store.</p>
+      <ol class="steps">
+        <li><span class="step-n">1</span><div>Trong Xcode: <strong>Product → Archive</strong> để đóng gói app.</div></li>
+        <li><span class="step-n">2</span><div>Bấm <strong>Distribute App → App Store Connect</strong> để tải lên.</div></li>
+        <li><span class="step-n">3</span><div>Vào <strong>App Store Connect → TestFlight</strong>, mời người thử qua email.</div></li>
+        <li><span class="step-n">4</span><div>Họ cài app <strong>TestFlight</strong> trên iPhone và mở bản thử của bạn.</div></li>
+      </ol>
+      <p class="note">Tới đây bạn cần <strong>Developer Program</strong> (99$/năm). Người thử <em>không</em> cần trả gì.</p>
+    </section>
+
+    <!-- 8. Prepare for App Store -->
+    <section class="slide">
+      <div class="kicker">Chuẩn bị phát hành</div>
+      <h2>Những thứ cần cho App Store</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🎨</div><h3>App Icon</h3><p>Biểu tượng app, đủ các kích cỡ (Xcode tạo từ 1 ảnh lớn).</p></div>
+        <div class="card"><div class="card-emoji">🖼</div><h3>Ảnh chụp màn hình</h3><p>Vài ảnh giới thiệu app trên trang App Store.</p></div>
+        <div class="card"><div class="card-emoji">📝</div><h3>Mô tả &amp; thông tin</h3><p>Tên, mô tả, từ khoá, danh mục, chính sách riêng tư.</p></div>
+      </div>
+      <p class="note">Tất cả khai báo tại <strong>App Store Connect</strong> — trang quản lý app của Apple (appstoreconnect.apple.com).</p>
+    </section>
+
+    <!-- 9. Submit for review -->
+    <section class="slide">
+      <div class="kicker">Gửi duyệt</div>
+      <h2>Đưa app lên App Store</h2>
+      <ol class="steps">
+        <li><span class="step-n">1</span><div>Tạo bản ghi app mới trong <strong>App Store Connect</strong>.</div></li>
+        <li><span class="step-n">2</span><div>Điền thông tin, tải <strong>ảnh chụp màn hình</strong> &amp; mô tả.</div></li>
+        <li><span class="step-n">3</span><div>Chọn bản build đã tải lên (qua Archive), bấm <strong>Submit for Review</strong>.</div></li>
+        <li><span class="step-n">4</span><div>Apple <strong>xét duyệt</strong> (thường vài giờ đến vài ngày).</div></li>
+        <li><span class="step-n">5</span><div>Được duyệt → app <strong>lên App Store</strong>, ai cũng tải được! 🚀</div></li>
+      </ol>
+      <p class="note">Bị từ chối là chuyện thường — Apple sẽ nêu lý do, bạn sửa rồi gửi lại.</p>
+    </section>
+
+    <!-- 10. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Những gì bạn đã biết</h2>
+      <ul class="checklist checklist--done">
+        <li><strong>Apple ID miễn phí</strong>: chạy trên máy của bạn (hết hạn 7 ngày)</li>
+        <li>Chạy máy thật: chọn Team trong <strong>Signing &amp; Capabilities</strong> → Run → tin cậy nhà phát triển</li>
+        <li><strong>Bundle ID</strong> + ký số (bật "Automatically manage signing")</li>
+        <li><strong>TestFlight</strong> để mời người khác thử (cần Developer Program)</li>
+        <li>App Store: Archive → App Store Connect → <strong>Submit for Review</strong></li>
+      </ul>
+      <p class="note">Từ "Hello World" tới một app thật trên App Store — bạn đã đi trọn con đường!</p>
+    </section>
+
+    <!-- 11. Homework -->
+    <section class="slide">
+      <div class="kicker">Trước buổi sau</div>
+      <h2>Nhiệm vụ của bạn 🚀</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">🤳</div><h3>Chạy máy thật</h3><p>Cài một app bạn đã làm (vd to-do ở Bài 10) lên iPhone của bạn.</p></div>
+        <div class="card"><div class="card-emoji">🎨</div><h3>Thêm icon</h3><p>Thiết kế một App Icon đơn giản và gắn vào project.</p></div>
+        <div class="card"><div class="card-emoji">📸</div><h3>Chụp màn hình</h3><p>Chụp vài màn hình đẹp của app — tập làm "trang giới thiệu".</p></div>
+      </div>
+      <p class="note">Mẹo: dùng app TestFlight để mời một người bạn thử app của bạn cho vui!</p>
+    </section>
+
+    <!-- 12. End -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc Bài 11</div>
+      <h1 class="hero-title">Bạn đã là một <span class="grad">nhà phát triển iOS</span>. 🎉</h1>
+      <p class="hero-sub">Từ con số 0 đến đưa app lên iPhone thật &amp; App Store. Hành trình tuyệt vời — và đây mới chỉ là khởi đầu!</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="bai-10.html">‹ Bài 10</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="bai-12.html">Bài 12 · Combine ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Controls -->
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">12</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <!-- Slide dots -->
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

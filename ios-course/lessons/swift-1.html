@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nền tảng Swift — S1: Kiểu dữ liệu &amp; Hàm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Nền tảng Swift · Phần 0</div>
+      <h1 class="hero-title">Kiểu dữ liệu &amp; <span class="grad">Hàm</span></h1>
+      <p class="hero-sub">Những viên gạch đầu tiên của ngôn ngữ Swift: chứa dữ liệu trong biến, và gói việc làm vào hàm.</p>
+      <div class="hero-meta">
+        <span class="pill">Nền tảng · S1</span>
+        <span class="pill pill--ghost">let/var · func</span>
+        <span class="pill pill--ghost">~20 phút</span>
+      </div>
+      <div class="hint">Nên học cụm Nền tảng này <strong>trước Bài 3</strong> · Nhấn <kbd>→</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. Learn -->
+    <section class="slide">
+      <div class="kicker">Trong bài này</div>
+      <h2>Bạn sẽ học được gì</h2>
+      <ul class="checklist">
+        <li><strong>Biến</strong> (<code>var</code>) &amp; <strong>hằng</strong> (<code>let</code>)</li>
+        <li>Các <strong>kiểu cơ bản</strong>: Int, Double, String, Bool</li>
+        <li>Swift <strong>tự đoán kiểu</strong> &amp; khi nào tự khai báo</li>
+        <li>Chèn giá trị vào chuỗi (<strong>string interpolation</strong>)</li>
+        <li>Viết <strong>hàm</strong>: tham số, nhãn, giá trị trả về</li>
+      </ul>
+      <p class="note">Mẹo học: gõ thử mọi ví dụ trong <strong>Swift Playground</strong> (hoặc một Playground trong Xcode) để thấy kết quả ngay.</p>
+    </section>
+
+    <!-- 3. let/var -->
+    <section class="slide">
+      <div class="kicker">Chứa dữ liệu</div>
+      <h2>Hằng &amp; biến</h2>
+      <div class="two-col">
+        <div>
+          <pre class="code" data-lang="swift"><code><span class="k">let</span> tenApp = <span class="s">"SnapEdit"</span>
+<span class="c">// tenApp = "X"  ❌ không đổi được</span></code></pre>
+          <p class="note"><code>let</code> = hằng, gán một lần.</p>
+        </div>
+        <div>
+          <pre class="code" data-lang="swift"><code><span class="k">var</span> diem = <span class="n">0</span>
+diem = <span class="n">10</span>   <span class="c">// ✅ đổi được</span></code></pre>
+          <p class="note"><code>var</code> = biến, đổi được.</p>
+        </div>
+      </div>
+      <p class="note">Quy tắc: dùng <code>let</code> trước, chỉ chuyển <code>var</code> khi thật sự cần đổi — code an toàn &amp; rõ ý hơn.</p>
+    </section>
+
+    <!-- 4. Basic types -->
+    <section class="slide">
+      <div class="kicker">Bốn kiểu nền</div>
+      <h2>Kiểu cơ bản</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> tuoi: <span class="t">Int</span> = <span class="n">25</span>          <span class="c">// số nguyên</span>
+<span class="k">let</span> gia: <span class="t">Double</span> = <span class="n">19.99</span>      <span class="c">// số thực</span>
+<span class="k">let</span> ten: <span class="t">String</span> = <span class="s">"An"</span>       <span class="c">// chuỗi chữ</span>
+<span class="k">let</span> daBat: <span class="t">Bool</span> = <span class="k">true</span>      <span class="c">// đúng/sai</span></code></pre>
+      <p class="note"><code>Int</code> đếm số nguyên; <code>Double</code> cho số lẻ; <code>String</code> cho chữ; <code>Bool</code> chỉ có <code>true</code>/<code>false</code>.</p>
+    </section>
+
+    <!-- 5. Type inference -->
+    <section class="slide">
+      <div class="kicker">Đỡ phải gõ</div>
+      <h2>Swift tự đoán kiểu</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> tuoi = <span class="n">25</span>        <span class="c">// Swift hiểu là Int</span>
+<span class="k">let</span> ten = <span class="s">"An"</span>       <span class="c">// Swift hiểu là String</span>
+
+<span class="c">// Chỉ ghi kiểu khi cần rõ ràng:</span>
+<span class="k">let</span> gia: <span class="t">Double</span> = <span class="n">20</span>  <span class="c">// khai báo Double; 20 thành 20.0</span></code></pre>
+      <p class="note">Thường bạn <strong>không cần</strong> ghi kiểu — Swift tự suy ra từ giá trị. Chỉ ghi khi muốn rõ hoặc ép một kiểu khác.</p>
+    </section>
+
+    <!-- 6. Interpolation -->
+    <section class="slide">
+      <div class="kicker">Ghép chuỗi</div>
+      <h2>Chèn giá trị vào chuỗi</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">let</span> ten = <span class="s">"An"</span>
+<span class="k">let</span> tuoi = <span class="n">25</span>
+
+<span class="k">let</span> cau = <span class="s">"Xin chào \(ten), \(tuoi) tuổi!"</span>
+<span class="c">// → "Xin chào An, 25 tuổi!"</span></code></pre>
+      <p class="note"><code>\(...)</code> thả giá trị bất kỳ vào giữa chuỗi. Bạn đã thấy nó ở Bài 1 — giờ thì hiểu rõ.</p>
+    </section>
+
+    <!-- 7. Functions -->
+    <section class="slide">
+      <div class="kicker">Gói việc làm</div>
+      <h2>Hàm với <span class="grad">func</span></h2>
+      <pre class="code" data-lang="swift"><code><span class="k">func</span> <span class="fn">chao</span>(ten: <span class="t">String</span>) -&gt; <span class="t">String</span> {
+    <span class="k">return</span> <span class="s">"Xin chào, \(ten)!"</span>
+}
+
+<span class="k">let</span> loi = <span class="fn">chao</span>(ten: <span class="s">"An"</span>)   <span class="c">// "Xin chào, An!"</span></code></pre>
+      <p class="note">Cấu trúc: <code>func tên(tham số: Kiểu) -&gt; KiểuTrảVề { ... }</code>. <code>-&gt;</code> cho biết hàm <em>trả về</em> gì; bỏ đi nếu hàm không trả gì.</p>
+    </section>
+
+    <!-- 8. Labels & defaults -->
+    <section class="slide">
+      <div class="kicker">Tham số gọn &amp; rõ</div>
+      <h2>Nhãn &amp; giá trị mặc định</h2>
+      <pre class="code" data-lang="swift"><code><span class="k">func</span> <span class="fn">cong</span>(_ a: <span class="t">Int</span>, _ b: <span class="t">Int</span> = <span class="n">0</span>) -&gt; <span class="t">Int</span> {
+    a + b              <span class="c">// hàm 1 dòng: bỏ được "return"</span>
+}
+
+<span class="fn">cong</span>(<span class="n">2</span>, <span class="n">3</span>)   <span class="c">// 5</span>
+<span class="fn">cong</span>(<span class="n">2</span>)      <span class="c">// 2  (b mặc định = 0)</span></code></pre>
+      <p class="note"><code>_</code> = bỏ nhãn khi gọi. <code>= 0</code> = giá trị mặc định. Hàm chỉ một dòng có thể <strong>bỏ <code>return</code></strong>.</p>
+    </section>
+
+    <!-- 9. Complete sample -->
+    <section class="slide">
+      <div class="kicker">Code hoàn chỉnh</div>
+      <h2>Chạy trong Playground ✅</h2>
+      <pre class="code" data-lang="swift"><code><span class="c">// Dán vào Swift Playground để xem kết quả in ra</span>
+<span class="k">func</span> <span class="fn">tinhBMI</span>(canNang: <span class="t">Double</span>, chieuCao: <span class="t">Double</span>) -&gt; <span class="t">Double</span> {
+    canNang / (chieuCao * chieuCao)
+}
+
+<span class="k">let</span> bmi = <span class="fn">tinhBMI</span>(canNang: <span class="n">60</span>, chieuCao: <span class="n">1.7</span>)
+<span class="k">let</span> ket = <span class="s">"BMI của bạn là \(bmi)"</span>
+<span class="fn">print</span>(ket)   <span class="c">// BMI của bạn là 20.76...</span></code></pre>
+      <p class="note">Lưu ý: nền tảng ngôn ngữ chạy trong <strong>Playground</strong> (không cần SwiftUI). Mở Xcode → <em>File → New → Playground</em>.</p>
+    </section>
+
+    <!-- 10. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Những gì bạn đã biết</h2>
+      <ul class="checklist checklist--done">
+        <li><code>let</code> hằng · <code>var</code> biến</li>
+        <li>Kiểu cơ bản: <strong>Int · Double · String · Bool</strong></li>
+        <li>Swift tự đoán kiểu; ghi kiểu khi cần rõ</li>
+        <li><code>\(...)</code> chèn giá trị vào chuỗi</li>
+        <li><code>func tên(tham số) -&gt; KiểuTrảVề</code></li>
+      </ul>
+      <p class="note">Đây là chữ cái đầu tiên của "bảng chữ cái" Swift. Tiếp theo: thứ gây vấp nhất với người mới — Optionals.</p>
+    </section>
+
+    <!-- 11. End -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc S1</div>
+      <h1 class="hero-title">Viên gạch <span class="grad">đầu tiên</span> đã xong. 🧱</h1>
+      <p class="hero-sub">Tiếp theo: Optionals — cách Swift xử lý "giá trị có thể không có".</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="swift-2.html">S2 · Optionals ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">11</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>
