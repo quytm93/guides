@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(/.claude/skills/init-mvvm-project/**)",
+      "Edit(/.claude/skills/update-deployment-target/**)",
+      "Edit(/.claude/skills/update-bundle-id/**)",
+      "Edit(/.claude/skills/build-configurations/**)",
+      "Edit(/.claude/skills/update-app-name/**)",
+      "Edit(/.claude/skills/signing-provisioning/**)",
+      "Bash(cat Appfile)",
+      "Bash(cat Matchfile)",
+      "Bash(cat Pluginfile)",
+      "Bash(cat .env)",
+      "Edit(/.claude/skills/deploy-testflight/**)",
+      "Edit(/.claude/skills/deploy-production/**)",
+      "Edit(/.claude/skills/deploy-staging/**)",
+    ]
+  }
+}
