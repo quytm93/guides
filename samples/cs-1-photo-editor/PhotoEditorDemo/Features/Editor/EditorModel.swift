@@ -48,6 +48,26 @@ final class EditorModel {
         await reapplyFilter()
     }
 
+    func load(testImage: TestImage) async {
+        isWorking = true
+        status = "Đang tải ảnh test…"
+        defer { isWorking = false }
+
+        let url = testImage.url
+        let maxPixel = previewMaxPixel
+        let downsized = await Task.detached(priority: .userInitiated) {
+            ImageLoader.downsample(url: url, maxPixel: maxPixel)
+        }.value
+
+        guard let downsized else {
+            status = "Không đọc được ảnh test."
+            return
+        }
+        base = downsized
+        status = "\(testImage.name) · \(testImage.subtitle) → preview \(Int(downsized.size.width))×\(Int(downsized.size.height)) px."
+        await reapplyFilter()
+    }
+
     func useSampleImage() async {
         isWorking = true
         status = "Đang tạo ảnh mẫu…"

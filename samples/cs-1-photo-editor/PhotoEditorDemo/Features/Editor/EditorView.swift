@@ -4,6 +4,7 @@ import PhotosUI
 struct EditorView: View {
     @State private var model = EditorModel()
     @State private var pickerItem: PhotosPickerItem?
+    @State private var showTestPicker = false
 
     var body: some View {
         NavigationStack {
@@ -59,23 +60,38 @@ struct EditorView: View {
     }
 
     private var sourceButtons: some View {
-        HStack(spacing: 12) {
+        VStack(spacing: 10) {
             PhotosPicker(selection: $pickerItem, matching: .images) {
-                Label("Chọn ảnh", systemImage: "photo")
+                Label("Chọn từ thư viện", systemImage: "photo")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
 
-            Button {
-                Task { await model.useSampleImage() }
-            } label: {
-                Label("Ảnh mẫu", systemImage: "sparkles")
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 12) {
+                Button {
+                    showTestPicker = true
+                } label: {
+                    Label("Ảnh test", systemImage: "photo.stack")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+
+                Button {
+                    Task { await model.useSampleImage() }
+                } label: {
+                    Label("Ảnh mẫu", systemImage: "sparkles")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
             }
-            .buttonStyle(.bordered)
         }
         .onChange(of: pickerItem) { _, newItem in
             Task { await model.load(item: newItem) }
+        }
+        .sheet(isPresented: $showTestPicker) {
+            TestImagePickerSheet { testImage in
+                Task { await model.load(testImage: testImage) }
+            }
         }
     }
 }

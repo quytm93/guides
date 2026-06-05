@@ -8,6 +8,7 @@ struct MetalPreviewView: View {
     @State private var lastZoom: CGFloat = 1
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
+    @State private var showTestPicker = false
 
     private let maxZoom: CGFloat = 16
 
@@ -22,6 +23,12 @@ struct MetalPreviewView: View {
             }
             .padding()
             .navigationTitle("Metal Preview")
+            .sheet(isPresented: $showTestPicker) {
+                TestImagePickerSheet { testImage in
+                    resetZoom()
+                    Task { await model.load(testImage: testImage) }
+                }
+            }
             // Footprint cập nhật liên tục để thấy nó TĂNG khi zoom (render tile full-res).
             .task {
                 while !Task.isCancelled {
@@ -127,6 +134,15 @@ struct MetalPreviewView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
+            .disabled(model.isGenerating)
+
+            Button {
+                showTestPicker = true
+            } label: {
+                Label("Chọn ảnh test (ảnh thật)", systemImage: "photo.stack")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
             .disabled(model.isGenerating)
         }
     }

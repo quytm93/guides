@@ -35,6 +35,16 @@ final class MetalPreviewModel {
         updateFootprint()
     }
 
+    /// Nạp ảnh test dạng `CIImage` **lazy** từ URL — không bung bitmap full-res.
+    func load(testImage: TestImage) async {
+        isGenerating = true
+        defer { isGenerating = false }
+
+        image = CIImage(contentsOf: testImage.url)
+        info = "\(testImage.name) · \(testImage.subtitle) · render bằng Metal"
+        updateFootprint()
+    }
+
     func updateFootprint() {
         footprintText = "Footprint hiện tại: " + MemoryReporter.mb(MemoryReporter.footprint())
     }
