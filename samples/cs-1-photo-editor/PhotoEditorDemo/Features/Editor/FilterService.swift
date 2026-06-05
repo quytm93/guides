@@ -13,6 +13,9 @@ enum PhotoFilter: String, CaseIterable, Identifiable {
 }
 
 protocol FilterServing {
+    /// Công thức GPU thuần `CIImage → CIImage` (lazy) — dùng cho cả MTKView.
+    func apply(_ filter: PhotoFilter, to input: CIImage) -> CIImage
+    /// Trả về `UIImage` đã render (materialize) — dùng cho preview tĩnh / export.
     func apply(_ filter: PhotoFilter, to image: UIImage) -> UIImage?
 }
 
@@ -27,38 +30,38 @@ final class FilterService: FilterServing {
 
     private let context = CIContext(options: [.useSoftwareRenderer: false])
 
-    func apply(_ filter: PhotoFilter, to image: UIImage) -> UIImage? {
-        guard filter != .none else { return image }
-        guard let input = CIImage(image: image) else { return image }
-
-        let output: CIImage?
+    /// `CIImage → CIImage`: chỉ là *công thức*, chưa render. Rẻ, lazy, tile được.
+    func apply(_ filter: PhotoFilter, to input: CIImage) -> CIImage {
         switch filter {
         case .none:
-            output = input
+            return input
         case .vivid:
             let f = CIFilter.vibrance()
             f.inputImage = input
             f.amount = 1
-            output = f.outputImage
+            return f.outputImage ?? input
         case .mono:
             let f = CIFilter.photoEffectMono()
             f.inputImage = input
-            output = f.outputImage
+            return f.outputImage ?? input
         case .sepia:
             let f = CIFilter.sepiaTone()
             f.inputImage = input
             f.intensity = 0.9
-            output = f.outputImage
+            return f.outputImage ?? input
         case .noir:
             let f = CIFilter.photoEffectNoir()
             f.inputImage = input
-            output = f.outputImage
+            return f.outputImage ?? input
         }
+    }
 
-        guard let result = output,
-              let cg = context.createCGImage(result, from: result.extent) else {
-            return nil
-        }
+    /// `UIImage → UIImage`: render công thức trên qua `CIContext` dùng chung.
+    func apply(_ filter: PhotoFilter, to image: UIImage) -> UIImage? {
+        guard filter != .none else { return image }
+        guard let input = CIImage(image: image) else { return image }
+        let output = apply(filter, to: input)
+        guard let cg = context.createCGImage(output, from: output.extent) else { return nil }
         return UIImage(cgImage: cg, scale: image.scale, orientation: image.imageOrientation)
     }
 }

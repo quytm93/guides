@@ -9,6 +9,9 @@ struct RootView: View {
             MemoryLabView()
                 .tabItem { Label("Memory Lab", systemImage: "gauge.with.dots.needle.67percent") }
 
+            MetalPreviewView()
+                .tabItem { Label("Metal", systemImage: "cpu") }
+
             AboutView()
                 .tabItem { Label("Bài học", systemImage: "graduationcap") }
         }

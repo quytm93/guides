@@ -24,7 +24,14 @@ Giữ vài bitmap như vậy + filter trung gian → app vượt giới hạn RA
 hành kill** (crash kiểu *Jetsam*, không có stack trace đẹp). Nếu lại xử lý trên
 main thread → **UI đứng hình** (hang) vài giây.
 
-Dự án này biến hai cạm bẫy đó thành thứ **nhìn thấy & đo được** trong tab *Memory Lab*.
+Dự án này biến hai cạm bẫy đó thành thứ **nhìn thấy & đo được** trong tab *Memory Lab*,
+rồi đưa ra **hai cách làm đúng** để giữ footprint thấp:
+
+| Cách xử lý ảnh 48MP | Footprint | Xem ảnh | Tab |
+|---|---|---|---|
+| ❌ Full-res bitmap trên main thread | ~190 MB + **hang** | đầy đủ | Memory Lab |
+| ✅ **Cách 1** — Downsample (ImageIO, CPU) | ~vài MB | bản thu nhỏ | Memory Lab · Chỉnh ảnh |
+| ✅ **Cách 2** — Render GPU (`MTKView` + `CIContext`) | ~30 MB | **đầy đủ**, zoom được | Metal |
 
 ---
 
@@ -62,9 +69,11 @@ PhotoEditorDemo/
 ├── Core/
 │   ├── Memory/
 │   │   └── MemoryReporter.swift     đọc phys_footprint (như thước đo Xcode)
-│   └── ImageIO/
-│       ├── ImageLoader.swift        downsample qua ImageIO (chìa khóa)
-│       └── SyntheticImage.swift     tạo ảnh nặng để demo (không kèm file ảnh)
+│   ├── ImageIO/
+│   │   ├── ImageLoader.swift        downsample qua ImageIO — CÁCH 1
+│   │   └── SyntheticImage.swift     tạo ảnh nặng để demo (không kèm file ảnh)
+│   └── Metal/
+│       └── MetalImageView.swift     MTKView + CIContext — CÁCH 2
 ├── Features/
 │   ├── Editor/
 │   │   ├── EditorView.swift         UI chọn ảnh + filter + share
@@ -73,6 +82,11 @@ PhotoEditorDemo/
 │   ├── MemoryLab/
 │   │   ├── MemoryLabView.swift      UI so sánh sai/đúng
 │   │   └── MemoryLabModel.swift     đo bộ nhớ & thời gian
+│   ├── MetalPreview/
+│   │   ├── MetalPreviewView.swift   UI render ảnh lớn bằng Metal
+│   │   └── MetalPreviewModel.swift  CIImage lazy + đọc footprint
+│   ├── Shared/
+│   │   └── FilterBar.swift          thanh filter dùng chung
 │   └── About/
 │       └── AboutView.swift          tóm tắt bài học
 └── Resources/
@@ -187,10 +201,45 @@ poller.cancel()
 Poller tick được trong lúc xử lý ⇒ main thread không bị block. Đó là sự khác biệt
 *nhìn thấy được* so với `runNaive`.
 
+### `Core/Metal/MetalImageView.swift` — **tùy chọn 2: render bằng GPU**
+`UIViewRepresentable` bọc một `MTKView`. Một `Renderer` (MTKViewDelegate) dùng
+`CIContext(mtlDevice:)` để vẽ `CIImage` thẳng vào texture của drawable:
+
+```swift
+ciContext.render(centered,
+                 to: drawable.texture,
+                 commandBuffer: commandBuffer,
+                 bounds: CGRect(origin: .zero, size: dst),   // chỉ kích thước hiển thị
+                 colorSpace: colorSpace)
+```
+
+Vì sao footprint vẫn thấp dù ảnh **48MP**:
+- `CIImage` là *công thức* lazy — chưa bung bitmap nào vào RAM.
+- Core Image chỉ render **đúng kích thước drawable** và **tự tile** trên GPU; không
+  bao giờ giữ cả ảnh full-res cùng lúc.
+- Ta KHÔNG tạo `UIImage`/`CGImage` full-res trong code ⇒ không có "spike".
+
+Cài đặt quan trọng: `framebufferOnly = false` (để CIContext ghi vào texture),
+`enableSetNeedsDisplay = true` + `isPaused = true` (chỉ vẽ khi đổi ảnh/filter → tiết
+kiệm GPU/pin). Filter áp dưới dạng `CIImage → CIImage` (xem `FilterService` bên dưới)
+nên hoàn toàn chạy trên GPU.
+
+> **Đo thực tế trong app:** tạo ảnh 48MP (6000×8000) rồi xem tab Metal → footprint
+> chỉ ~**30 MB**, so với ~**190 MB** của cách bung full-res. Cùng một ảnh.
+
+### `FilterService` có hai cửa
+Sau refactor, service cung cấp:
+- `apply(_:to: CIImage) -> CIImage` — công thức GPU thuần (dùng cho MTKView, vẫn lazy).
+- `apply(_:to: UIImage) -> UIImage?` — render ra ảnh tĩnh (preview/export), gọi lại
+  hàm trên rồi materialize qua `CIContext` dùng chung.
+
+Đây là lý do cùng một bộ filter chạy được cho cả tab Chỉnh ảnh lẫn tab Metal mà
+không lặp code.
+
 ### `Features/.../*View.swift`
 SwiftUI thuần, `@State private var model = …`, không logic nặng trong view. `RootView`
-là `TabView` ba tab. `EditorView` có `PhotosPicker` + `ShareLink` (export chạy trên
-simulator).
+là `TabView` bốn tab. `EditorView` có `PhotosPicker` + `ShareLink` (export chạy trên
+simulator). `EditorView` và `MetalPreviewView` dùng chung `FilterBar`.
 
 ---
 

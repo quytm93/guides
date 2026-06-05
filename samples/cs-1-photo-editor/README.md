@@ -39,7 +39,16 @@ xcodebuild -scheme PhotoEditorDemo \
 |---|---|
 | **Chỉnh ảnh** | Chọn ảnh (hoặc dùng *Ảnh mẫu*), áp filter Core Image, chia sẻ kết quả. Preview luôn được **downsample**. |
 | **Memory Lab** | ⭐ Ngôi sao. Tạo ảnh tới **48MP** rồi so sánh **cách SAI vs cách ĐÚNG** — đo bộ nhớ tăng & thời gian xử lý ngay trên màn hình. |
+| **Metal** | Tùy chọn 2: render ảnh **48MP** bằng `MTKView` + `CIContext` — vẫn xem ảnh gốc đầy đủ mà footprint chỉ ~vài chục MB. |
 | **Bài học** | Tóm tắt 4 bài học hiệu năng. |
+
+### Hai cách giữ footprint thấp với ảnh lớn
+| Cách | Kỹ thuật | Ưu / nhược |
+|---|---|---|
+| **1 · Downsample (CPU)** | ImageIO tạo thumbnail đúng kích thước (`ImageLoader`) | Đơn giản, ra `UIImage` nhỏ để share/export. Mất chi tiết full-res. |
+| **2 · Metal (GPU)** | `CIImage` lazy → `CIContext.render` vào drawable của `MTKView`, tile trên GPU (`MetalImageView`) | Vẫn xem ảnh gốc đầy đủ, zoom được, footprint thấp. Phức tạp hơn một chút. |
+
+> **❌ Cách sai** (để đối chiếu): `UIImage(data:)` rồi vẽ full-res trên main thread → bitmap ~190 MB + UI đứng hình.
 
 ### Cách dùng Memory Lab
 1. Kéo thanh trượt lên **48 MP**, bấm **Tạo ảnh nguồn**.
@@ -71,11 +80,14 @@ PhotoEditorDemo/
   App/                  PhotoEditorDemoApp.swift · RootView.swift (TabView)
   Core/
     Memory/             MemoryReporter.swift      — đọc footprint
-    ImageIO/            ImageLoader.swift          — downsample
+    ImageIO/            ImageLoader.swift          — downsample (cách 1)
                         SyntheticImage.swift       — tạo ảnh nặng để demo
+    Metal/              MetalImageView.swift       — MTKView + CIContext (cách 2)
   Features/
     Editor/             EditorView · EditorModel · FilterService
     MemoryLab/          MemoryLabView · MemoryLabModel
+    MetalPreview/       MetalPreviewView · MetalPreviewModel
+    Shared/             FilterBar (dùng chung)
     About/              AboutView
   Resources/            Assets.xcassets
 ```

@@ -9,7 +9,7 @@ struct EditorView: View {
         NavigationStack {
             VStack(spacing: 16) {
                 imageArea
-                filterBar
+                FilterBar(selection: model.filter) { model.filter = $0 }
                 sourceButtons
                 Text(model.status)
                     .font(.footnote)
@@ -56,28 +56,6 @@ struct EditorView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    private var filterBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(PhotoFilter.allCases) { filter in
-                    Button {
-                        model.filter = filter
-                    } label: {
-                        Text(filter.rawValue)
-                            .font(.subheadline.weight(.medium))
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
-                            .background(model.filter == filter ? Color.accentColor : Color(.secondarySystemBackground),
-                                        in: Capsule())
-                            .foregroundStyle(model.filter == filter ? .white : .primary)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(.horizontal, 2)
-        }
     }
 
     private var sourceButtons: some View {
