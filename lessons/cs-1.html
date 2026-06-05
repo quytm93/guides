@@ -78,7 +78,30 @@ flowchart TD
       </div>
       <p class="note"><strong>Bài học:</strong> Quyết định <em>on-device vs server</em> theo từng tính năng. Cache mạnh tay. Bước <strong>export/share</strong> là nơi người dùng đánh giá chất lượng — đầu tư vào đó.</p>
     </section>
-    <!-- 5. Kết -->
+    <!-- 5. Dự án mẫu -->
+    <section class="slide">
+      <div class="kicker">Thực hành · Dự án mẫu</div>
+      <h2>📦 Tải về &amp; chạy thử: <span class="grad">PhotoEditorDemo</span></h2>
+      <p class="lead">Một photo editor <strong>on-device</strong> chạy ngay trên Simulator — không cần server, API key hay tài khoản. Minh họa đúng cạm bẫy <strong>bộ nhớ · hang · CPU</strong> của CS-1.</p>
+      <div class="req-grid">
+        <div class="req">
+          <h3>🧪 Memory Lab</h3>
+          <ul>
+            <li>Tạo ảnh tới <strong>48MP</strong> rồi so sánh <strong>cách SAI</strong> (full-res, main thread → đứng hình, +~190 MB) với <strong>cách ĐÚNG</strong> (downsample, off-main → mượt).</li>
+            <li>Đo bộ nhớ thật bằng <code>phys_footprint</code> ngay trên màn hình.</li>
+          </ul>
+        </div>
+        <div class="req req--need">
+          <h3>🏗️ Kiến trúc</h3>
+          <ul>
+            <li>iOS 17+ · SwiftUI · <code>@Observable</code> MVVM · async/await · service tách protocol.</li>
+            <li>Mở Xcode 16+ → ⌘R. Files dùng <em>synchronized folders</em>.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">📂 <a href="https://github.com/quytm93/guides/tree/main/samples/cs-1-photo-editor">Mã nguồn dự án</a> · 📖 <a href="https://github.com/quytm93/guides/blob/main/samples/cs-1-photo-editor/cs-1-photo-editor.md">Tài liệu đi qua từng file</a></p>
+    </section>
+    <!-- 6. Kết -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Kết thúc CS-1</div>
       <h1 class="hero-title">🎨 <span class="grad">AI Photo Editor</span></h1>

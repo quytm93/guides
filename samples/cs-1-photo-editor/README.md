@@ -1,0 +1,89 @@
+# CS-1 · AI Photo Editor — Sample Project
+
+Dự án mẫu chạy được cho **Case Study #1** trong khóa học. Một trình chỉnh ảnh
+**on-device** kiểu SnapEdit, dùng để minh họa các **cạm bẫy hiệu năng & bộ nhớ**
+khi xử lý ảnh độ phân giải cao trên iOS — và cách làm đúng.
+
+> Toàn bộ chạy ngay trên máy: **không cần server, không API key, không tài khoản.**
+> Chạy được trên **Simulator**.
+
+---
+
+## Tải về & chạy
+
+```bash
+git clone <repo>
+cd samples/cs-1-photo-editor
+open PhotoEditorDemo.xcodeproj
+```
+
+Trong Xcode (cần **Xcode 16+**, project nhắm **iOS 17.0+**):
+
+1. Chọn simulator bất kỳ (vd. *iPhone 17 Pro*).
+2. Bấm **Run** (⌘R).
+
+Hoặc build bằng dòng lệnh:
+
+```bash
+xcodebuild -scheme PhotoEditorDemo \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+```
+
+> Chạy trên máy thật: chọn target → tab *Signing & Capabilities* → đặt **Team** của bạn.
+
+---
+
+## 3 tab trong app
+
+| Tab | Mục đích |
+|---|---|
+| **Chỉnh ảnh** | Chọn ảnh (hoặc dùng *Ảnh mẫu*), áp filter Core Image, chia sẻ kết quả. Preview luôn được **downsample**. |
+| **Memory Lab** | ⭐ Ngôi sao. Tạo ảnh tới **48MP** rồi so sánh **cách SAI vs cách ĐÚNG** — đo bộ nhớ tăng & thời gian xử lý ngay trên màn hình. |
+| **Bài học** | Tóm tắt 4 bài học hiệu năng. |
+
+### Cách dùng Memory Lab
+1. Kéo thanh trượt lên **48 MP**, bấm **Tạo ảnh nguồn**.
+2. Bấm **❌ Cách sai: full-res, main thread** → thử chạm/kéo màn hình: **UI đứng hình**, bộ nhớ tăng vọt (~+190 MB).
+3. Bấm **✅ Cách đúng: downsample, off-main** → mượt, bộ nhớ gần như không đổi.
+4. So hai dòng kết quả.
+
+---
+
+## Bài học rút ra (CS-1)
+
+| # | Bài học | Code minh họa |
+|---|---|---|
+| 1 | **Downsample khi nạp** — đừng giữ bitmap full-res | [`ImageLoader.swift`](PhotoEditorDemo/Core/ImageIO/ImageLoader.swift) (ImageIO thumbnail) |
+| 2 | **Xử lý ngoài main thread** — tránh hang | `Task.detached` trong [`MemoryLabModel`](PhotoEditorDemo/Features/MemoryLab/MemoryLabModel.swift) & [`EditorModel`](PhotoEditorDemo/Features/Editor/EditorModel.swift) |
+| 3 | **Dùng lại một `CIContext`** | [`FilterService.swift`](PhotoEditorDemo/Features/Editor/FilterService.swift) |
+| 4 | **Full-res chỉ khi export** — preview ở độ phân giải thấp | `previewMaxPixel` trong `EditorModel` |
+
+Đo bộ nhớ thật bằng `phys_footprint`: [`MemoryReporter.swift`](PhotoEditorDemo/Core/Memory/MemoryReporter.swift).
+
+---
+
+## Kiến trúc
+
+MVVM theo chuẩn nhà trường: **iOS 17+ · SwiftUI · `@Observable` · async/await · service tách protocol.**
+
+```
+PhotoEditorDemo/
+  App/                  PhotoEditorDemoApp.swift · RootView.swift (TabView)
+  Core/
+    Memory/             MemoryReporter.swift      — đọc footprint
+    ImageIO/            ImageLoader.swift          — downsample
+                        SyntheticImage.swift       — tạo ảnh nặng để demo
+  Features/
+    Editor/             EditorView · EditorModel · FilterService
+    MemoryLab/          MemoryLabView · MemoryLabModel
+    About/              AboutView
+  Resources/            Assets.xcassets
+```
+
+> Project dùng **synchronized folders** (Xcode 16+): thêm file `.swift` vào thư mục
+> là Xcode tự nhận, không cần sửa `.pbxproj`.
+
+## Mở rộng (gợi ý bài tập)
+- Thêm **Vision** (`VNGeneratePersonSegmentationRequest`) để xóa/đổi nền.
+- Export full-res bằng **tiling** thay vì downsample.
+- Thêm **StoreKit 2** paywall (watermark cho bản free) như slide CS-1.

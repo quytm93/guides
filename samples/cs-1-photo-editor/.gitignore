@@ -1,0 +1,6 @@
+# Xcode / build artefacts
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.DS_Store
