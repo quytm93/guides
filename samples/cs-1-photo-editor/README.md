@@ -39,16 +39,22 @@ xcodebuild -scheme PhotoEditorDemo \
 |---|---|
 | **Chỉnh ảnh** | Chọn ảnh (hoặc dùng *Ảnh mẫu*), áp filter Core Image, chia sẻ kết quả. Preview luôn được **downsample**. |
 | **Memory Lab** | ⭐ Ngôi sao. Tạo ảnh tới **48MP** rồi so sánh **cách SAI vs cách ĐÚNG** — đo bộ nhớ tăng & thời gian xử lý ngay trên màn hình. |
-| **Metal** | Tùy chọn 2: render ảnh **48MP** bằng `MTKView` + `CIContext` — vẫn xem ảnh gốc đầy đủ mà footprint chỉ ~vài chục MB. |
-| **Bài học** | Tóm tắt 4 bài học hiệu năng. |
+| **Metal** | Tùy chọn 2: render ảnh **48MP** bằng `MTKView` + `CIContext`. **Pinch/kéo/slider để zoom** — chi tiết full-res hiện ra mà footprint chỉ ~vài chục MB. |
+| **Bài học** | Tóm tắt 4 bài học + khi nào dùng ImageIO vs Metal. |
 
 ### Hai cách giữ footprint thấp với ảnh lớn
-| Cách | Kỹ thuật | Ưu / nhược |
+| Cách | Kỹ thuật | Dùng khi |
 |---|---|---|
-| **1 · Downsample (CPU)** | ImageIO tạo thumbnail đúng kích thước (`ImageLoader`) | Đơn giản, ra `UIImage` nhỏ để share/export. Mất chi tiết full-res. |
-| **2 · Metal (GPU)** | `CIImage` lazy → `CIContext.render` vào drawable của `MTKView`, tile trên GPU (`MetalImageView`) | Vẫn xem ảnh gốc đầy đủ, zoom được, footprint thấp. Phức tạp hơn một chút. |
+| **1 · Downsample (CPU)** — `ImageLoader` | ImageIO tạo thumbnail đúng kích thước | Cần ảnh **tĩnh** để hiển thị/share/lưu, thumbnail/lưới. Mất chi tiết gốc. |
+| **2 · Metal (GPU)** — `MetalImageView` | `CIImage` lazy → `CIContext.render` vào drawable của `MTKView`, tile trên GPU | Cần **canvas tương tác**: zoom/pan thấy chi tiết full-res + filter realtime, vẫn ít RAM. |
 
+> Editor thật dùng **cả hai**: Metal cho canvas khi chỉnh, rồi render full-res ra file chỉ ở bước **export**.
+>
 > **❌ Cách sai** (để đối chiếu): `UIImage(data:)` rồi vẽ full-res trên main thread → bitmap ~190 MB + UI đứng hình.
+
+### Thử nghiệm zoom (tab Metal)
+Tạo ảnh 48MP → kéo slider zoom lên **16×** → quan sát dòng *Footprint*: nó **nhích** lên
+(render tile full-res vùng đang xem) nhưng vẫn nhỏ hơn nhiều so với bung cả ảnh.
 
 ### Cách dùng Memory Lab
 1. Kéo thanh trượt lên **48 MP**, bấm **Tạo ảnh nguồn**.

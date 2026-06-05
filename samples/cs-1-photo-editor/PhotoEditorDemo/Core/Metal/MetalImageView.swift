@@ -17,6 +17,10 @@ import CoreImage
 struct MetalImageView: UIViewRepresentable {
     let image: CIImage?
     let filter: PhotoFilter
+    /// 1 = vừa khung (aspect-fit). >1 = phóng to để xem chi tiết full-res.
+    var zoom: CGFloat = 1
+    /// Độ dịch khi kéo (points, theo hệ UIKit).
+    var offset: CGSize = .zero
 
     func makeCoordinator() -> Renderer {
         Renderer(filters: FilterService.shared)
@@ -37,6 +41,8 @@ struct MetalImageView: UIViewRepresentable {
     func updateUIView(_ view: MTKView, context: Context) {
         context.coordinator.image = image
         context.coordinator.filter = filter
+        context.coordinator.zoom = zoom
+        context.coordinator.offset = offset
         view.setNeedsDisplay()
     }
 
@@ -51,6 +57,8 @@ struct MetalImageView: UIViewRepresentable {
 
         var image: CIImage?
         var filter: PhotoFilter = .none
+        var zoom: CGFloat = 1
+        var offset: CGSize = .zero
 
         init(filters: FilterServing) {
             self.filters = filters
@@ -79,11 +87,20 @@ struct MetalImageView: UIViewRepresentable {
             let src = filtered.extent
             guard src.width > 0, src.height > 0 else { return }
 
-            // Aspect-fit + canh giữa vào drawable.
-            let scale = min(dst.width / src.width, dst.height / src.height)
+            // Aspect-fit làm gốc, rồi nhân thêm zoom. Khi zoom > 1, Core Image chỉ
+            // render & tile phần nhìn thấy ở độ phân giải cao → footprint tăng theo
+            // *vùng hiển thị*, KHÔNG theo toàn ảnh.
+            let baseScale = min(dst.width / src.width, dst.height / src.height)
+            let scale = baseScale * max(zoom, 1)
             let scaled = filtered.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-            let tx = (dst.width  - scaled.extent.width)  / 2 - scaled.extent.origin.x
-            let ty = (dst.height - scaled.extent.height) / 2 - scaled.extent.origin.y
+            let s = scaled.extent
+
+            // Canh giữa + áp pan (đổi đơn vị point → pixel, lật trục Y cho hệ CIImage).
+            let pointScale = view.contentScaleFactor
+            let dx = offset.width  * pointScale
+            let dy = offset.height * pointScale
+            let tx = (dst.width  - s.width)  / 2 - s.origin.x + dx
+            let ty = (dst.height - s.height) / 2 - s.origin.y - dy
             let centered = scaled.transformed(by: CGAffineTransform(translationX: tx, y: ty))
 
             // Render thẳng vào texture của drawable, chỉ ở kích thước hiển thị.

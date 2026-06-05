@@ -256,6 +256,37 @@ Quy tắc rút gọn: **"Downsample sớm, xử lý nền, đo bằng số thậ
 
 ---
 
+## 5b. Dùng cách nào? `ImageIO` vs `MetalView`
+
+Cả hai đều giữ footprint thấp, nhưng giải hai bài toán khác nhau:
+
+| | **ImageIO** (`ImageLoader`) | **MetalView** (`MetalImageView`) |
+|---|---|---|
+| Bản chất | Thu nhỏ MỘT lần → `UIImage` nhỏ | Giữ công thức lazy, vẽ phần nhìn thấy mỗi frame |
+| Chạy ở | CPU | GPU (Core Image tile) |
+| Độ phân giải | **Mất** chi tiết gốc | **Giữ** full-res |
+| Zoom thấy chi tiết thật | ❌ | ✅ (footprint nhích theo *vùng nhìn thấy*) |
+| Filter realtime khi pan/zoom | Phải xử lý lại (CPU) | Rẻ — công thức GPU vẽ lại |
+| Share / lưu / đưa vào `Image()` | ✅ có sẵn `UIImage` | ❌ cần render thêm một lần ra file |
+| Độ phức tạp | Thấp | Cao hơn |
+
+**Dùng `ImageIO` khi:** cần một ảnh **tĩnh** để hiển thị/chia sẻ/lưu, làm thumbnail
+hoặc lưới ảnh — không cần soi chi tiết gốc. (Tab *Chỉnh ảnh*.)
+
+**Dùng `MetalView` khi:** cần **canvas tương tác** — zoom/pan thấy chi tiết full-res
++ filter realtime mà vẫn ít RAM. (Tab *Metal*, đã có pinch · kéo · slider · chạm 2 lần
+để reset.)
+
+**Quy tắc thực chiến:** editor thật dùng **cả hai** — `MetalView` cho canvas khi
+chỉnh, rồi **một lần** `CIContext.render` full-res ra file ở bước **export**.
+
+> Lưu ý: `MetalView` không "miễn phí" — khi zoom 100% vào ảnh gigapixel, Core Image
+> giải mã & xử lý các *tile đang nhìn thấy* ở full-res, nên footprint tăng theo
+> *vùng hiển thị × mức zoom*, không theo cả ảnh. Chi phí của `ImageIO` thì cố định
+> ngay từ đầu. Đó chính là điểm đánh đổi.
+
+---
+
 ## 6. Bài tập mở rộng
 
 1. **Tiled export:** xuất full-res bằng cách chia ô (tile) thay vì downsample — giữ

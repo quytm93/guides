@@ -20,8 +20,25 @@ struct AboutView: View {
                            "Preview ở độ phân giải thấp; chỉ xử lý full-res (và nên tile) ở bước xuất ảnh cuối cùng.")
                 }
 
+                Section("Dùng cách nào? ImageIO vs Metal") {
+                    compare(
+                        "ImageIO — downsample (CPU)",
+                        why: "Thu nhỏ ảnh MỘT lần thành UIImage nhỏ.",
+                        when: "Cần một ảnh tĩnh để hiển thị, chia sẻ, lưu, hoặc làm thumbnail/lưới ảnh. Không cần zoom vào chi tiết gốc."
+                    )
+                    compare(
+                        "MetalView — render GPU (MTKView)",
+                        why: "Giữ ảnh gốc dạng công thức lazy, chỉ vẽ phần nhìn thấy.",
+                        when: "Canvas chỉnh ảnh tương tác: cần zoom/pan thấy chi tiết full-res + filter realtime, mà vẫn ít RAM."
+                    )
+                    Text("Editor thật thường dùng CẢ HAI: Metal cho canvas khi chỉnh; một lần render full-res ra file chỉ ở bước export.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
                 Section("Thử ngay") {
                     label("Memory Lab", "Tạo ảnh 48MP rồi so sánh cách sai vs đúng — xem bộ nhớ tăng bao nhiêu.")
+                    label("Metal", "Render ảnh 48MP rồi zoom vào — chi tiết hiện ra, footprint chỉ nhích theo vùng nhìn thấy.")
                     label("Chỉnh ảnh", "Chọn ảnh hoặc dùng ảnh mẫu, áp filter Core Image, chia sẻ kết quả.")
                 }
 
@@ -41,6 +58,20 @@ struct AboutView: View {
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.primary)
             Text(body)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 2)
+    }
+
+    private func compare(_ title: String, why: String, when: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+            Label(why, systemImage: "gearshape")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            Label(when, systemImage: "checkmark.circle")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
