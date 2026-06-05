@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case study iOS — CS-14: News / Reading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <main class="deck" id="deck">
+    <!-- 1. Cover -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Case study · Ứng dụng thật</div>
+      <h1 class="hero-title">📰 News &amp; <span class="grad">Reading</span></h1>
+      <p class="hero-sub">Logic paywall &amp; luật subscription của Apple định hình kiến trúc; push kỷ luật = retention.</p>
+      <div class="hero-meta">
+        <span class="pill">CS-14</span>
+        <span class="pill pill--ghost">Báo chí</span>
+        <span class="pill pill--ghost">Subscription + ads</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+    <!-- 2. Tổng quan -->
+    <section class="slide">
+      <div class="kicker">Slide 1 · Tổng quan</div>
+      <h2>Ứng dụng &amp; mô hình</h2>
+      <p class="lead">Đọc tin, nhận tin nóng, đọc cả khi offline.</p>
+      <div class="req-grid">
+        <div class="req">
+          <h3>🌐 Lĩnh vực (domain)</h3>
+          <ul>
+            <li>Báo chí / xuất bản — đọc tin, lưu offline.</li>
+            <li><strong>Yếu tố then chốt:</strong> Kỷ luật push = giữ chân hay bị gỡ.</li>
+          </ul>
+        </div>
+        <div class="req req--need">
+          <h3>💰 Mô hình kinh doanh</h3>
+          <ul>
+            <li>Subscription + quảng cáo (lai).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 3. Khái niệm & thuật ngữ -->
+    <section class="slide">
+      <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
+      <h2>Từ khóa kỹ thuật cần biết</h2>
+      <ul class="checklist">
+        <li><strong>Content pipeline (CMS)</strong> — dựng &amp; phân phối nội dung.</li>
+        <li><strong>Metered paywall</strong> — giới hạn số bài miễn phí.</li>
+        <li><strong>Reader app entitlement</strong> — quy định subscription của Apple.</li>
+        <li><strong>Rich text / media rendering</strong> — dựng bài đa phương tiện.</li>
+        <li><strong>Smart push</strong> — tin nóng không spam.</li>
+      </ul>
+    </section>
+    <!-- 4. Kiến trúc -->
+    <section class="slide">
+      <div class="kicker">Slide 3 · Sơ đồ kiến trúc</div>
+      <h2>Luồng dữ liệu &amp; thành phần</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  CMS[CMS / Editorial] --> FEED[Content API]
+  FEED --> APP[iOS App]
+  APP --> PAY[Metered Paywall]
+  PAY --> SK[StoreKit Subscription]
+  APP --> OFF[Offline reading]
+  CMS --> PUSH[Breaking-news push]
+  PUSH --> APP
+        </pre>
+      </div>
+      <p class="note"><strong>Bài học:</strong> Logic đo lượt đọc &amp; luật subscription của Apple định hình kiến trúc. <strong>Push kỷ luật</strong> quyết định retention.</p>
+    </section>
+    <!-- 5. Kết -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc CS-14</div>
+      <h1 class="hero-title">📰 <span class="grad">News / Reading</span></h1>
+      <p class="hero-sub">Logic paywall &amp; luật subscription của Apple định hình kiến trúc; push kỷ luật = retention.</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="cs-13.html">‹ CS-13</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-15.html">CS-15 ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">5</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <!-- Mermaid: vendored locally (mermaid@11.4.1) — no CDN, works offline on GitHub Pages -->
+  <script src="../js/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        background: 'transparent',
+        primaryColor: '#131a32',
+        primaryTextColor: '#eef1f8',
+        primaryBorderColor: '#5e5ce6',
+        lineColor: '#a7b0c6',
+        secondaryColor: '#0a84ff',
+        tertiaryColor: '#0a0e1c',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '18px'
+      },
+      htmlLabels: false,
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: false }
+    });
+  </script>
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

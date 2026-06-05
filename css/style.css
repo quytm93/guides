@@ -396,3 +396,87 @@ body.page-home { overflow: auto; }
 @media (prefers-reduced-motion: reduce) {
   .slide { transition: opacity 0.2s ease; transform: none !important; }
 }
+
+/* ---------- Case-study architecture diagrams (Mermaid) ---------- */
+.diagram {
+  width: 100%;
+  max-width: 920px;
+  max-height: 56vh;
+  margin: 0.4rem auto 0.2rem;
+  padding: 1rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex; justify-content: center; align-items: center;
+  overflow: auto;
+}
+.diagram .mermaid {
+  margin: 0; padding: 0; background: none; border: 0;
+  width: 100%;
+  font-family: var(--font);
+  line-height: 1.3;
+  text-align: center;
+}
+.diagram .mermaid svg { width: 100%; height: auto; max-height: 52vh; }
+/* Hide the raw graph text until Mermaid swaps in the SVG */
+.diagram .mermaid:not([data-processed]) { color: transparent; min-height: 180px; }
+
+/* ---------- Home: roadmap (mục lục) ---------- */
+html { scroll-behavior: smooth; }
+.page-home :target { scroll-margin-top: 1.5rem; }
+.roadmap { display: flex; align-items: stretch; gap: 0.55rem; flex-wrap: wrap; }
+.roadmap-step {
+  flex: 1 1 200px;
+  display: flex; flex-direction: column; gap: 0.12rem;
+  padding: 0.85rem 1.05rem; border-radius: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  text-decoration: none; color: var(--text);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+.roadmap-step:hover { border-color: var(--accent); background: var(--surface-2); transform: translateY(-2px); }
+.rs-k { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.rs-t { font-size: 1.1rem; font-weight: 700; }
+.rs-d { font-size: 0.85rem; color: var(--muted); }
+.roadmap-arrow { display: flex; align-items: center; color: var(--muted); font-size: 1.3rem; }
+@media (max-width: 720px) { .roadmap-arrow { display: none; } }
+.map-hint {
+  margin-top: 1.4rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.map-hint kbd {
+  font-family: var(--mono); font-size: 0.82em;
+  padding: 0.05rem 0.4rem; border-radius: 6px;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+}
+
+/* ---------- Home: case-study theme groups ---------- */
+.cs-group {
+  display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap;
+  margin: 0.4rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.cs-group h3 { font-size: 1.18rem; margin: 0; }
+.cs-group span { color: var(--muted); font-size: 0.92rem; }
+
+/* ---------- Home: "why foundation" explainer (Phần 0) ---------- */
+.why {
+  margin-bottom: 1.7rem;
+  padding: 1.3rem 1.45rem;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(94, 92, 230, 0.09), rgba(10, 132, 255, 0.05));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+}
+.why-lead { font-size: 1.02rem; color: var(--text); margin-bottom: 1rem; }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1.5rem; }
+.why-item { display: flex; gap: 0.6rem; color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+.why-item strong { color: var(--text); }
+.why-ico { font-size: 1.15rem; line-height: 1.35; flex: 0 0 auto; }
+@media (max-width: 720px) { .why-grid { grid-template-columns: 1fr; } }

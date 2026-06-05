@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case study iOS — CS-16: Smart-Home Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <main class="deck" id="deck">
+    <!-- 1. Cover -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Case study · Ứng dụng thật</div>
+      <h1 class="hero-title">🏠 Smart-Home <span class="grad">Companion</span></h1>
+      <p class="hero-sub">Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc; khoảnh khắc ghép thiết bị quyết định thành bại.</p>
+      <div class="hero-meta">
+        <span class="pill">CS-16</span>
+        <span class="pill pill--ghost">IoT</span>
+        <span class="pill pill--ghost">Phần cứng + app</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+    <!-- 2. Tổng quan -->
+    <section class="slide">
+      <div class="kicker">Slide 1 · Tổng quan</div>
+      <h2>Ứng dụng &amp; mô hình</h2>
+      <p class="lead">Điều khiển đèn / khóa / cảm biến từ điện thoại.</p>
+      <div class="req-grid">
+        <div class="req">
+          <h3>🌐 Lĩnh vực (domain)</h3>
+          <ul>
+            <li>IoT — app điều khiển thiết bị phần cứng.</li>
+            <li><strong>Yếu tố then chốt:</strong> App chạy theo lịch của phần cứng.</li>
+          </ul>
+        </div>
+        <div class="req req--need">
+          <h3>💰 Mô hình kinh doanh</h3>
+          <ul>
+            <li>App miễn phí; tiền nằm ở phần cứng; chất lượng app kéo review phần cứng.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 3. Khái niệm & thuật ngữ -->
+    <section class="slide">
+      <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
+      <h2>Từ khóa kỹ thuật cần biết</h2>
+      <ul class="checklist">
+        <li><strong>CoreBluetooth (BLE)</strong> — ghép &amp; giao tiếp thiết bị.</li>
+        <li><strong>HomeKit</strong> — tích hợp nhà thông minh Apple.</li>
+        <li><strong>OTA firmware update</strong> — cập nhật firmware qua app.</li>
+        <li><strong>Reconnection handling</strong> — xử lý kết nối chập chờn.</li>
+        <li><strong>Background BLE constraints</strong> — giới hạn nền của hệ thống.</li>
+      </ul>
+    </section>
+    <!-- 4. Kiến trúc -->
+    <section class="slide">
+      <div class="kicker">Slide 3 · Sơ đồ kiến trúc</div>
+      <h2>Luồng dữ liệu &amp; thành phần</h2>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  DEV[Thiet bi phan cung] -. BLE .-> APP[iOS App]
+  APP --> PAIR[Pairing flow]
+  APP --> CTRL[Control state]
+  APP --> OTA[OTA firmware]
+  APP --> HK[HomeKit]
+  APP --> CLOUD[Cloud sync]
+        </pre>
+      </div>
+      <p class="note"><strong>Bài học:</strong> Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc và dễ lỗi. Khoảnh khắc <strong>ghép thiết bị</strong> quyết định thành bại.</p>
+    </section>
+    <!-- 5. Kết -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc CS-16</div>
+      <h1 class="hero-title">🏠 <span class="grad">Smart-Home Companion</span></h1>
+      <p class="hero-sub">Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc; khoảnh khắc ghép thiết bị quyết định thành bại.</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="cs-15.html">‹ CS-15</a>
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-17.html">CS-17 ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">5</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <!-- Mermaid: vendored locally (mermaid@11.4.1) — no CDN, works offline on GitHub Pages -->
+  <script src="../js/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        background: 'transparent',
+        primaryColor: '#131a32',
+        primaryTextColor: '#eef1f8',
+        primaryBorderColor: '#5e5ce6',
+        lineColor: '#a7b0c6',
+        secondaryColor: '#0a84ff',
+        tertiaryColor: '#0a0e1c',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '18px'
+      },
+      htmlLabels: false,
+      flowchart: { curve: 'basis', useMaxWidth: true, htmlLabels: false }
+    });
+  </script>
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

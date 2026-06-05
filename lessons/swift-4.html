@@ -97,6 +97,26 @@ y.ten = <span class="s">"Bình"</span>
       <p class="note"><code>class</code> được <strong>chia sẻ</strong> (tham chiếu) — nhiều biến trỏ cùng object. Cần <code>init</code>. Đây là lý do Bài 9/18 dùng class cho ViewModel.</p>
     </section>
 
+    <!-- 6b. Struct vs Class: bộ nhớ & tốc độ -->
+    <section class="slide">
+      <div class="kicker">Vì sao quan trọng</div>
+      <h2>Struct vs Class — <span class="grad">bộ nhớ &amp; tốc độ</span></h2>
+      <p class="lead">Không chỉ khác cách <em>sao chép</em> — chúng nằm ở <strong>vùng nhớ</strong> khác nhau, nên tốc độ cũng khác.</p>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-emoji">📦</div>
+          <h3>Struct · giá trị</h3>
+          <p>Thường nằm ở <strong>stack</strong> · sao chép khi gán · cấp phát/thu hồi <strong>rất nhanh</strong> · không cần ARC.</p>
+        </div>
+        <div class="card">
+          <div class="card-emoji">🔗</div>
+          <h3>Class · tham chiếu</h3>
+          <p>Nằm ở <strong>heap</strong> · chia sẻ tham chiếu · <strong>ARC</strong> đếm tham chiếu · kế thừa được, linh hoạt.</p>
+        </div>
+      </div>
+      <p class="note">📌 Mặc định dùng <code>struct</code> (Apple khuyến nghị). Dùng <code>class</code> khi cần <strong>chia sẻ trạng thái</strong> (ViewModel — Bài 9) hoặc cần <strong>identity</strong>. <strong>Nói gần đúng cho dễ nhớ:</strong> thực tế struct chứa kiểu tham chiếu, struct quá lớn, hay bị "bắt" trong closure <em>escaping</em> vẫn có thể lên heap; <code>Array</code>/<code>String</code> dùng Copy-on-Write. Đào sâu ở <strong>Bài 18 (ARC)</strong>.</p>
+    </section>
+
     <!-- 7. Protocol -->
     <section class="slide">
       <div class="kicker">Hợp đồng</div>
@@ -184,7 +204,7 @@ y.ten = <span class="s">"Bình"</span>
 
   <nav class="controls" aria-label="Điều hướng slide">
     <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
-    <div class="counter"><span id="current">1</span> / <span id="total">11</span></div>
+    <div class="counter"><span id="current">1</span> / <span id="total">12</span></div>
     <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
   </nav>
   <div class="dots" id="dots" aria-hidden="true"></div>

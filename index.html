@@ -25,11 +25,52 @@
       </div>
     </header>
 
-    <!-- Lessons -->
-    <section style="margin-bottom: 3rem;">
+    <!-- Lộ trình / Mục lục -->
+    <section id="muc-luc" style="margin-bottom: 2.8rem;">
+      <span class="kicker">Mục lục</span>
+      <h2 style="margin: 0.3rem 0 1.1rem;">Khóa học gồm <span class="grad">4 phần</span></h2>
+      <nav class="roadmap" aria-label="Lộ trình khóa học">
+        <a class="roadmap-step" href="#phan-0">
+          <span class="rs-k">Phần 0</span>
+          <span class="rs-t">Nền tảng Swift</span>
+          <span class="rs-d">4 bài · học trước</span>
+        </a>
+        <span class="roadmap-arrow" aria-hidden="true">→</span>
+        <a class="roadmap-step" href="#phan-ios">
+          <span class="rs-k">Phần 1</span>
+          <span class="rs-t">18 bài iOS</span>
+          <span class="rs-d">khóa chính + tổng kết</span>
+        </a>
+        <span class="roadmap-arrow" aria-hidden="true">→</span>
+        <a class="roadmap-step" href="#phan-cases">
+          <span class="rs-k">Phần 2</span>
+          <span class="rs-t">20 Case study</span>
+          <span class="rs-d">thực chiến · có sơ đồ</span>
+        </a>
+        <span class="roadmap-arrow" aria-hidden="true">→</span>
+        <a class="roadmap-step" href="#phan-perf">
+          <span class="rs-k">Phần 3</span>
+          <span class="rs-t">Hiệu năng &amp; Sự cố</span>
+          <span class="rs-d">crash · bộ nhớ · CPU</span>
+        </a>
+      </nav>
+      <p class="map-hint">💡 Mỗi bài là một <strong>slideshow</strong> — bấm <kbd>→</kbd> / <kbd>Space</kbd> để chuyển slide, <kbd>☰</kbd> để mở danh sách. Mới bắt đầu? Đi từ <strong>Phần 0</strong>.</p>
+    </section>
+
+    <section id="phan-0" style="margin-bottom: 3rem;">
       <div class="section-head">
         <h2>Phần 0 · Nền tảng Swift</h2>
-        <span class="sub">Ngôn ngữ Swift căn bản · nên học trước Bài 3</span>
+        <span class="sub">Gốc rễ của mọi bài sau — nắm chắc thì hết "học vẹt".</span>
+      </div>
+
+      <div class="why">
+        <p class="why-lead">Bỏ qua phần này bạn vẫn gõ được code — nhưng sẽ <strong>học vẹt</strong>. Nắm nền tảng, mọi bài sau nhẹ tênh:</p>
+        <div class="why-grid">
+          <div class="why-item"><span class="why-ico">🧠</span><div><strong>Value vs Reference</strong> — <code>struct</code> được <em>sao chép</em> &amp; thường nằm ở <strong>stack</strong> (rất nhanh); <code>class</code> <em>chia sẻ</em> &amp; nằm ở <strong>heap</strong>. Chọn đúng → tránh bug "sửa chỗ này hỏng chỗ kia".</div></div>
+          <div class="why-item"><span class="why-ico">⚡</span><div><strong>Tốc độ &amp; bộ nhớ</strong> — stack cấp phát/thu hồi gần như tức thì; heap tốn hơn &amp; cần ARC. Nền cho <strong>Bài 18 (ARC, retain cycle)</strong>.</div></div>
+          <div class="why-item"><span class="why-ico">🛡</span><div><strong>An toàn với Optionals</strong> — <code>nil</code> được kiểm soát → ít crash <em>(Bài S2)</em>.</div></div>
+          <div class="why-item"><span class="why-ico">🧩</span><div><strong>Hiểu vì sao SwiftUI viết vậy</strong> — <code>View</code> là struct, dùng protocol &amp; closure khắp nơi <em>(Bài S4)</em>.</div></div>
+        </div>
       </div>
 
       <div class="lesson-grid">
@@ -85,7 +126,7 @@
           <h3>Closure, Struct/Class &amp; Protocol</h3>
           <p>Hiểu vì sao SwiftUI viết như vậy: closure, value/reference &amp; protocol.</p>
           <div class="lesson-meta">
-            <span>📊 11 slide</span>
+            <span>📊 12 slide</span>
             <span>⏱ ~25 phút</span>
           </div>
         </a>
@@ -93,7 +134,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="phan-ios">
       <div class="section-head">
         <h2>Danh sách bài học</h2>
         <span class="sub">4 bài nền tảng + 18 bài + trang tổng kết · khóa học hoàn chỉnh 🎓</span>
@@ -367,6 +408,448 @@
           </div>
         </a>
 
+      </div>
+    </section>
+
+    <section id="phan-cases" style="margin-top: 3rem;">
+      <div class="section-head">
+        <h2>Phần 2 · Case study ứng dụng thật</h2>
+        <span class="sub">20 ứng dụng · 5 nhóm chủ đề · mỗi case 5 slide 📱</span>
+      </div>
+
+      <div class="cs-group">
+        <h3>🎨 Sáng tạo &amp; Media</h3>
+        <span>Công cụ sáng tạo, video, nhạc &amp; audio — nặng Core Image / Metal / AVFoundation.</span>
+      </div>
+      <div class="lesson-grid" style="margin-bottom: 2.2rem;">
+
+        <a class="lesson lesson--ready" href="lessons/cs-1.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C1</div>
+            <span class="lesson-tag tag-ready">Sáng tạo</span>
+          </div>
+          <h3>🎨 AI Photo Editor</h3>
+          <p>Biến thao tác chỉnh ảnh phức tạp thành 1–2 chạm nhờ AI — pipeline Core Image / Metal / Core ML.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Subscription</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-19.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C19</div>
+            <span class="lesson-tag tag-ready">Creator economy</span>
+          </div>
+          <h3>🎬 Short-Video Editor</h3>
+          <p>Độ tin cậy &amp; tốc độ export là thước đo niềm tin; video ngốn nhiệt và RAM.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Creator subscription</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-12.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C12</div>
+            <span class="lesson-tag tag-ready">Media</span>
+          </div>
+          <h3>🎵 Music Streaming</h3>
+          <p>Kinh tế bản quyền chi phối mô hình kinh doanh; DRM + offline thực sự khó.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Subscription</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-5.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C5</div>
+            <span class="lesson-tag tag-ready">Wellness</span>
+          </div>
+          <h3>🧘 Meditation / Sleep</h3>
+          <p>Thực chất là bài toán nội dung — và nhạc không được tắt khi khóa máy.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Content subscription</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="cs-group">
+        <h3>💳 Thương mại, Fintech &amp; Marketplace</h3>
+        <span>Thanh toán, tiền bạc &amp; sàn giao dịch nhiều bên.</span>
+      </div>
+      <div class="lesson-grid" style="margin-bottom: 2.2rem;">
+
+        <a class="lesson lesson--ready" href="lessons/cs-8.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C8</div>
+            <span class="lesson-tag tag-ready">Bán lẻ</span>
+          </div>
+          <h3>🛒 E-commerce</h3>
+          <p>Apple Pay là siêu năng lực chuyển đổi; hiệu năng lưới sản phẩm = doanh thu.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Giao dịch</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-3.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C3</div>
+            <span class="lesson-tag tag-ready">Fintech</span>
+          </div>
+          <h3>💰 Personal Finance</h3>
+          <p>Gom mọi tài khoản về một chỗ, tự phân loại chi tiêu — nơi bảo mật chính là sản phẩm.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Freemium + premium</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-6.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C6</div>
+            <span class="lesson-tag tag-ready">Logistics</span>
+          </div>
+          <h3>🛵 Food Delivery</h3>
+          <p>Realtime + payment + maps = vận hành phức tạp; bạn đang xây một công ty logistics.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Hoa hồng sàn</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-11.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C11</div>
+            <span class="lesson-tag tag-ready">Di chuyển</span>
+          </div>
+          <h3>🚗 Ride-Hailing</h3>
+          <p>Định vị nền vs pin là cân đối thường trực; thanh khoản hai phía mới là vấn đề thật.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Hoa hồng</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="cs-group">
+        <h3>💬 Mạng xã hội &amp; Nội dung</h3>
+        <span>Mạng lưới người dùng, kiểm duyệt, gắn kết &amp; doanh thu.</span>
+      </div>
+      <div class="lesson-grid" style="margin-bottom: 2.2rem;">
+
+        <a class="lesson lesson--ready" href="lessons/cs-4.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C4</div>
+            <span class="lesson-tag tag-ready">Mạng xã hội</span>
+          </div>
+          <h3>📸 Social Photo Feed</h3>
+          <p>Một app mạng xã hội là bài toán hệ phân tán khoác áo UI — phần khó nằm ở backend.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Quảng cáo</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-13.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C13</div>
+            <span class="lesson-tag tag-ready">Mạng xã hội</span>
+          </div>
+          <h3>💘 Dating</h3>
+          <p>An toàn &amp; chống tài khoản giả là engineering lõi, không phải nghĩ sau.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Subscription + microtxn</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-14.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C14</div>
+            <span class="lesson-tag tag-ready">Báo chí</span>
+          </div>
+          <h3>📰 News / Reading</h3>
+          <p>Logic paywall &amp; luật subscription của Apple định hình kiến trúc; push kỷ luật = retention.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Subscription + ads</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-7.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C7</div>
+            <span class="lesson-tag tag-ready">Game</span>
+          </div>
+          <h3>🎮 Casual Game</h3>
+          <p>Chỉ retention (D1/D7/D30) và ARPDAU là quan trọng; cân bằng kinh tế là việc liên tục.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 IAP + quảng cáo</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="cs-group">
+        <h3>📚 Sức khỏe, Học tập &amp; Năng suất</h3>
+        <span>Thói quen, giáo dục &amp; ghi chú — đo lường &amp; giữ chân.</span>
+      </div>
+      <div class="lesson-grid" style="margin-bottom: 2.2rem;">
+
+        <a class="lesson lesson--ready" href="lessons/cs-2.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C2</div>
+            <span class="lesson-tag tag-ready">Sức khỏe</span>
+          </div>
+          <h3>🏃 Habit & Fitness Tracker</h3>
+          <p>Biến vận động thành thói quen với vòng tròn tiến độ, widget và Apple Watch.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Freemium</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-10.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C10</div>
+            <span class="lesson-tag tag-ready">EdTech</span>
+          </div>
+          <h3>🗣️ Language Learning</h3>
+          <p>Gamification chính là động cơ giữ chân; app phải được đo lường toàn diện.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Freemium</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-9.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C9</div>
+            <span class="lesson-tag tag-ready">Năng suất</span>
+          </div>
+          <h3>📝 Notes / Productivity</h3>
+          <p>Đồng bộ offline-first là toàn bộ cuộc chơi — chọn mô hình giải quyết xung đột trước tiên.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Mua 1 lần + sub</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-17.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C17</div>
+            <span class="lesson-tag tag-ready">Kids EdTech</span>
+          </div>
+          <h3>🧸 Kids Education</h3>
+          <p>Tuân thủ pháp lý ràng buộc mọi thứ; cha mẹ mua, trẻ dùng.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Family subscription</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="cs-group">
+        <h3>🛠 Nền tảng, Phần cứng &amp; AI</h3>
+        <span>AR, BLE/IoT, doanh nghiệp &amp; LLM — khai thác năng lực thiết bị.</span>
+      </div>
+      <div class="lesson-grid" style="margin-bottom: 2.2rem;">
+
+        <a class="lesson lesson--ready" href="lessons/cs-15.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C15</div>
+            <span class="lesson-tag tag-ready">AR commerce</span>
+          </div>
+          <h3>📐 AR Furniture/Measure</h3>
+          <p>UX dạy người dùng quét phòng là tất cả; thường là một tính năng, không phải mô hình độc lập.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Lead-gen / bán lẻ</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-16.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C16</div>
+            <span class="lesson-tag tag-ready">IoT</span>
+          </div>
+          <h3>🏠 Smart-Home Companion</h3>
+          <p>Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc; khoảnh khắc ghép thiết bị quyết định thành bại.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Phần cứng + app</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-18.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C18</div>
+            <span class="lesson-tag tag-ready">Doanh nghiệp</span>
+          </div>
+          <h3>🔧 Enterprise Field App</h3>
+          <p>Người mua ≠ người dùng; độ tin cậy quan trọng hơn độ bóng bẩy.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 B2B SaaS / seat</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/cs-20.html">
+          <div class="lesson-top">
+            <div class="lesson-num">C20</div>
+            <span class="lesson-tag tag-ready">AI</span>
+          </div>
+          <h3>🤖 AI Chat Assistant</h3>
+          <p>Biên lợi nhuận = giá − chi phí token, nên định tuyến model là quyết định tài chính.</p>
+          <div class="lesson-meta">
+            <span>📊 5 slide</span>
+            <span>🏗 Theo lượt / subscription</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="phan-perf" style="margin-top: 3rem;">
+      <div class="section-head">
+        <h2>Phần 3 · Hiệu năng &amp; Sự cố nghiêm trọng</h2>
+        <span class="sub">10 nhóm theo triệu chứng — crash · terminations · bộ nhớ · treo · giật · CPU/pin · đĩa · mạng. Kèm bản tra cứu <code>performance-critical-issues.md</code> 🔍</span>
+      </div>
+
+      <div class="lesson-grid">
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#3">
+          <div class="lesson-top">
+            <div class="lesson-num">🔴</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Crash — app văng</h3>
+          <p>Lỗi làm app văng ngay</p>
+          <div class="lesson-meta">
+            <span>🔎 5 điểm</span>
+            <span>→ slide 3</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#4">
+          <div class="lesson-top">
+            <div class="lesson-num">⚫</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Bị hệ thống giết (terminations)</h3>
+          <p>App bị iOS giết, không phải crash code</p>
+          <div class="lesson-meta">
+            <span>🔎 4 điểm</span>
+            <span>→ slide 4</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#5">
+          <div class="lesson-top">
+            <div class="lesson-num">🟠</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Rò rỉ &amp; ngốn bộ nhớ</h3>
+          <p>Bộ nhớ phình &amp; rò rỉ</p>
+          <div class="lesson-meta">
+            <span>🔎 5 điểm</span>
+            <span>→ slide 5</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#6">
+          <div class="lesson-top">
+            <div class="lesson-num">🟡</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Treo UI (hangs)</h3>
+          <p>UI đứng hình</p>
+          <div class="lesson-meta">
+            <span>🔎 5 điểm</span>
+            <span>→ slide 6</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#7">
+          <div class="lesson-top">
+            <div class="lesson-num">🟤</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Giật khung hình (hitches)</h3>
+          <p>Cuộn &amp; animation rớt frame</p>
+          <div class="lesson-meta">
+            <span>🔎 5 điểm</span>
+            <span>→ slide 7</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#8">
+          <div class="lesson-top">
+            <div class="lesson-num">🔵</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>CPU, pin &amp; nhiệt</h3>
+          <p>Nóng máy &amp; tụt pin</p>
+          <div class="lesson-meta">
+            <span>🔎 5 điểm</span>
+            <span>→ slide 8</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#9">
+          <div class="lesson-top">
+            <div class="lesson-num">💾</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Đĩa &amp; I/O</h3>
+          <p>Ghi đĩa quá nhiều</p>
+          <div class="lesson-meta">
+            <span>🔎 4 điểm</span>
+            <span>→ slide 9</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#10">
+          <div class="lesson-top">
+            <div class="lesson-num">🌐</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Mạng</h3>
+          <p>Tải dữ liệu lãng phí</p>
+          <div class="lesson-meta">
+            <span>🔎 5 điểm</span>
+            <span>→ slide 10</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#11">
+          <div class="lesson-top">
+            <div class="lesson-num">🟣</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Khởi động (launch)</h3>
+          <p>Mở app chậm</p>
+          <div class="lesson-meta">
+            <span>🔎 4 điểm</span>
+            <span>→ slide 11</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#12">
+          <div class="lesson-top">
+            <div class="lesson-num">🟢</div>
+            <span class="lesson-tag tag-ready">Hiệu năng</span>
+          </div>
+          <h3>Concurrency (Swift 6)</h3>
+          <p>Đa luồng &amp; dữ liệu an toàn</p>
+          <div class="lesson-meta">
+            <span>🔎 4 điểm</span>
+            <span>→ slide 12</span>
+          </div>
+        </a>
       </div>
     </section>
 

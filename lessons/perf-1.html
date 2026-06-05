@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lập trình iOS — Hiệu năng &amp; Sự cố nghiêm trọng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+  <main class="deck" id="deck">
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Lập trình iOS · Phần 3</div>
+      <h1 class="hero-title">Hiệu năng &amp; <span class="grad">Sự cố nghiêm trọng</span></h1>
+      <p class="hero-sub">Không phải cú pháp — mà là biết app sẽ <strong>crash, bị giết, ngốn RAM, treo, giật, tốn pin</strong> ở đâu. Xếp theo triệu chứng.</p>
+      <div class="hero-meta">
+        <span class="pill">Phần 3</span>
+        <span class="pill pill--ghost">10 nhóm triệu chứng</span>
+        <span class="pill pill--ghost">Theo số liệu Apple</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Vì sao có phần này</div>
+      <h2>AI lo cú pháp — bạn lo <span class="grad">điểm hỏng</span></h2>
+      <p class="lead">AI viết được <strong>cú pháp</strong> trong vài giây. Việc khó — và là giá trị của kỹ sư — là biết <strong>app sẽ hỏng ở đâu</strong>. Đây là danh mục lỗi nghiêm trọng &amp; điểm hại hiệu năng, xếp theo <strong>triệu chứng</strong> (khớp 7 nhóm số liệu Apple đo ở máy thật), để soi code của bạn hoặc do AI sinh ra.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.55rem; margin:0.6rem 0;">
+        <span class="pill pill--ghost">🔴 Crash — app văng</span><span class="pill pill--ghost">⚫ Bị hệ thống giết (terminations)</span><span class="pill pill--ghost">🟠 Rò rỉ &amp; ngốn bộ nhớ</span><span class="pill pill--ghost">🟡 Treo UI (hangs)</span><span class="pill pill--ghost">🟤 Giật khung hình (hitches)</span><span class="pill pill--ghost">🔵 CPU, pin &amp; nhiệt</span><span class="pill pill--ghost">💾 Đĩa &amp; I/O</span><span class="pill pill--ghost">🌐 Mạng</span><span class="pill pill--ghost">🟣 Khởi động (launch)</span><span class="pill pill--ghost">🟢 Concurrency (Swift 6)</span>
+      </div>
+      <p class="note">Bản tra cứu đầy đủ (dấu hiệu &amp; cách tránh từng mục): <code>performance-critical-issues.md</code>.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🔴 Crash — app văng</div>
+      <h2>Lỗi làm app văng ngay</h2>
+      <ul class="checklist">
+        <li><strong>Force-unwrap nil (<code>!</code>)</strong> — Dùng <code>if let</code>/<code>guard let</code>/<code>??</code>; tránh <code>!</code> &amp; <code>try!</code>.</li>
+        <li><strong>Index ngoài mảng</strong> — Kiểm tra <code>indices.contains</code>, dùng <code>first</code>/<code>last</code>.</li>
+        <li><strong>Cập nhật UI ngoài main thread</strong> — Đưa cập nhật UI về <code>@MainActor</code>.</li>
+        <li><strong>Data race (đọc/ghi đồng thời)</strong> — Dùng <code>actor</code>/serial queue; bật strict concurrency.</li>
+        <li><strong><code>try!</code> / <code>as!</code> / <code>fatalError</code></strong> — Dùng <code>try?</code>/<code>do-catch</code>, <code>as?</code>.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Crash log (Xcode Organizer), Main Thread Checker, Thread Sanitizer.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">⚫ Bị hệ thống giết (terminations)</div>
+      <h2>App bị iOS giết, không phải crash code</h2>
+      <ul class="checklist">
+        <li><strong>Watchdog <code>0x8badf00d</code></strong> — Không chặn main thread ở các mốc vòng đời; việc nặng làm async.</li>
+        <li><strong><code>0xdead10cc</code> (giữ lock khi vào nền)</strong> — Đóng/giải phóng lock &amp; hoàn tất ghi trước khi vào nền; xin background task.</li>
+        <li><strong>Jetsam (hết RAM)</strong> — Giảm peak memory (xem nhóm Bộ nhớ): downsample, cache có hạn.</li>
+        <li><strong>CPU cao khi ở nền</strong> — Dừng việc khi vào nền; dùng background task đúng cách.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Xcode Organizer › Terminations, MetricKit exit reasons.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🟠 Rò rỉ &amp; ngốn bộ nhớ</div>
+      <h2>Bộ nhớ phình &amp; rò rỉ</h2>
+      <ul class="checklist">
+        <li><strong>Retain cycle (self giữ nhau)</strong> — <code>[weak self]</code> trong closure; <code>weak</code>/<code>unowned</code> cho delegate/parent.</li>
+        <li><strong>Closure trong Task/Combine/timer giữ self mạnh</strong> — <code>[weak self]</code>; hủy <code>Task</code>/cancellable.</li>
+        <li><strong>Ảnh load full-resolution</strong> — Downsample về đúng kích thước hiển thị trước khi vẽ.</li>
+        <li><strong>Cache không giới hạn</strong> — Dùng <code>NSCache</code> + giới hạn số lượng/dung lượng.</li>
+        <li><strong>Giữ dữ liệu lớn trong RAM</strong> — Phân trang, stream, giải phóng khi rời màn hình.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Memory Graph Debugger, Instruments › Leaks / Allocations.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🟡 Treo UI (hangs)</div>
+      <h2>UI đứng hình</h2>
+      <ul class="checklist">
+        <li><strong>Việc nặng trên main thread</strong> — Đẩy việc nặng sang background; main chỉ làm UI.</li>
+        <li><strong>I/O mạng/đĩa đồng bộ trên main</strong> — <code>async/await</code>; đọc file/mạng off-main.</li>
+        <li><strong>Giải mã ảnh lớn trên main</strong> — Decode off-main; <code>prepareForDisplay</code>.</li>
+        <li><strong><code>body</code> SwiftUI làm việc nặng</strong> — Giữ body nhẹ; đừng tạo <code>DateFormatter</code> trong body.</li>
+        <li><strong>Tác vụ đồng bộ dài trong nút bấm</strong> — Bọc <code>Task { }</code>, hiện <code>ProgressView</code>.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Instruments › Hangs; Xcode Organizer › Hangs (hang rate).</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🟤 Giật khung hình (hitches)</div>
+      <h2>Cuộn &amp; animation rớt frame</h2>
+      <ul class="checklist">
+        <li><strong>Offscreen rendering</strong> — Đặt <code>shadowPath</code>; tránh mask; dùng <code>cornerCurve</code>.</li>
+        <li><strong>Decode/scale ảnh trong cell khi cuộn</strong> — Decode &amp; downsample off-main, cache sẵn.</li>
+        <li><strong>Overdraw / blending</strong> — Đặt nền <code>opaque</code>; giảm lớp mờ.</li>
+        <li><strong>Auto Layout phức tạp trong cell</strong> — Đơn giản layout; cache chiều cao; ô tự dựng.</li>
+        <li><strong>Hitch rate cao</strong> — Đo &amp; hạ hitch rate ở màn hình cuộn chính.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Instruments › Animation Hitches; overlay Offscreen-Rendered / Blended Layers.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🔵 CPU, pin &amp; nhiệt</div>
+      <h2>Nóng máy &amp; tụt pin</h2>
+      <ul class="checklist">
+        <li><strong>Vẽ lại thừa (body churn)</strong> — Thu hẹp state; tách view nhỏ; <code>@Observable</code> đúng phạm vi.</li>
+        <li><strong>Timer/loop chạy quá dày</strong> — Giảm tần suất; dừng khi không cần.</li>
+        <li><strong>Polling thay vì event</strong> — Dùng push / async stream / callback.</li>
+        <li><strong>Location accuracy cao luôn bật</strong> — Giảm accuracy; significant-change; tắt khi nền.</li>
+        <li><strong>Bỏ qua nhiệt &amp; Low Power Mode</strong> — Theo dõi <code>ProcessInfo.thermalState</code> &amp; <code>isLowPowerModeEnabled</code>, giảm tải.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Instruments › Time Profiler &amp; Energy Log; ProcessInfo.thermalState.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">💾 Đĩa &amp; I/O</div>
+      <h2>Ghi đĩa quá nhiều</h2>
+      <ul class="checklist">
+        <li><strong>Ghi đĩa quá mức</strong> — Gộp/giảm ghi; chỉ ghi khi cần.</li>
+        <li><strong>Log/analytics ghi liên tục</strong> — Throttle/batch log; tắt log nặng ở Release.</li>
+        <li><strong>Core Data/SwiftData autosave churn</strong> — Batch thay đổi; lưu theo lô.</li>
+        <li><strong>Ghi file lớn đồng bộ</strong> — Ghi nền, theo khối (chunk).</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: MetricKit (disk write exception), Instruments › File Activity.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🌐 Mạng</div>
+      <h2>Tải dữ liệu lãng phí</h2>
+      <ul class="checklist">
+        <li><strong>Request lẻ tẻ liên tục</strong> — Batch &amp; gộp request; tải trước hợp lý.</li>
+        <li><strong>Không nén / payload lớn</strong> — Nén (gzip), ảnh đúng size, chỉ lấy field cần.</li>
+        <li><strong>Không dùng cache (<code>URLCache</code>)</strong> — Bật HTTP cache; <code>ETag</code>/<code>If-None-Match</code>.</li>
+        <li><strong>Không timeout / không cancel</strong> — Đặt timeout; hủy <code>Task</code> khi view đóng.</li>
+        <li><strong>Polling thay vì push</strong> — Dùng push / long-poll / socket khi hợp lý.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Instruments › Network; Energy Log (networking).</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🟣 Khởi động (launch)</div>
+      <h2>Mở app chậm</h2>
+      <ul class="checklist">
+        <li><strong>Nhiều việc lúc launch</strong> — Trì hoãn việc không cần; làm lười; nền hóa.</li>
+        <li><strong><code>init</code> View/Model nặng</strong> — Đưa việc nặng vào <code>.task</code>/<code>onAppear</code>.</li>
+        <li><strong>Đọc/giải mã dữ liệu lớn đồng bộ khi mở</strong> — Async + placeholder trước.</li>
+        <li><strong>Quá nhiều dynamic framework</strong> — Giảm phụ thuộc; cân nhắc static link.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Instruments › App Launch; Xcode Organizer › Launches.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🟢 Concurrency (Swift 6)</div>
+      <h2>Đa luồng &amp; dữ liệu an toàn</h2>
+      <ul class="checklist">
+        <li><strong>Thiếu <code>@MainActor</code> cho UI state</strong> — Đánh dấu <code>@MainActor</code> cho ViewModel/UI.</li>
+        <li><strong>Sai actor isolation</strong> — Thiết kế theo <code>actor</code>; tuân thủ <code>Sendable</code>.</li>
+        <li><strong>Không cancel <code>Task</code> khi view biến mất</strong> — Dùng <code>.task</code> (tự hủy) hoặc <code>cancel()</code>.</li>
+        <li><strong>Chia sẻ mutable state giữa task</strong> — Bọc trong actor; tránh biến toàn cục mutable.</li>
+      </ul>
+      <p class="note">🔍 Phát hiện bằng: Thread Sanitizer; cảnh báo strict concurrency của trình biên dịch.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Phát hiện sớm &amp; đo lường</div>
+      <h2>Bộ công cụ <span class="grad">săn lỗi</span></h2>
+      <ul class="checklist">
+        <li><strong>Xcode Organizer</strong> — 7 nhóm số liệu máy thật: Launches · Hangs · Hitches · Memory · Disk · Battery · Terminations</li>
+        <li><strong>MetricKit</strong> — MXHangDiagnostic · MXDiskWriteExceptionDiagnostic · MXCPUExceptionDiagnostic · hitch · exit reasons</li>
+        <li><strong>Instruments</strong> — Time Profiler · Allocations/Leaks · Animation Hitches · Hangs · Energy Log · Core Animation</li>
+        <li><strong>Main Thread Checker</strong> — bắt cập nhật UI sai thread (bật khi Debug)</li>
+        <li><strong>Thread / Address Sanitizer</strong> — bắt data race &amp; truy cập bộ nhớ hỏng</li>
+        <li><strong>Memory Graph Debugger</strong> — tìm retain cycle (đối tượng không giải phóng)</li>
+        <li><strong>Debug overlays</strong> — Color Offscreen-Rendered Yellow · Color Blended Layers (soi hitch)</li>
+        <li><strong>ProcessInfo</strong> — <code>thermalState</code> · <code>isLowPowerModeEnabled</code> để thích ứng</li>
+      </ul>
+      <p class="note">📏 Ngưỡng đáng nhớ — hang <strong>&gt;250ms</strong> · hitch rate <strong>&lt;5 / 5–10 / &gt;10 ms/s</strong> · disk <strong>&gt;1GB/ngày</strong>. Theo dõi máy thật bằng <strong>MetricKit</strong> + <strong>Xcode Organizer</strong>.</p>
+    </section>
+
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết phần</div>
+      <h1 class="hero-title">Soi code theo <span class="grad">triệu chứng</span></h1>
+      <p class="hero-sub">Crash · Terminations · Bộ nhớ · Hang · Hitch · CPU/pin/nhiệt · Đĩa · Mạng · Khởi động · Concurrency — hỏi cho mọi màn hình &amp; mọi PR.</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="../performance-critical-issues.md">Bản tra cứu ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">14</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>
