@@ -29,11 +29,14 @@ struct MetalPreviewView: View {
                     Task { await model.load(testImage: testImage) }
                 }
             }
-            // Footprint cập nhật liên tục để thấy nó TĂNG khi zoom (render tile full-res).
-            .task {
-                while !Task.isCancelled {
+            // Footprint cập nhật theo SỰ KIỆN (không poll liên tục): khi zoom đổi và
+            // sau mỗi lần nạp ảnh (chờ render xong mới đọc). Tránh ép render lại liên tục.
+            .task { model.updateFootprint() }
+            .onChange(of: zoom) { _, _ in model.updateFootprint() }
+            .onChange(of: model.info) { _, _ in
+                Task {
+                    try? await Task.sleep(for: .milliseconds(400))
                     model.updateFootprint()
-                    try? await Task.sleep(for: .milliseconds(500))
                 }
             }
         }
@@ -43,8 +46,12 @@ struct MetalPreviewView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(.secondarySystemBackground))
-            if let image = model.image {
-                MetalImageView(image: image, filter: model.filter, zoom: zoom, offset: offset)
+            if model.hasImage {
+                MetalImageView(displayImage: model.displayImage,
+                               fullImage: model.fullImage,
+                               filter: model.filter,
+                               zoom: zoom,
+                               offset: offset)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .gesture(magnify.simultaneously(with: pan))
                     .onTapGesture(count: 2) { resetZoom() }

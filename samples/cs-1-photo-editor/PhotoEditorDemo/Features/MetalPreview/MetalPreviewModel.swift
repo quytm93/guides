@@ -8,44 +8,70 @@ final class MetalPreviewModel {
     var sourceMegapixels: Double = 48
     var filter: PhotoFilter = .none
 
-    private(set) var image: CIImage?
+    /// Bản nhẹ để xem vừa khung / zoom thấp (render nhanh).
+    private(set) var displayImage: CIImage?
+    /// Ảnh gốc lazy — chỉ dùng khi zoom sâu.
+    private(set) var fullImage: CIImage?
+
     private(set) var isGenerating = false
-    private(set) var info = "Chưa có ảnh. Tạo một ảnh lớn để Metal render."
+    private(set) var info = "Chưa có ảnh. Tạo một ảnh lớn hoặc chọn ảnh test."
     private(set) var footprintText = ""
 
-    var hasImage: Bool { image != nil }
+    /// Cạnh dài nhất của bản display — đủ nét cho zoom thấp, đủ nhẹ cho RAM/CPU.
+    private let displayMaxPixel: CGFloat = 2048
 
-    /// Tạo ảnh lớn rồi bọc thành `CIImage` **lazy** — KHÔNG bung bitmap full-res.
+    var hasImage: Bool { fullImage != nil || displayImage != nil }
+
+    // MARK: - Tạo ảnh synthetic
+
     func generate() async {
         isGenerating = true
         defer { isGenerating = false }
 
         let mp = sourceMegapixels
-        let data = await Task.detached(priority: .userInitiated) {
-            SyntheticImage.makeJPEG(megapixels: mp)
+        let maxPixel = displayMaxPixel
+        let (display, full) = await Task.detached(priority: .userInitiated) { () -> (CIImage?, CIImage?) in
+            let data = SyntheticImage.makeJPEG(megapixels: mp)
+            let display = ImageLoader.downsample(data: data, maxPixel: maxPixel).flatMap { CIImage(image: $0) }
+            let full = CIImage(data: data)
+            return (display, full)
         }.value
 
-        // `CIImage(data:)` chỉ giữ data nén + công thức giải mã; Core Image sẽ tile
-        // khi render. Đây là lý do footprint không tăng theo độ phân giải nguồn.
-        image = CIImage(data: data)
-
+        displayImage = display ?? full
+        fullImage = full
         let size = SyntheticImage.pixelSize(megapixels: mp)
-        info = String(format: "Nguồn %.0f MP · %d×%d px · render bằng Metal (CIContext)",
-                      mp, Int(size.width), Int(size.height))
+        info = String(format: "Nguồn %.0f MP · %d×%d px · Metal (preview %.0fpx · zoom sâu = full-res)",
+                      mp, Int(size.width), Int(size.height), displayMaxPixel)
         updateFootprint()
     }
 
-    /// Nạp ảnh test dạng `CIImage` **lazy** từ URL — không bung bitmap full-res.
+    // MARK: - Nạp ảnh test thật
+
     func load(testImage: TestImage) async {
         isGenerating = true
         defer { isGenerating = false }
 
-        image = CIImage(contentsOf: testImage.url)
-        info = "\(testImage.name) · \(testImage.subtitle) · render bằng Metal"
+        // Chờ một nhịp để sheet picker đóng mượt TRƯỚC khi xử lý.
+        try? await Task.sleep(for: .milliseconds(250))
+
+        let url = testImage.url
+        let maxPixel = displayMaxPixel
+        let (display, full) = await Task.detached(priority: .userInitiated) { () -> (CIImage?, CIImage?) in
+            // Bản display: ImageIO downsample (không bung full-res), bọc thành CIImage.
+            let display = ImageLoader.downsample(url: url, maxPixel: maxPixel).flatMap { CIImage(image: $0) }
+            // Bản full: lazy, tôn trọng orientation để khớp với bản display.
+            let full = CIImage(contentsOf: url, options: [.applyOrientationProperty: true])
+            return (display, full)
+        }.value
+
+        displayImage = display ?? full
+        fullImage = full
+        info = "\(testImage.name) · \(testImage.subtitle) · Metal (zoom sâu = full-res)"
         updateFootprint()
     }
 
     func updateFootprint() {
-        footprintText = "Footprint hiện tại: " + MemoryReporter.mb(MemoryReporter.footprint())
+        let text = "Footprint hiện tại: " + MemoryReporter.mb(MemoryReporter.footprint())
+        if text != footprintText { footprintText = text }   // tránh recompute thừa
     }
 }

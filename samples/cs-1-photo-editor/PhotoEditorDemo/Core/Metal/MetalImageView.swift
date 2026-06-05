@@ -2,22 +2,25 @@ import SwiftUI
 import MetalKit
 import CoreImage
 
-/// **Tùy chọn 2 — pipeline GPU.** Hiển thị một `CIImage` (có thể RẤT lớn) bằng
-/// `MTKView` + `CIContext`.
+/// **Tùy chọn 2 — pipeline GPU với Level-of-Detail (LOD).**
 ///
-/// Vì sao footprint vẫn thấp dù ảnh 48MP:
-/// - `CIImage` chỉ là *công thức* (lazy), chưa bung bitmap nào vào RAM.
-/// - `CIContext.render(...)` chỉ vẽ **đúng kích thước drawable** đang hiển thị và
-///   **tự chia ô (tile)** trên GPU. Core Image không bao giờ giữ cả ảnh full-res
-///   trong bộ nhớ một lúc.
-/// - Ta KHÔNG bao giờ tạo `UIImage`/`CGImage` full-res trong code → không có "spike".
+/// Hiển thị ảnh lớn bằng `MTKView` + `CIContext`, nhận HAI nguồn:
+/// - `displayImage`: bản đã downsample (vd. 2048px) — dùng khi xem vừa khung / zoom
+///   thấp. Render rất nhanh.
+/// - `fullImage`: ảnh gốc dạng `CIImage` **lazy** — chỉ dùng khi **zoom sâu**, lúc đó
+///   vùng nhìn thấy (ROI) chỉ là một mẩu nhỏ của ảnh nên Core Image cũng render nhanh
+///   mà vẫn cho chi tiết thật.
 ///
-/// Đối lập với *Memory Lab · cách sai* (bung full-res bitmap vào RAM) và bổ sung
-/// cho *cách đúng* (downsample CPU): đây là cách vẫn xem được ảnh gốc đầy đủ.
+/// Vì sao cách này vừa **ít RAM** vừa **mượt**:
+/// - Ở zoom thấp, render cả khung = render `displayImage` nhỏ → nhanh.
+/// - Ở zoom cao, render `fullImage` nhưng ROI nhỏ → nhanh; footprint chỉ tăng theo
+///   *vùng hiển thị × zoom*, không theo cả ảnh.
+/// - Không bao giờ bung bitmap full-res của ảnh gốc vào RAM.
 struct MetalImageView: UIViewRepresentable {
-    let image: CIImage?
+    let displayImage: CIImage?
+    let fullImage: CIImage?
     let filter: PhotoFilter
-    /// 1 = vừa khung (aspect-fit). >1 = phóng to để xem chi tiết full-res.
+    /// 1 = vừa khung (aspect-fit). >1 = phóng to.
     var zoom: CGFloat = 1
     /// Độ dịch khi kéo (points, theo hệ UIKit).
     var offset: CGSize = .zero
@@ -39,11 +42,24 @@ struct MetalImageView: UIViewRepresentable {
     }
 
     func updateUIView(_ view: MTKView, context: Context) {
-        context.coordinator.image = image
-        context.coordinator.filter = filter
-        context.coordinator.zoom = zoom
-        context.coordinator.offset = offset
-        view.setNeedsDisplay()
+        let c = context.coordinator
+        // CHỈ vẽ lại khi thứ ảnh hưởng tới hình thật sự đổi. Nếu không, mỗi lần
+        // SwiftUI tính lại body (vd. cập nhật footprint) sẽ kích hoạt một lần
+        // CIContext.render trên main thread → treo máy + CPU cao.
+        let needsRedraw =
+            c.displayImage !== displayImage ||
+            c.fullImage !== fullImage ||
+            c.filter != filter ||
+            c.zoom != zoom ||
+            c.offset != offset
+
+        c.displayImage = displayImage
+        c.fullImage = fullImage
+        c.filter = filter
+        c.zoom = zoom
+        c.offset = offset
+
+        if needsRedraw { view.setNeedsDisplay() }
     }
 
     // MARK: - Renderer
@@ -55,7 +71,11 @@ struct MetalImageView: UIViewRepresentable {
         private let colorSpace = CGColorSpaceCreateDeviceRGB()
         private let filters: FilterServing
 
-        var image: CIImage?
+        /// Trên ngưỡng zoom này thì chuyển sang ảnh full-res (ROI đã đủ nhỏ để nhanh).
+        private let fullResZoomThreshold: CGFloat = 2.5
+
+        var displayImage: CIImage?
+        var fullImage: CIImage?
         var filter: PhotoFilter = .none
         var zoom: CGFloat = 1
         var offset: CGSize = .zero
@@ -73,7 +93,11 @@ struct MetalImageView: UIViewRepresentable {
         func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
         func draw(in view: MTKView) {
-            guard let image,
+            // Chọn nguồn theo mức zoom: thấp → display (nhanh), sâu → full-res (chi tiết).
+            let useFull = zoom > fullResZoomThreshold
+            let source = (useFull ? fullImage : displayImage) ?? fullImage ?? displayImage
+
+            guard let source,
                   let ciContext,
                   let commandQueue,
                   let drawable = view.currentDrawable,
@@ -83,19 +107,18 @@ struct MetalImageView: UIViewRepresentable {
             guard dst.width > 0, dst.height > 0 else { return }
 
             // Áp filter ở dạng công thức (vẫn lazy).
-            let filtered = filters.apply(filter, to: image)
+            let filtered = filters.apply(filter, to: source)
             let src = filtered.extent
             guard src.width > 0, src.height > 0 else { return }
 
-            // Aspect-fit làm gốc, rồi nhân thêm zoom. Khi zoom > 1, Core Image chỉ
-            // render & tile phần nhìn thấy ở độ phân giải cao → footprint tăng theo
-            // *vùng hiển thị*, KHÔNG theo toàn ảnh.
+            // Aspect-fit làm gốc (kích thước vừa khung KHÔNG đổi dù nguồn là display
+            // hay full-res), rồi nhân thêm zoom.
             let baseScale = min(dst.width / src.width, dst.height / src.height)
             let scale = baseScale * max(zoom, 1)
             let scaled = filtered.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
             let s = scaled.extent
 
-            // Canh giữa + áp pan (đổi đơn vị point → pixel, lật trục Y cho hệ CIImage).
+            // Canh giữa + áp pan (đổi point → pixel, lật trục Y cho hệ CIImage).
             let pointScale = view.contentScaleFactor
             let dx = offset.width  * pointScale
             let dy = offset.height * pointScale

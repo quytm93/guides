@@ -280,10 +280,18 @@ hoặc lưới ảnh — không cần soi chi tiết gốc. (Tab *Chỉnh ảnh*
 **Quy tắc thực chiến:** editor thật dùng **cả hai** — `MetalView` cho canvas khi
 chỉnh, rồi **một lần** `CIContext.render` full-res ra file ở bước **export**.
 
-> Lưu ý: `MetalView` không "miễn phí" — khi zoom 100% vào ảnh gigapixel, Core Image
-> giải mã & xử lý các *tile đang nhìn thấy* ở full-res, nên footprint tăng theo
-> *vùng hiển thị × mức zoom*, không theo cả ảnh. Chi phí của `ImageIO` thì cố định
-> ngay từ đầu. Đó chính là điểm đánh đổi.
+> Lưu ý: `MetalView` không "miễn phí" — render **cả khung** một ảnh 50MP ở zoom 1
+> rất nặng (ROI = toàn ảnh). Vì vậy tab Metal dùng **Level-of-Detail (LOD)**:
+> - Zoom thấp → render bản **display** đã downsample (vd. 2048px) → nhanh.
+> - Zoom sâu (> ~2.5×) → render **full-res** nhưng ROI chỉ là một mẩu nhỏ → vẫn nhanh
+>   và cho chi tiết thật.
+>
+> Đây cũng là cách editor thật làm. Footprint vẫn thấp (~40–60 MB) ở mọi mức zoom.
+>
+> **Bẫy hiệu năng đã sửa trong sample:** ban đầu vòng lặp đọc footprint mỗi 0.5s ép
+> `MTKView` render lại ảnh full-res *liên tục trên main thread* → treo máy, CPU 100%.
+> Sửa bằng: (1) chỉ `setNeedsDisplay` khi ảnh/filter/zoom/offset đổi thật; (2) đọc
+> footprint theo sự kiện thay vì poll; (3) LOD ở trên.
 
 ---
 
