@@ -109,10 +109,6 @@
 
   // ---- Lesson sidebar menu ----
   const LESSONS = [
-    { n: 'S1', file: 'swift-1.html', title: 'Nền tảng: Kiểu dữ liệu & Hàm' },
-    { n: 'S2', file: 'swift-2.html', title: 'Nền tảng: Optionals' },
-    { n: 'S3', file: 'swift-3.html', title: 'Nền tảng: Collections & Control flow' },
-    { n: 'S4', file: 'swift-4.html', title: 'Nền tảng: Closure, Struct & Protocol' },
     { n: '01', file: 'bai-1.html', title: 'Bắt đầu' },
     { n: '02', file: 'bai-2.html', title: 'Cài đặt & Làm quen Xcode 26' },
     { n: '03', file: 'bai-3.html', title: 'App tương tác đầu tiên' },

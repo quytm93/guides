@@ -35,6 +35,25 @@
     </section>
 
     <section class="slide">
+      <div class="kicker">Nền tảng bộ nhớ</div>
+      <h2>struct vs class · <span class="grad">stack vs heap</span></h2>
+      <p class="lead">Trước khi soi triệu chứng: một lựa chọn nền tảng quyết định <strong>tốc độ &amp; bộ nhớ</strong> — kiểu <em>giá trị</em> hay <em>tham chiếu</em>, nằm ở <strong>stack</strong> hay <strong>heap</strong>.</p>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-emoji">📦</div>
+          <h3>struct · giá trị</h3>
+          <p>Thường ở <strong>stack</strong> · sao chép khi gán · cấp phát/thu hồi <strong>gần như tức thì</strong> · <strong>không tốn ARC</strong>.</p>
+        </div>
+        <div class="card">
+          <div class="card-emoji">🔗</div>
+          <h3>class · tham chiếu</h3>
+          <p>Ở <strong>heap</strong> · chia sẻ tham chiếu · <strong>ARC</strong> đếm &amp; thu hồi · mỗi lần cấp phát/đếm đều tốn CPU.</p>
+        </div>
+      </div>
+      <p class="note">📌 Vì sao vào Phần 3: <strong>heap + ARC</strong> là gốc của <em>rò rỉ &amp; ngốn bộ nhớ</em> (retain cycle), <em>bị Jetsam giết</em> (peak RAM), và <em>CPU/pin</em> (cấp phát thừa). Mặc định <code>struct</code>; dùng <code>class</code> khi cần chia sẻ trạng thái (ViewModel) hoặc identity. <strong>Nói gần đúng cho dễ nhớ:</strong> struct quá lớn, chứa kiểu tham chiếu, hay bị "bắt" trong closure <em>escaping</em> vẫn có thể lên heap; <code>Array</code>/<code>String</code> dùng Copy-on-Write.</p>
+    </section>
+
+    <section class="slide">
       <div class="kicker">🔴 Crash — app văng</div>
       <h2>Lỗi làm app văng ngay</h2>
       <ul class="checklist">
@@ -190,7 +209,7 @@
 
   <nav class="controls" aria-label="Điều hướng slide">
     <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
-    <div class="counter"><span id="current">1</span> / <span id="total">14</span></div>
+    <div class="counter"><span id="current">1</span> / <span id="total">15</span></div>
     <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
   </nav>
 

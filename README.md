@@ -11,8 +11,6 @@ A teaching workshop for iOS development, made of two parts:
 
 Open [index.html](index.html) in a browser for the lesson index. Slides live in [lessons/](lessons/).
 
-**Swift foundations** (`swift-1`…`swift-4`): data types & functions · optionals · collections & control flow · closures, struct/class & protocol.
-
 **iOS track** (`bai-1`…`bai-18`):
 
 | # | Topic | # | Topic |
@@ -31,7 +29,7 @@ Plus [tong-ket.html](lessons/tong-ket.html) — wrap-up & roadmap.
 
 **Case studies** — [case-studies.md](case-studies.md): 20 real-app case-study lessons (in **Vietnamese**), one app per lesson in ≤3 "slides" with key concepts, terms, factors, and a Mermaid architecture diagram. Spans technical, business, and domain aspects (photo editor, fintech, ride-hailing, AR, IoT, AI chat, …).
 
-**Performance & critical issues** — [performance-critical-issues.md](performance-critical-issues.md) + slide deck [lessons/perf-1.html](lessons/perf-1.html) ("Phần 3"): a concept catalog of what makes iOS apps **crash, get terminated, leak memory, hang, hitch, and drain CPU/battery/disk/network** — grouped by **symptom**, aligned with Apple's Xcode Organizer metric categories. Focuses on *what to watch for in production* (not syntax).
+**Performance & critical issues** — [performance-critical-issues.md](performance-critical-issues.md) + slide deck [lessons/perf-1.html](lessons/perf-1.html) ("Phần 3"): a concept catalog of what makes iOS apps **crash, get terminated, leak memory, hang, hitch, and drain CPU/battery/disk/network** — grouped by **symptom**, aligned with Apple's Xcode Organizer metric categories. Opens with a memory-model primer (value vs reference, stack vs heap, ARC) since that underlies the memory/CPU symptoms. Focuses on *what to watch for in production* (not syntax).
 
 **House style** (taught throughout, and enforced by the skills): iOS 17+, Xcode 26, SwiftUI-first, **MVVM with `@Observable`**, `async/await` + actors, SwiftData, Combine reserved for event streams. Every code lesson ends with a complete copy-paste-runnable sample.
 

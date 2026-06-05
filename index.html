@@ -28,14 +28,8 @@
     <!-- Lộ trình / Mục lục -->
     <section id="muc-luc" style="margin-bottom: 2.8rem;">
       <span class="kicker">Mục lục</span>
-      <h2 style="margin: 0.3rem 0 1.1rem;">Khóa học gồm <span class="grad">4 phần</span></h2>
+      <h2 style="margin: 0.3rem 0 1.1rem;">Khóa học gồm <span class="grad">3 phần</span></h2>
       <nav class="roadmap" aria-label="Lộ trình khóa học">
-        <a class="roadmap-step" href="#phan-0">
-          <span class="rs-k">Phần 0</span>
-          <span class="rs-t">Nền tảng Swift</span>
-          <span class="rs-d">4 bài · học trước</span>
-        </a>
-        <span class="roadmap-arrow" aria-hidden="true">→</span>
         <a class="roadmap-step" href="#phan-ios">
           <span class="rs-k">Phần 1</span>
           <span class="rs-t">18 bài iOS</span>
@@ -54,90 +48,13 @@
           <span class="rs-d">crash · bộ nhớ · CPU</span>
         </a>
       </nav>
-      <p class="map-hint">💡 Mỗi bài là một <strong>slideshow</strong> — bấm <kbd>→</kbd> / <kbd>Space</kbd> để chuyển slide, <kbd>☰</kbd> để mở danh sách. Mới bắt đầu? Đi từ <strong>Phần 0</strong>.</p>
-    </section>
-
-    <section id="phan-0" style="margin-bottom: 3rem;">
-      <div class="section-head">
-        <h2>Phần 0 · Nền tảng Swift</h2>
-        <span class="sub">Gốc rễ của mọi bài sau — nắm chắc thì hết "học vẹt".</span>
-      </div>
-
-      <div class="why">
-        <p class="why-lead">Bỏ qua phần này bạn vẫn gõ được code — nhưng sẽ <strong>học vẹt</strong>. Nắm nền tảng, mọi bài sau nhẹ tênh:</p>
-        <div class="why-grid">
-          <div class="why-item"><span class="why-ico">🧠</span><div><strong>Value vs Reference</strong> — <code>struct</code> được <em>sao chép</em> &amp; thường nằm ở <strong>stack</strong> (rất nhanh); <code>class</code> <em>chia sẻ</em> &amp; nằm ở <strong>heap</strong>. Chọn đúng → tránh bug "sửa chỗ này hỏng chỗ kia".</div></div>
-          <div class="why-item"><span class="why-ico">⚡</span><div><strong>Tốc độ &amp; bộ nhớ</strong> — stack cấp phát/thu hồi gần như tức thì; heap tốn hơn &amp; cần ARC. Nền cho <strong>Bài 18 (ARC, retain cycle)</strong>.</div></div>
-          <div class="why-item"><span class="why-ico">🛡</span><div><strong>An toàn với Optionals</strong> — <code>nil</code> được kiểm soát → ít crash <em>(Bài S2)</em>.</div></div>
-          <div class="why-item"><span class="why-ico">🧩</span><div><strong>Hiểu vì sao SwiftUI viết vậy</strong> — <code>View</code> là struct, dùng protocol &amp; closure khắp nơi <em>(Bài S4)</em>.</div></div>
-        </div>
-      </div>
-
-      <div class="lesson-grid">
-
-        <!-- Swift S1 -->
-        <a class="lesson lesson--ready" href="lessons/swift-1.html">
-          <div class="lesson-top">
-            <div class="lesson-num">S1</div>
-            <span class="lesson-tag tag-ready">Nền tảng</span>
-          </div>
-          <h3>Kiểu dữ liệu &amp; Hàm</h3>
-          <p>Biến/hằng, Int·String·Double·Bool, và viết hàm với <code>func</code>.</p>
-          <div class="lesson-meta">
-            <span>📊 11 slide</span>
-            <span>⏱ ~20 phút</span>
-          </div>
-        </a>
-
-        <!-- Swift S2 -->
-        <a class="lesson lesson--ready" href="lessons/swift-2.html">
-          <div class="lesson-top">
-            <div class="lesson-num">S2</div>
-            <span class="lesson-tag tag-ready">Nền tảng</span>
-          </div>
-          <h3>Optionals</h3>
-          <p>Khái niệm quan trọng nhất: <code>nil</code>, <code>if let</code>, <code>guard let</code>, <code>??</code>.</p>
-          <div class="lesson-meta">
-            <span>📊 12 slide</span>
-            <span>⏱ ~25 phút</span>
-          </div>
-        </a>
-
-        <!-- Swift S3 -->
-        <a class="lesson lesson--ready" href="lessons/swift-3.html">
-          <div class="lesson-top">
-            <div class="lesson-num">S3</div>
-            <span class="lesson-tag tag-ready">Nền tảng</span>
-          </div>
-          <h3>Collections &amp; Control flow</h3>
-          <p>Array, Dictionary, vòng lặp <code>for</code>, <code>if</code>/<code>switch</code> &amp; enum.</p>
-          <div class="lesson-meta">
-            <span>📊 11 slide</span>
-            <span>⏱ ~22 phút</span>
-          </div>
-        </a>
-
-        <!-- Swift S4 -->
-        <a class="lesson lesson--ready" href="lessons/swift-4.html">
-          <div class="lesson-top">
-            <div class="lesson-num">S4</div>
-            <span class="lesson-tag tag-ready">Nền tảng</span>
-          </div>
-          <h3>Closure, Struct/Class &amp; Protocol</h3>
-          <p>Hiểu vì sao SwiftUI viết như vậy: closure, value/reference &amp; protocol.</p>
-          <div class="lesson-meta">
-            <span>📊 12 slide</span>
-            <span>⏱ ~25 phút</span>
-          </div>
-        </a>
-
-      </div>
+      <p class="map-hint">💡 Mỗi bài là một <strong>slideshow</strong> — bấm <kbd>→</kbd> / <kbd>Space</kbd> để chuyển slide, <kbd>☰</kbd> để mở danh sách. Mới bắt đầu? Đi từ <strong>Bài 1</strong>.</p>
     </section>
 
     <section id="phan-ios">
       <div class="section-head">
-        <h2>Danh sách bài học</h2>
-        <span class="sub">4 bài nền tảng + 18 bài + trang tổng kết · khóa học hoàn chỉnh 🎓</span>
+        <h2>Phần 1 · Danh sách bài học</h2>
+        <span class="sub">18 bài + trang tổng kết · khóa học hoàn chỉnh 🎓</span>
       </div>
 
       <div class="lesson-grid">
@@ -716,12 +633,25 @@
     <section id="phan-perf" style="margin-top: 3rem;">
       <div class="section-head">
         <h2>Phần 3 · Hiệu năng &amp; Sự cố nghiêm trọng</h2>
-        <span class="sub">10 nhóm theo triệu chứng — crash · terminations · bộ nhớ · treo · giật · CPU/pin · đĩa · mạng. Kèm bản tra cứu <code>performance-critical-issues.md</code> 🔍</span>
+        <span class="sub">Nền tảng bộ nhớ + 10 nhóm theo triệu chứng — crash · terminations · bộ nhớ · treo · giật · CPU/pin · đĩa · mạng. Kèm bản tra cứu <code>performance-critical-issues.md</code> 🔍</span>
       </div>
 
       <div class="lesson-grid">
 
         <a class="lesson lesson--ready" href="lessons/perf-1.html#3">
+          <div class="lesson-top">
+            <div class="lesson-num">📦</div>
+            <span class="lesson-tag tag-ready">Nền tảng</span>
+          </div>
+          <h3>struct/class · stack/heap</h3>
+          <p>Giá trị vs tham chiếu &amp; ARC → gốc của bộ nhớ/CPU</p>
+          <div class="lesson-meta">
+            <span>🔎 nền tảng</span>
+            <span>→ slide 3</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#4">
           <div class="lesson-top">
             <div class="lesson-num">🔴</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -730,11 +660,11 @@
           <p>Lỗi làm app văng ngay</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
-            <span>→ slide 3</span>
+            <span>→ slide 4</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#4">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#5">
           <div class="lesson-top">
             <div class="lesson-num">⚫</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -743,11 +673,11 @@
           <p>App bị iOS giết, không phải crash code</p>
           <div class="lesson-meta">
             <span>🔎 4 điểm</span>
-            <span>→ slide 4</span>
+            <span>→ slide 5</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#5">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#6">
           <div class="lesson-top">
             <div class="lesson-num">🟠</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -756,11 +686,11 @@
           <p>Bộ nhớ phình &amp; rò rỉ</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
-            <span>→ slide 5</span>
+            <span>→ slide 6</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#6">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#7">
           <div class="lesson-top">
             <div class="lesson-num">🟡</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -769,11 +699,11 @@
           <p>UI đứng hình</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
-            <span>→ slide 6</span>
+            <span>→ slide 7</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#7">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#8">
           <div class="lesson-top">
             <div class="lesson-num">🟤</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -782,11 +712,11 @@
           <p>Cuộn &amp; animation rớt frame</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
-            <span>→ slide 7</span>
+            <span>→ slide 8</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#8">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#9">
           <div class="lesson-top">
             <div class="lesson-num">🔵</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -795,11 +725,11 @@
           <p>Nóng máy &amp; tụt pin</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
-            <span>→ slide 8</span>
+            <span>→ slide 9</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#9">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#10">
           <div class="lesson-top">
             <div class="lesson-num">💾</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -808,11 +738,11 @@
           <p>Ghi đĩa quá nhiều</p>
           <div class="lesson-meta">
             <span>🔎 4 điểm</span>
-            <span>→ slide 9</span>
+            <span>→ slide 10</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#10">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#11">
           <div class="lesson-top">
             <div class="lesson-num">🌐</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -821,11 +751,11 @@
           <p>Tải dữ liệu lãng phí</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
-            <span>→ slide 10</span>
+            <span>→ slide 11</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#11">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#12">
           <div class="lesson-top">
             <div class="lesson-num">🟣</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -834,11 +764,11 @@
           <p>Mở app chậm</p>
           <div class="lesson-meta">
             <span>🔎 4 điểm</span>
-            <span>→ slide 11</span>
+            <span>→ slide 12</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/perf-1.html#12">
+        <a class="lesson lesson--ready" href="lessons/perf-1.html#13">
           <div class="lesson-top">
             <div class="lesson-num">🟢</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
@@ -847,7 +777,7 @@
           <p>Đa luồng &amp; dữ liệu an toàn</p>
           <div class="lesson-meta">
             <span>🔎 4 điểm</span>
-            <span>→ slide 12</span>
+            <span>→ slide 13</span>
           </div>
         </a>
       </div>
