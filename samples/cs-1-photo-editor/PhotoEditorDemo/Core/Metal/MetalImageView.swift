@@ -103,11 +103,12 @@ struct MetalImageView: UIViewRepresentable {
         }
 
         func draw(in view: MTKView) {
-            #if targetEnvironment(simulator)
-            drawOnMain(in: view)
-            #else
+//            #if targetEnvironment(simulator)
+//            drawOnMain(in: view)
+//            #else
+//            drawOffMain(in: view)
+//            #endif
             drawOffMain(in: view)
-            #endif
         }
 
         // MARK: Nguồn + ma trận (chung)
