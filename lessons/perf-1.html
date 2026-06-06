@@ -185,7 +185,7 @@
       <ul class="checklist">
         <li><strong>Xcode Organizer</strong> — 7 nhóm số liệu máy thật: Launches · Hangs · Hitches · Memory · Disk · Battery · Terminations</li>
         <li><strong>MetricKit</strong> — MXHangDiagnostic · MXDiskWriteExceptionDiagnostic · MXCPUExceptionDiagnostic · hitch · exit reasons</li>
-        <li><strong>Instruments</strong> — Time Profiler · Allocations/Leaks · Animation Hitches · Hangs · Energy Log · Core Animation</li>
+        <li><strong>Instruments (<code>⌘I</code> → Profile)</strong> — bộ profiler chọn <em>template theo triệu chứng</em>: <code>Time Profiler</code> (CPU/hang) · <code>Allocations</code>+<code>Leaks</code> (RAM/rò rỉ) · <code>Animation Hitches</code> (giật) · <code>App Launch</code> (khởi động) · <code>Energy Log</code> (pin/nhiệt) · <code>File Activity</code> (đĩa) · <code>Network</code> (mạng). ⚠️ Profile bản <strong>Release</strong> trên <strong>máy thật</strong>, không dùng Simulator.</li>
         <li><strong>Main Thread Checker</strong> — bắt cập nhật UI sai thread (bật khi Debug)</li>
         <li><strong>Thread / Address Sanitizer</strong> — bắt data race &amp; truy cập bộ nhớ hỏng</li>
         <li><strong>Memory Graph Debugger</strong> — tìm retain cycle (đối tượng không giải phóng)</li>
@@ -193,6 +193,21 @@
         <li><strong>ProcessInfo</strong> — <code>thermalState</code> · <code>isLowPowerModeEnabled</code> để thích ứng</li>
       </ul>
       <p class="note">📏 Ngưỡng đáng nhớ — hang <strong>&gt;250ms</strong> · hitch rate <strong>&lt;5 / 5–10 / &gt;10 ms/s</strong> · disk <strong>&gt;1GB/ngày</strong>. Theo dõi máy thật bằng <strong>MetricKit</strong> + <strong>Xcode Organizer</strong>.</p>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">🛠️ Xcode Instruments</div>
+      <h2>Profiler theo <span class="grad">triệu chứng</span></h2>
+      <p class="lead">Mở bằng <code>⌘I</code> (Product › Profile) → chọn <strong>template</strong> đúng với triệu chứng đang nghi. Mỗi template gắn sẵn instrument phù hợp để đo trên timeline thật.</p>
+      <ul class="checklist">
+        <li><strong>Time Profiler</strong> — CPU nóng &amp; hang: xem call tree, tìm hàm chiếm nhiều thời gian trên main thread.</li>
+        <li><strong>Allocations + Leaks</strong> — RAM phình &amp; rò rỉ: theo dõi peak memory, bắt retain cycle (xem cùng Memory Graph).</li>
+        <li><strong>Animation Hitches</strong> — cuộn/animation rớt frame: định vị commit/render quá hạn deadline.</li>
+        <li><strong>App Launch</strong> — khởi động chậm: bóc tách pha pre-main / khởi tạo lúc mở app.</li>
+        <li><strong>Energy Log</strong> — pin &amp; nhiệt: quy chiếu CPU, mạng, location, GPU về mức tiêu thụ.</li>
+        <li><strong>File Activity · Network</strong> — đĩa &amp; mạng: đo lượng ghi đĩa, request lãng phí.</li>
+      </ul>
+      <p class="note">⚠️ Luôn profile bản <strong>Release</strong> trên <strong>máy thật</strong> — Simulator dùng CPU/GPU/RAM của Mac nên số liệu hiệu năng <em>không phản ánh</em> thiết bị thật.</p>
     </section>
 
     <section class="slide slide--center slide--hero">
@@ -209,7 +224,7 @@
 
   <nav class="controls" aria-label="Điều hướng slide">
     <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
-    <div class="counter"><span id="current">1</span> / <span id="total">15</span></div>
+    <div class="counter"><span id="current">1</span> / <span id="total">16</span></div>
     <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
   </nav>
 
