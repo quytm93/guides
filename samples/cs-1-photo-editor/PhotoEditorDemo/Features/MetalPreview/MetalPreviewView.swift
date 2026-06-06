@@ -71,7 +71,8 @@ struct MetalPreviewView: View {
                                fullImage: model.fullImage,
                                filter: model.filter,
                                zoom: zoom,
-                               offset: offset)
+                               offset: offset,
+                               interactive: isInteracting)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .gesture(magnify.simultaneously(with: pan))
                     .onTapGesture(count: 2) { resetZoom() }

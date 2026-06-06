@@ -2,24 +2,19 @@ import SwiftUI
 import MetalKit
 import CoreImage
 
-/// **Tùy chọn 2 — pipeline GPU, render NẶNG trên hàng đợi riêng (actual-res khi kéo).**
+/// **Tùy chọn 2 — pipeline GPU.** Render ảnh lớn bằng `MTKView` + `CIContext`.
 ///
-/// Hai nguồn ảnh:
+/// Hai nguồn ảnh (Level-of-Detail):
 /// - `displayImage`: bản downsample (vd. 2048px) — xem vừa khung / zoom thấp, tức thì.
 /// - `fullImage`: ảnh gốc `CIImage` **lazy** — khi **zoom sâu**, render đúng độ phân
 ///   giải thật (ROI lúc đó chỉ là một mẩu nhỏ).
 ///
-/// Cách giữ slider mượt mà vẫn full-res (bản tối giản):
-/// 1. `draw(in:)` chạy trên MAIN: lấy `currentDrawable` + tính ma trận (rẻ).
-/// 2. Đẩy **đúng phần nặng** — `ciContext.render` (gồm giải mã JPEG) + `present` +
-///    `commit` — sang **một serial queue riêng**. Main thread rảnh → slider mượt.
-/// 3. Mỗi lúc chỉ có **một** drawable đang xử lý (`inFlight`); các giá trị zoom đến
-///    trong lúc đó được **gộp** (`pending`) rồi render lại với giá trị mới nhất. Bắt
-///    buộc, vì pool chỉ có 3 drawable — nếu không sẽ cạn → `currentDrawable` nil/treo.
-///
-/// > ⚠️ iOS **Simulator** dùng Metal phần mềm, present-từ-queue-khác có thể KHÔNG
-/// > hiển thị (màn xám). Hãy chạy trên **máy thật**. Trên `main` là bản proxy (mượt ở
-/// > cả simulator).
+/// **Hai đường render tùy môi trường:**
+/// - **Máy thật:** đẩy `ciContext.render` (nặng) sang **serial queue riêng**, blit/
+///   present ngoài main → kéo slider vẫn mượt mà giữ *full-res* khi zoom.
+/// - **Simulator:** Metal phần mềm không hiển thị được đường present-ngoài-main, nên
+///   render **trên main** + dùng bản display lúc đang tương tác (`interactive`) cho
+///   khỏi lag. (Đó là lý do còn tham số `interactive`.)
 struct MetalImageView: UIViewRepresentable {
     let displayImage: CIImage?
     let fullImage: CIImage?
@@ -28,6 +23,8 @@ struct MetalImageView: UIViewRepresentable {
     var zoom: CGFloat = 1
     /// Độ dịch khi kéo (points, theo hệ UIKit).
     var offset: CGSize = .zero
+    /// Đang kéo slider / pinch / pan? Chỉ dùng cho đường Simulator (render trên main).
+    var interactive: Bool = false
 
     func makeCoordinator() -> Renderer {
         Renderer(filters: FilterService.shared)
@@ -37,10 +34,10 @@ struct MetalImageView: UIViewRepresentable {
         let view = MTKView()
         view.device = context.coordinator.device
         view.delegate = context.coordinator
-        view.framebufferOnly = false        // CIContext ghi trực tiếp vào texture
+        view.framebufferOnly = false
         view.isOpaque = true
         view.isPaused = true
-        view.enableSetNeedsDisplay = true   // ta gọi setNeedsDisplay() để kích hoạt draw
+        view.enableSetNeedsDisplay = true
         view.clearColor = MTLClearColor(red: 0.04, green: 0.05, blue: 0.11, alpha: 1)
         context.coordinator.view = view
         return view
@@ -53,13 +50,15 @@ struct MetalImageView: UIViewRepresentable {
             c.fullImage !== fullImage ||
             c.filter != filter ||
             c.zoom != zoom ||
-            c.offset != offset
+            c.offset != offset ||
+            c.interactive != interactive
 
         c.displayImage = displayImage
         c.fullImage = fullImage
         c.filter = filter
         c.zoom = zoom
         c.offset = offset
+        c.interactive = interactive
 
         if changed { view.setNeedsDisplay() }
     }
@@ -83,8 +82,9 @@ struct MetalImageView: UIViewRepresentable {
         var filter: PhotoFilter = .none
         var zoom: CGFloat = 1
         var offset: CGSize = .zero
+        var interactive = false
 
-        // Cờ điều phối — chỉ chạm trên MAIN thread.
+        // Cờ điều phối đường off-main (device) — chỉ chạm trên MAIN.
         private var inFlight = false
         private var pending = false
 
@@ -102,58 +102,88 @@ struct MetalImageView: UIViewRepresentable {
             view.setNeedsDisplay()
         }
 
-        /// Chạy trên MAIN (do setNeedsDisplay kích hoạt). Phần nặng đẩy sang renderQueue.
         func draw(in view: MTKView) {
-            // Đang render dở → ghi nhận "có yêu cầu mới" rồi thoát (gộp về mới nhất).
-            guard !inFlight else { pending = true; return }
+            #if targetEnvironment(simulator)
+            drawOnMain(in: view)
+            #else
+            drawOffMain(in: view)
+            #endif
+        }
 
-            // Chọn nguồn theo zoom (LOD): thấp → display (nhẹ), sâu → full-res (nét thật).
+        // MARK: Nguồn + ma trận (chung)
+
+        private func currentSource() -> CIImage? {
+            #if targetEnvironment(simulator)
+            // Đang tương tác → dùng display cho nhẹ (Metal phần mềm chậm).
+            let useFull = !interactive && zoom > fullResZoomThreshold
+            #else
             let useFull = zoom > fullResZoomThreshold
-            let source = (useFull ? fullImage : displayImage) ?? fullImage ?? displayImage
+            #endif
+            return (useFull ? fullImage : displayImage) ?? fullImage ?? displayImage
+        }
 
-            guard let source,
-                  let ciContext,
-                  let commandQueue,
-                  let drawable = view.currentDrawable,            // lấy trên MAIN
-                  let commandBuffer = commandQueue.makeCommandBuffer() else { return }
-
-            let dst = view.drawableSize
-            guard dst.width > 0, dst.height > 0 else { return }
-
-            // Tính ma trận (rẻ) trên main — chưa giải mã pixel nào (CIImage lazy).
+        /// Aspect-fit + zoom + pan → CIImage đã đặt đúng vị trí trong khung `dst`.
+        private func centeredImage(source: CIImage, dst: CGSize, pointScale: CGFloat) -> CIImage? {
             let filtered = filters.apply(filter, to: source)
             let src = filtered.extent
-            guard src.width > 0, src.height > 0 else { return }
+            guard src.width > 0, src.height > 0 else { return nil }
 
             let baseScale = min(dst.width / src.width, dst.height / src.height)
             let scale = baseScale * max(zoom, 1)
             let scaled = filtered.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
             let s = scaled.extent
-            let pointScale = view.contentScaleFactor
             let dx = offset.width  * pointScale
             let dy = offset.height * pointScale
             let tx = (dst.width  - s.width)  / 2 - s.origin.x + dx
             let ty = (dst.height - s.height) / 2 - s.origin.y - dy
-            let centered = scaled.transformed(by: CGAffineTransform(translationX: tx, y: ty))
+            return scaled.transformed(by: CGAffineTransform(translationX: tx, y: ty))
+        }
+
+        // MARK: Đường Simulator — render trên MAIN
+
+        private func drawOnMain(in view: MTKView) {
+            guard let source = currentSource(),
+                  let ciContext,
+                  let commandQueue,
+                  let drawable = view.currentDrawable,
+                  let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+            let dst = view.drawableSize
+            guard dst.width > 0, dst.height > 0,
+                  let centered = centeredImage(source: source, dst: dst, pointScale: view.contentScaleFactor)
+            else { return }
+
+            ciContext.render(centered, to: drawable.texture, commandBuffer: commandBuffer,
+                             bounds: CGRect(origin: .zero, size: dst), colorSpace: colorSpace)
+            commandBuffer.present(drawable)
+            commandBuffer.commit()
+        }
+
+        // MARK: Đường máy thật — render NẶNG ngoài MAIN (gộp về mới nhất)
+
+        private func drawOffMain(in view: MTKView) {
+            guard !inFlight else { pending = true; return }
+            guard let source = currentSource(),
+                  let ciContext,
+                  let commandQueue,
+                  let drawable = view.currentDrawable,
+                  let commandBuffer = commandQueue.makeCommandBuffer() else { return }
+            let dst = view.drawableSize
+            guard dst.width > 0, dst.height > 0,
+                  let centered = centeredImage(source: source, dst: dst, pointScale: view.contentScaleFactor)
+            else { return }
 
             let colorSpace = self.colorSpace
             inFlight = true
             renderQueue.async { [weak self] in
                 autoreleasepool {
-                    // ⬇️ Phần NẶNG — giờ chạy NGOÀI main thread.
-                    ciContext.render(
-                        centered,
-                        to: drawable.texture,
-                        commandBuffer: commandBuffer,
-                        bounds: CGRect(origin: .zero, size: dst),
-                        colorSpace: colorSpace
-                    )
+                    ciContext.render(centered, to: drawable.texture, commandBuffer: commandBuffer,
+                                     bounds: CGRect(origin: .zero, size: dst), colorSpace: colorSpace)
                     commandBuffer.addCompletedHandler { _ in
                         DispatchQueue.main.async {
                             self?.inFlight = false
                             if self?.pending == true {
                                 self?.pending = false
-                                self?.view?.setNeedsDisplay()   // render lại với zoom mới nhất
+                                self?.view?.setNeedsDisplay()
                             }
                         }
                     }
