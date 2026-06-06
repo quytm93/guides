@@ -9,6 +9,7 @@ struct MetalPreviewView: View {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var showTestPicker = false
+    @State private var isInteracting = false
 
     private let maxZoom: CGFloat = 16
 
@@ -32,7 +33,16 @@ struct MetalPreviewView: View {
             // Footprint cập nhật theo SỰ KIỆN (không poll liên tục): khi zoom đổi và
             // sau mỗi lần nạp ảnh (chờ render xong mới đọc). Tránh ép render lại liên tục.
             .task { model.updateFootprint() }
-            .onChange(of: zoom) { _, _ in model.updateFootprint() }
+            // Cập nhật footprint khi NGỪNG tương tác (sau lần render full-res) — tránh
+            // đọc/recompute mỗi frame lúc đang kéo slider.
+            .onChange(of: isInteracting) { _, interacting in
+                if !interacting {
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(300))
+                        model.updateFootprint()
+                    }
+                }
+            }
             .onChange(of: model.info) { _, _ in
                 Task {
                     try? await Task.sleep(for: .milliseconds(400))
@@ -51,7 +61,8 @@ struct MetalPreviewView: View {
                                fullImage: model.fullImage,
                                filter: model.filter,
                                zoom: zoom,
-                               offset: offset)
+                               offset: offset,
+                               interactive: isInteracting)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .gesture(magnify.simultaneously(with: pan))
                     .onTapGesture(count: 2) { resetZoom() }
@@ -74,11 +85,13 @@ struct MetalPreviewView: View {
     private var magnify: some Gesture {
         MagnifyGesture()
             .onChanged { value in
+                isInteracting = true
                 zoom = min(max(lastZoom * value.magnification, 1), maxZoom)
             }
             .onEnded { _ in
                 lastZoom = zoom
                 if zoom == 1 { offset = .zero; lastOffset = .zero }
+                isInteracting = false   // render full-res một lần cho nét
             }
     }
 
@@ -86,10 +99,14 @@ struct MetalPreviewView: View {
         DragGesture()
             .onChanged { value in
                 guard zoom > 1 else { return }   // chỉ kéo khi đã phóng to
+                isInteracting = true
                 offset = CGSize(width: lastOffset.width + value.translation.width,
                                 height: lastOffset.height + value.translation.height)
             }
-            .onEnded { _ in lastOffset = offset }
+            .onEnded { _ in
+                lastOffset = offset
+                isInteracting = false
+            }
     }
 
     private func resetZoom() {
@@ -105,6 +122,7 @@ struct MetalPreviewView: View {
             HStack {
                 Image(systemName: "minus.magnifyingglass")
                 Slider(value: $zoom, in: 1...maxZoom) { editing in
+                    isInteracting = editing
                     if !editing { lastZoom = zoom; if zoom == 1 { offset = .zero; lastOffset = .zero } }
                 }
                 Image(systemName: "plus.magnifyingglass")

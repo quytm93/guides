@@ -24,6 +24,9 @@ struct MetalImageView: UIViewRepresentable {
     var zoom: CGFloat = 1
     /// Độ dịch khi kéo (points, theo hệ UIKit).
     var offset: CGSize = .zero
+    /// Đang tương tác (kéo slider / pinch / pan)? Khi true thì LUÔN dùng bản display
+    /// nhẹ để mỗi frame render nhanh; thả tay mới render full-res một lần cho nét.
+    var interactive: Bool = false
 
     func makeCoordinator() -> Renderer {
         Renderer(filters: FilterService.shared)
@@ -51,13 +54,15 @@ struct MetalImageView: UIViewRepresentable {
             c.fullImage !== fullImage ||
             c.filter != filter ||
             c.zoom != zoom ||
-            c.offset != offset
+            c.offset != offset ||
+            c.interactive != interactive
 
         c.displayImage = displayImage
         c.fullImage = fullImage
         c.filter = filter
         c.zoom = zoom
         c.offset = offset
+        c.interactive = interactive
 
         if needsRedraw { view.setNeedsDisplay() }
     }
@@ -79,6 +84,7 @@ struct MetalImageView: UIViewRepresentable {
         var filter: PhotoFilter = .none
         var zoom: CGFloat = 1
         var offset: CGSize = .zero
+        var interactive = false
 
         init(filters: FilterServing) {
             self.filters = filters
@@ -93,8 +99,9 @@ struct MetalImageView: UIViewRepresentable {
         func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
 
         func draw(in view: MTKView) {
-            // Chọn nguồn theo mức zoom: thấp → display (nhanh), sâu → full-res (chi tiết).
-            let useFull = zoom > fullResZoomThreshold
+            // Chọn nguồn: đang tương tác → LUÔN display (nhanh, mượt). Đứng yên & zoom
+            // sâu → full-res (chi tiết thật). Đây là chìa khóa để kéo slider không lag.
+            let useFull = !interactive && zoom > fullResZoomThreshold
             let source = (useFull ? fullImage : displayImage) ?? fullImage ?? displayImage
 
             guard let source,
