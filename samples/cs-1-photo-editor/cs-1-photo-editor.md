@@ -262,6 +262,9 @@ việc render nặng ở đó sẽ làm kéo zoom giật. Vì vậy:
 - **Simulator:** render trên main + lúc đang kéo thì dùng `displayImage` (`interactive`)
   cho khỏi lag.
 
+> *Trạng thái repo hiện tại:* `draw(in:)` đang gọi thẳng `drawOffMain` (ưu tiên kiểm
+> thử máy thật) ⇒ Simulator sẽ ra màn xám. Chi tiết & cách bật lại: xem **4b**.
+
 Cài đặt: `framebufferOnly=false`, `isPaused=true`, `enableSetNeedsDisplay=true` (tự gọi
 `setNeedsDisplay` để vẽ khi cần — không vẽ thừa). Filter áp dạng `CIImage → CIImage`
 (xem `FilterService`) nên chạy trên GPU.
@@ -288,6 +291,139 @@ không lặp code.
 SwiftUI thuần, `@State private var model = …`, không logic nặng trong view. `RootView`
 là `TabView` bốn tab. `EditorView` có `PhotosPicker` + `ShareLink` (export chạy trên
 simulator). `EditorView` và `MetalPreviewView` dùng chung `FilterBar`.
+
+---
+
+## 4b. Mổ xẻ sâu `MetalImageView`
+
+Đây là file "khó" nhất sample — nơi gặp nhau của **SwiftUI ↔ UIKit ↔ Metal ↔ Core
+Image** và toàn bộ kỹ thuật giữ-mượt. Đi từ trên xuống.
+
+### Cầu nối: `UIViewRepresentable` + `Coordinator`
+`MTKView` là view của UIKit, nên ta bọc nó cho SwiftUI bằng `UIViewRepresentable`.
+- `makeUIView` tạo `MTKView` một lần.
+- `makeCoordinator()` tạo `Renderer` — đây là **bộ não** (giữ trạng thái + vẽ), tồn
+  tại xuyên suốt vòng đời view (SwiftUI không tạo lại mỗi lần body chạy lại).
+- `updateUIView` được gọi **mỗi khi state SwiftUI đổi** → ta đồng bộ tham số xuống
+  `Renderer`.
+
+### `makeUIView` — ý nghĩa từng cờ `MTKView`
+```swift
+view.framebufferOnly = false      // cho phép CIContext GHI thẳng vào texture drawable
+view.isPaused = true              // TẮT vòng lặp vẽ 60fps tự động…
+view.enableSetNeedsDisplay = true // …chỉ vẽ khi ta gọi setNeedsDisplay()
+context.coordinator.view = view   // Renderer giữ weak ref để tự yêu cầu vẽ lại
+```
+- `isPaused=true` + `enableSetNeedsDisplay=true` = **vẽ theo nhu cầu** (như
+  `UIView.setNeedsDisplay`). Ảnh tĩnh thì không tốn GPU/pin; ta toàn quyền điều khiển
+  *khi nào* vẽ — chìa khóa để không render thừa.
+- `framebufferOnly=false` bắt buộc, vì Core Image cần ghi vào `drawable.texture`.
+
+### `updateUIView` — "change-gate" chống render thừa
+```swift
+let changed = c.image !== image || c.zoom != zoom || …   // chỉ những thứ ảnh hưởng HÌNH
+…copy tham số xuống coordinator…
+if changed { view.setNeedsDisplay() }
+```
+SwiftUI gọi `updateUIView` *rất thường* (mỗi lần body tính lại — vd. footprint đổi).
+Nếu cứ thế `setNeedsDisplay` thì ta vẽ lại ảnh full-res vô cớ → đúng cái bug treo máy
+đã gặp. Nên ta **chỉ vẽ lại khi ảnh/filter/zoom/offset thật sự đổi**.
+> Lưu ý nhỏ: `CIImage` là **class** → so sánh bằng `!==` (theo *tham chiếu*), không
+> phải `!=`.
+
+### `Renderer` — trạng thái & khởi tạo
+```swift
+ciContext = CIContext(mtlDevice: device, options: [.cacheIntermediates: false])
+renderQueue = DispatchQueue(label: "…metalRender", qos: .userInteractive)
+```
+- Một `CIContext` GPU **dùng lại** cho cả view (đừng tạo mỗi frame). `cacheIntermediates:
+  false` để không tích RAM.
+- `renderQueue`: hàng đợi **nối tiếp** cho phần render nặng (đường máy thật).
+- `inFlight` / `pending`: cờ điều phối — **chỉ chạm trên main thread** nên không cần khóa.
+
+### `currentSource()` — chọn độ phân giải (LOD)
+```swift
+let useFull = zoom > fullResZoomThreshold        // 2.5×
+return (useFull ? fullImage : displayImage) ?? fullImage ?? displayImage
+```
+Zoom thấp → `displayImage` (2048px, nhẹ). Zoom sâu → `fullImage` (gốc, lazy). Trên
+simulator còn thêm điều kiện `!interactive` (đang kéo thì ép dùng display cho khỏi lag).
+
+### `centeredImage(...)` — toán đặt ảnh (chưa render gì)
+Trả về **một `CIImage` công thức** đã biến đổi để nằm đúng chỗ trong khung `dst`:
+1. `baseScale` = aspect-fit (cạnh dài vừa khung) — giữ kích thước hiển thị **không đổi**
+   dù nguồn là display hay full-res.
+2. `× zoom`.
+3. Canh giữa + cộng `offset` (đổi point→pixel bằng `contentScaleFactor`; **trừ** `dy`
+   vì hệ toạ độ `CIImage` gốc ở **góc dưới-trái**, ngược trục Y với UIKit).
+
+Bước này **rẻ** (chỉ là phép biến đổi lười) → chạy trên main vô tư; phần đắt là lúc
+`ciContext.render` thật sự đọc pixel.
+
+### Hai đường vẽ
+`draw(in:)` (do `MTKView` gọi **trên main**) là *công tắc* chọn đường:
+
+**`drawOnMain` (simulator):** render đồng bộ ngay trên main → present → commit. Đơn
+giản, đáng tin trên Metal phần mềm, nhưng **khóa main** khi ảnh lớn ⇒ phải dựa vào LOD
+proxy lúc kéo để khỏi giật.
+
+**`drawOffMain` (máy thật):** giữ main rảnh, gồm 3 ý:
+```swift
+guard !inFlight else { pending = true; return }   // ① gộp: đang bận thì chỉ ghi nhận
+…lấy drawable + tính centered TRÊN MAIN…           // ② currentDrawable phải lấy ở main
+inFlight = true
+renderQueue.async {                                // ③ phần NẶNG ra khỏi main
+    ciContext.render(centered, to: drawable.texture, …)
+    commandBuffer.addCompletedHandler { _ in
+        DispatchQueue.main.async {                 // xong → mở khoá, render bước mới nhất
+            inFlight = false
+            if pending { pending = false; view.setNeedsDisplay() }
+        }
+    }
+    commandBuffer.present(drawable); commandBuffer.commit()
+}
+```
+- **① Gộp (coalesce):** kéo slider bắn ra hàng chục giá trị zoom/giây. Mỗi lúc chỉ cho
+  **một** lần render chạy; các giá trị đến giữa chừng chỉ bật `pending`. Render xong thì
+  vẽ lại **một lần** với giá trị mới nhất. Bắt buộc vì **pool chỉ có 3 drawable** — ôm
+  nhiều drawable cùng lúc sẽ làm `currentDrawable` trả nil/treo.
+- **② Lấy `currentDrawable` trên main** rồi mới đưa xuống queue: lấy ở thread nền không
+  đáng tin.
+- **③** `ciContext.render` (gồm cả giải mã JPEG vùng nhìn thấy) chạy ở `renderQueue` →
+  main thread không bị khoá → **slider mượt mà vẫn full-res**.
+
+### Vòng đời một lần kéo zoom (đường máy thật)
+```mermaid
+sequenceDiagram
+  participant S as Slider (main)
+  participant D as draw / drawOffMain (main)
+  participant Q as renderQueue (nền)
+  participant G as GPU
+  S->>D: zoom đổi → setNeedsDisplay()
+  alt đang render
+    D->>D: pending = true (gộp, thoát)
+  else rảnh
+    D->>D: lấy drawable + tính centered (rẻ)
+    D->>Q: async (inFlight = true)
+    Q->>G: ciContext.render + present + commit
+    G-->>D: completedHandler → main
+    D->>D: inFlight = false; nếu pending → vẽ lại (zoom mới nhất)
+  end
+```
+
+### Công tắc môi trường & trạng thái hiện tại
+Thiết kế gốc gate bằng `#if targetEnvironment(simulator)` trong `draw(in:)`
+(simulator → `drawOnMain`, máy thật → `drawOffMain`). **Hiện trong repo `draw(in:)`
+đang gọi thẳng `drawOffMain`** (ưu tiên kiểm thử trên máy thật). Hệ quả: chạy trên
+*Simulator* sẽ ra **màn xám** (Metal phần mềm không present được ngoài main). Mở lại
+khối `#if` nếu muốn Simulator hiển thị (qua `drawOnMain`).
+
+### Gotchas (đáng nhớ)
+- `MTKViewDelegate.draw(in:)` luôn được gọi **trên main** — đó là lý do phải tự đẩy
+  phần nặng đi nơi khác.
+- `currentDrawable` lấy trên main; pool chỉ **3 cái** → đừng giữ nhiều.
+- `present`-từ-thread-nền **không hiện trên Simulator** (chỉ máy thật).
+- `CIImage` lazy: tạo/biến đổi đều rẻ; chi phí dồn vào `ciContext.render`.
 
 ---
 
