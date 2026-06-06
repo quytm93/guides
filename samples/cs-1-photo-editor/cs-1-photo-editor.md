@@ -31,7 +31,26 @@ rồi đưa ra **hai cách làm đúng** để giữ footprint thấp:
 |---|---|---|---|
 | ❌ Full-res bitmap trên main thread | ~190 MB + **hang** | đầy đủ | Memory Lab |
 | ✅ **Cách 1** — Downsample (ImageIO, CPU) | ~vài MB | bản thu nhỏ | Memory Lab · Chỉnh ảnh |
-| ✅ **Cách 2** — Render GPU (`MTKView` + `CIContext`) | ~30 MB | **đầy đủ**, zoom được | Metal |
+| ✅ **Cách 2** — Render GPU (`MTKView` + `CIContext`) | ~40–60 MB | **đầy đủ**, zoom/pan được | Metal |
+
+---
+
+## 1b. Khái niệm cốt lõi (cho người mới)
+
+Bốn ý tưởng chi phối mọi tinh chỉnh hiệu năng trong sample này:
+
+1. **Ảnh ≠ file ảnh.** Một file JPEG 10 MB khi *vẽ ra màn hình* sẽ bung thành bitmap
+   `rộng × cao × 4` byte. Ảnh 50MP ≈ **200 MB RAM**. → *Đừng bao giờ giữ bitmap
+   full-res nếu không thật cần.*
+2. **Main thread là luồng vẽ UI.** Mọi việc nặng (giải mã ảnh, filter, render) chạy ở
+   đây sẽ làm **app đứng hình** (hang). → *Đẩy việc nặng sang luồng nền.*
+3. **Tài nguyên đắt thì tạo một lần.** `CIContext` biên dịch cả pipeline Metal, rất
+   tốn. → *Dùng lại, đừng tạo mỗi khung hình.*
+4. **Chỉ trả giá khi thật cần.** Màn hình chỉ ~1–3 triệu pixel; ảnh 50MP là thừa thãi.
+   → *Làm việc ở độ phân giải hiển thị (LOD); full-res chỉ khi export hoặc zoom sâu.*
+
+Sample cho bạn **nhìn thấy & đo** cả 4 điều này ở tab *Memory Lab*, và **2 cách áp
+dụng đúng**: tab *Chỉnh ảnh* (CPU downsample) và tab *Metal* (GPU + LOD + đa luồng).
 
 ---
 
@@ -54,6 +73,8 @@ xcodebuild -scheme PhotoEditorDemo \
 2. Bấm **❌ Cách sai** → vừa bấm vừa thử kéo màn hình: **đứng hình**, kết quả `+~190 MB`.
 3. Bấm **✅ Cách đúng** → mượt, kết quả `+~vài MB`.
 4. Chỉ vào hai dòng kết quả: cùng một ảnh, khác nhau ở *cách nạp & nơi chạy*.
+5. Sang tab **Metal** → **Ảnh test** → chọn ảnh **51MP** → kéo zoom: chi tiết thật
+   hiện ra mà dòng *Footprint* vẫn chỉ ~**40–60 MB**.
 
 ---
 
@@ -65,15 +86,17 @@ MVVM chuẩn nhà trường: **SwiftUI · `@Observable` · async/await · servic
 PhotoEditorDemo/
 ├── App/
 │   ├── PhotoEditorDemoApp.swift     @main entry
-│   └── RootView.swift               TabView: Chỉnh ảnh · Memory Lab · Bài học
+│   └── RootView.swift               TabView: Chỉnh ảnh · Memory Lab · Metal · Bài học
 ├── Core/
 │   ├── Memory/
 │   │   └── MemoryReporter.swift     đọc phys_footprint (như thước đo Xcode)
 │   ├── ImageIO/
 │   │   ├── ImageLoader.swift        downsample qua ImageIO — CÁCH 1
-│   │   └── SyntheticImage.swift     tạo ảnh nặng để demo (không kèm file ảnh)
-│   └── Metal/
-│       └── MetalImageView.swift     MTKView + CIContext — CÁCH 2
+│   │   └── SyntheticImage.swift     tạo ảnh nặng cho Memory Lab (không kèm file)
+│   ├── Metal/
+│   │   └── MetalImageView.swift     MTKView + CIContext + LOD — CÁCH 2
+│   └── TestImages/
+│       └── TestImageStore.swift     tìm & mô tả ảnh test trong bundle (ImageIO)
 ├── Features/
 │   ├── Editor/
 │   │   ├── EditorView.swift         UI chọn ảnh + filter + share
@@ -81,16 +104,18 @@ PhotoEditorDemo/
 │   │   └── FilterService.swift      Core Image, dùng lại 1 CIContext
 │   ├── MemoryLab/
 │   │   ├── MemoryLabView.swift      UI so sánh sai/đúng
-│   │   └── MemoryLabModel.swift     đo bộ nhớ & thời gian
+│   │   └── MemoryLabModel.swift     đo bộ nhớ & thời gian (ảnh synthetic)
 │   ├── MetalPreview/
-│   │   ├── MetalPreviewView.swift   UI render ảnh lớn bằng Metal
-│   │   └── MetalPreviewModel.swift  CIImage lazy + đọc footprint
+│   │   ├── MetalPreviewView.swift   canvas Metal: zoom/pan, nạp ảnh test
+│   │   └── MetalPreviewModel.swift  LOD: displayImage + fullImage (lazy)
 │   ├── Shared/
-│   │   └── FilterBar.swift          thanh filter dùng chung
+│   │   ├── FilterBar.swift          thanh filter dùng chung
+│   │   └── TestImagePickerSheet.swift  chọn ảnh test (dùng chung)
 │   └── About/
-│       └── AboutView.swift          tóm tắt bài học
+│       └── AboutView.swift          tóm tắt bài học + khi nào ImageIO vs Metal
 └── Resources/
-    └── Assets.xcassets              AppIcon + AccentColor
+    ├── Assets.xcassets             AppIcon + AccentColor
+    └── TestImages/                 ảnh thật .jpg đóng gói sẵn (17–51 MP)
 ```
 
 ```mermaid
@@ -201,31 +226,54 @@ poller.cancel()
 Poller tick được trong lúc xử lý ⇒ main thread không bị block. Đó là sự khác biệt
 *nhìn thấy được* so với `runNaive`.
 
-### `Core/Metal/MetalImageView.swift` — **tùy chọn 2: render bằng GPU**
-`UIViewRepresentable` bọc một `MTKView`. Một `Renderer` (MTKViewDelegate) dùng
-`CIContext(mtlDevice:)` để vẽ `CIImage` thẳng vào texture của drawable:
+### `Core/Metal/MetalImageView.swift` — **tùy chọn 2: GPU + LOD + đa luồng**
+`UIViewRepresentable` bọc `MTKView`; `Renderer` (MTKViewDelegate) dùng
+`CIContext(mtlDevice:)` vẽ `CIImage` thẳng vào texture của drawable, **chỉ ở kích
+thước đang hiển thị**:
 
 ```swift
-ciContext.render(centered,
-                 to: drawable.texture,
-                 commandBuffer: commandBuffer,
-                 bounds: CGRect(origin: .zero, size: dst),   // chỉ kích thước hiển thị
-                 colorSpace: colorSpace)
+ciContext.render(centered, to: drawable.texture, commandBuffer: commandBuffer,
+                 bounds: CGRect(origin: .zero, size: dst), colorSpace: colorSpace)
 ```
 
-Vì sao footprint vẫn thấp dù ảnh **48MP**:
-- `CIImage` là *công thức* lazy — chưa bung bitmap nào vào RAM.
-- Core Image chỉ render **đúng kích thước drawable** và **tự tile** trên GPU; không
-  bao giờ giữ cả ảnh full-res cùng lúc.
-- Ta KHÔNG tạo `UIImage`/`CGImage` full-res trong code ⇒ không có "spike".
+Footprint thấp vì: `CIImage` là *công thức* lazy; Core Image render đúng kích thước
+drawable và **tự tile** trên GPU; ta không bao giờ tạo `UIImage/CGImage` full-res.
 
-Cài đặt quan trọng: `framebufferOnly = false` (để CIContext ghi vào texture),
-`enableSetNeedsDisplay = true` + `isPaused = true` (chỉ vẽ khi đổi ảnh/filter → tiết
-kiệm GPU/pin). Filter áp dưới dạng `CIImage → CIImage` (xem `FilterService` bên dưới)
-nên hoàn toàn chạy trên GPU.
+**(a) Level-of-Detail — hai nguồn ảnh.** Render *cả khung* một ảnh 50MP ở zoom 1 vẫn
+nặng (vùng cần xử lý = toàn ảnh). Nên view nhận 2 nguồn:
+- `displayImage` — bản downsample ~2048px: dùng khi **zoom thấp** → render nhanh.
+- `fullImage` — `CIImage` gốc lazy: chỉ dùng khi **zoom > ~2.5×**, lúc đó vùng nhìn
+  thấy (ROI) chỉ là một mẩu nhỏ nên vẫn nhanh mà cho **chi tiết thật**.
 
-> **Đo thực tế trong app:** tạo ảnh 48MP (6000×8000) rồi xem tab Metal → footprint
-> chỉ ~**30 MB**, so với ~**190 MB** của cách bung full-res. Cùng một ảnh.
+**(b) Render ở đâu — tùy môi trường.** `MTKView` gọi `draw(in:)` trên **main thread**;
+việc render nặng ở đó sẽ làm kéo zoom giật. Vì vậy:
+
+```swift
+#if targetEnvironment(simulator)
+    drawOnMain(in: view)    // Simulator: Metal phần mềm không present được ngoài main
+#else
+    drawOffMain(in: view)   // Máy thật: đẩy render sang serial queue riêng
+#endif
+```
+
+- **Máy thật:** `ciContext.render` chạy trên **serial queue** → main rảnh → kéo slider
+  **mượt mà vẫn full-res**. Cờ `inFlight`/`pending` đảm bảo mỗi lúc chỉ một drawable,
+  và **gộp** các giá trị zoom đến giữa chừng về giá trị mới nhất (pool chỉ có 3 drawable).
+- **Simulator:** render trên main + lúc đang kéo thì dùng `displayImage` (`interactive`)
+  cho khỏi lag.
+
+Cài đặt: `framebufferOnly=false`, `isPaused=true`, `enableSetNeedsDisplay=true` (tự gọi
+`setNeedsDisplay` để vẽ khi cần — không vẽ thừa). Filter áp dạng `CIImage → CIImage`
+(xem `FilterService`) nên chạy trên GPU.
+
+> **Đo thực tế:** ảnh test **51MP** (5832×8748) ở tab Metal → footprint ~**40–60 MB**
+> ở *mọi* mức zoom, so với ~**190 MB** của cách bung full-res. Cùng một ảnh.
+
+### `Core/TestImages/TestImageStore.swift` + `Features/Shared/TestImagePickerSheet.swift`
+Tab *Chỉnh ảnh* và *Metal* nạp **ảnh thật đóng gói sẵn** (`Resources/TestImages`, 17–51
+MP) để test. `TestImageStore` quét các `.jpg` trong bundle, đọc kích thước qua ImageIO
+(**chỉ header, không giải mã**), và tạo thumbnail downsample cho picker — bản thân
+picker cũng tuân thủ bài học "không bung full-res".
 
 ### `FilterService` có hai cửa
 Sau refactor, service cung cấp:
@@ -250,9 +298,10 @@ simulator). `EditorView` và `MetalPreviewView` dùng chung `FilterBar`.
 | 1 | **Downsample khi nạp** | Ảnh 48MP ≈ 190 MB/bitmap → vượt RAM → bị kill | `ImageLoader.swift` |
 | 2 | **Xử lý ngoài main thread** | Filter nặng trên main = hang vài giây | `Task.detached` trong các Model |
 | 3 | **Dùng lại `CIContext`** | Context mới mỗi frame = biên dịch lại Metal, giật | `FilterService.swift` |
-| 4 | **Full-res chỉ khi export** | Preview thấp res; full-res (nên tile) chỉ ở bước cuối | `previewMaxPixel` |
+| 4 | **Full-res chỉ khi cần** | Preview ở độ phân giải hiển thị (LOD); full-res chỉ khi zoom sâu / export | `previewMaxPixel`, `MetalImageView` |
+| 5 | **Render canvas mượt** | Việc nặng lúc đang kéo zoom phải ra khỏi main (queue riêng) hoặc dùng proxy; chỉ vẽ khi có thay đổi | `MetalImageView.swift` |
 
-Quy tắc rút gọn: **"Downsample sớm, xử lý nền, đo bằng số thật."**
+Quy tắc rút gọn: **"Downsample sớm, xử lý nền, vẽ đúng lúc, đo bằng số thật."**
 
 ---
 
@@ -281,17 +330,22 @@ hoặc lưới ảnh — không cần soi chi tiết gốc. (Tab *Chỉnh ảnh*
 chỉnh, rồi **một lần** `CIContext.render` full-res ra file ở bước **export**.
 
 > Lưu ý: `MetalView` không "miễn phí" — render **cả khung** một ảnh 50MP ở zoom 1
-> rất nặng (ROI = toàn ảnh). Vì vậy tab Metal dùng **Level-of-Detail (LOD)**:
-> - Zoom thấp → render bản **display** đã downsample (vd. 2048px) → nhanh.
-> - Zoom sâu (> ~2.5×) → render **full-res** nhưng ROI chỉ là một mẩu nhỏ → vẫn nhanh
->   và cho chi tiết thật.
+> rất nặng (ROI = toàn ảnh). Sample xử lý bằng **3 lớp**:
+> 1. **LOD:** zoom thấp dùng bản display 2048px; zoom sâu (> ~2.5×) mới dùng full-res
+>    (ROI nhỏ → vẫn nhanh, cho chi tiết thật).
+> 2. **Đa luồng (máy thật):** đẩy `ciContext.render` sang serial queue, gộp về zoom
+>    mới nhất → kéo slider mượt mà vẫn full-res. *(Simulator: render trên main + dùng
+>    proxy lúc kéo, vì Metal phần mềm không present được ngoài main.)*
+> 3. **Vẽ đúng lúc:** chỉ `setNeedsDisplay` khi ảnh/filter/zoom/offset đổi thật; đọc
+>    footprint theo sự kiện, không poll.
 >
-> Đây cũng là cách editor thật làm. Footprint vẫn thấp (~40–60 MB) ở mọi mức zoom.
+> Footprint vẫn ~40–60 MB ở mọi mức zoom.
 >
-> **Bẫy hiệu năng đã sửa trong sample:** ban đầu vòng lặp đọc footprint mỗi 0.5s ép
-> `MTKView` render lại ảnh full-res *liên tục trên main thread* → treo máy, CPU 100%.
-> Sửa bằng: (1) chỉ `setNeedsDisplay` khi ảnh/filter/zoom/offset đổi thật; (2) đọc
-> footprint theo sự kiện thay vì poll; (3) LOD ở trên.
+> **Bẫy đã gặp & sửa trong sample (đáng để dạy):**
+> - Vòng poll footprint 0.5s ép `MTKView` render full-res *liên tục trên main* → treo
+>   máy, CPU 100%. → bỏ poll, dùng sự kiện + chỉ vẽ khi đổi.
+> - Kéo slider giật do mỗi bước zoom render lại trên main. → đẩy render ra queue riêng
+>   (máy thật) / dùng proxy (simulator).
 
 ---
 
