@@ -19,11 +19,21 @@ struct MetalPreviewView: View {
                 canvas
                 FilterBar(selection: model.filter) { model.filter = $0 }
                 if model.hasImage { zoomControls }
-                controls
                 footer
             }
             .padding()
             .navigationTitle("Metal Preview")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showTestPicker = true
+                    } label: {
+                        Label("Ảnh test", systemImage: "photo.stack")
+                    }
+                    .disabled(model.isGenerating)
+                }
+            }
             .sheet(isPresented: $showTestPicker) {
                 TestImagePickerSheet { testImage in
                     resetZoom()
@@ -66,11 +76,14 @@ struct MetalPreviewView: View {
                     .gesture(magnify.simultaneously(with: pan))
                     .onTapGesture(count: 2) { resetZoom() }
             } else {
-                ContentUnavailableView(
-                    "Chưa có ảnh",
-                    systemImage: "cpu",
-                    description: Text("Tạo ảnh lớn để xem Metal render mà vẫn ít RAM.")
-                )
+                ContentUnavailableView {
+                    Label("Chưa có ảnh", systemImage: "cpu")
+                } description: {
+                    Text("Chọn ảnh test để xem Metal render mà vẫn ít RAM.")
+                } actions: {
+                    Button("Chọn ảnh test") { showTestPicker = true }
+                        .buttonStyle(.borderedProminent)
+                }
             }
             if model.isGenerating {
                 ProgressView().controlSize(.large)
@@ -133,41 +146,6 @@ struct MetalPreviewView: View {
             Text("Pinch hoặc kéo thanh để zoom · kéo ảnh để di chuyển · chạm 2 lần để reset")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
-        }
-    }
-
-    private var controls: some View {
-        VStack(spacing: 10) {
-            HStack {
-                Text("Độ phân giải nguồn")
-                Spacer()
-                Text("\(Int(model.sourceMegapixels)) MP")
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-            }
-            Slider(value: $model.sourceMegapixels, in: 12...48, step: 4)
-            Button {
-                resetZoom()
-                Task { await model.generate() }
-            } label: {
-                if model.isGenerating {
-                    ProgressView()
-                } else {
-                    Label("Tạo & render ảnh \(Int(model.sourceMegapixels))MP", systemImage: "cpu")
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .disabled(model.isGenerating)
-
-            Button {
-                showTestPicker = true
-            } label: {
-                Label("Chọn ảnh test (ảnh thật)", systemImage: "photo.stack")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-            .disabled(model.isGenerating)
         }
     }
 

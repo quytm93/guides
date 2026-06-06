@@ -5,7 +5,6 @@ import CoreImage
 @Observable
 final class MetalPreviewModel {
 
-    var sourceMegapixels: Double = 48
     var filter: PhotoFilter = .none
 
     /// Bản nhẹ để xem vừa khung / zoom thấp (render nhanh).
@@ -14,36 +13,13 @@ final class MetalPreviewModel {
     private(set) var fullImage: CIImage?
 
     private(set) var isGenerating = false
-    private(set) var info = "Chưa có ảnh. Tạo một ảnh lớn hoặc chọn ảnh test."
+    private(set) var info = "Chưa có ảnh. Chọn ảnh test để xem Metal render."
     private(set) var footprintText = ""
 
     /// Cạnh dài nhất của bản display — đủ nét cho zoom thấp, đủ nhẹ cho RAM/CPU.
     private let displayMaxPixel: CGFloat = 2048
 
     var hasImage: Bool { fullImage != nil || displayImage != nil }
-
-    // MARK: - Tạo ảnh synthetic
-
-    func generate() async {
-        isGenerating = true
-        defer { isGenerating = false }
-
-        let mp = sourceMegapixels
-        let maxPixel = displayMaxPixel
-        let (display, full) = await Task.detached(priority: .userInitiated) { () -> (CIImage?, CIImage?) in
-            let data = SyntheticImage.makeJPEG(megapixels: mp)
-            let display = ImageLoader.downsample(data: data, maxPixel: maxPixel).flatMap { CIImage(image: $0) }
-            let full = CIImage(data: data)
-            return (display, full)
-        }.value
-
-        displayImage = display ?? full
-        fullImage = full
-        let size = SyntheticImage.pixelSize(megapixels: mp)
-        info = String(format: "Nguồn %.0f MP · %d×%d px · Metal (preview %.0fpx · zoom sâu = full-res)",
-                      mp, Int(size.width), Int(size.height), displayMaxPixel)
-        updateFootprint()
-    }
 
     // MARK: - Nạp ảnh test thật
 
