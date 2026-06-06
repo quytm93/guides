@@ -396,18 +396,18 @@ renderQueue.async {                                // ③ phần NẶNG ra khỏ
 ```mermaid
 sequenceDiagram
   participant S as Slider (main)
-  participant D as draw / drawOffMain (main)
+  participant D as drawOffMain (main)
   participant Q as renderQueue (nền)
   participant G as GPU
-  S->>D: zoom đổi → setNeedsDisplay()
-  alt đang render
-    D->>D: pending = true (gộp, thoát)
+  S->>D: zoom đổi, gọi setNeedsDisplay
+  alt đang render (inFlight)
+    D->>D: pending = true rồi thoát
   else rảnh
-    D->>D: lấy drawable + tính centered (rẻ)
-    D->>Q: async (inFlight = true)
-    Q->>G: ciContext.render + present + commit
-    G-->>D: completedHandler → main
-    D->>D: inFlight = false; nếu pending → vẽ lại (zoom mới nhất)
+    D->>D: lấy drawable, tính centered (rẻ)
+    D->>Q: async, đặt inFlight = true
+    Q->>G: ciContext.render, present, commit
+    G-->>D: completedHandler về main
+    D->>D: inFlight = false, nếu pending thì vẽ lại
   end
 ```
 
