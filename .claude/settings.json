@@ -35,7 +35,11 @@
       "Bash(git -c core.pager=cat diff samples/cs-1-photo-editor/PhotoEditorDemo/Core/Metal/MetalImageView.swift)",
       "Bash(awk '/Lesson 18|bai-18|phan-cases|phan-perf|tong-ket/{p=1} p' index.html)",
       "Bash(awk '/Lesson 11/{p=1} /phan-cases/{p=0} p' index.html)",
-      "Bash(cd /Users/quytran/Workshop/lessons && rm -f bai-*.html tong-ket.html && echo \"--- remaining files in lessons/ ---\" && ls)"
+      "Bash(cd /Users/quytran/Workshop/lessons && rm -f bai-*.html tong-ket.html && echo \"--- remaining files in lessons/ ---\" && ls)",
+      "Bash(grep -noE '#[0-9a-fA-F]{3,6}' css/style.css)",
+      "Bash(sort -t: -k1 -n)",
+      "Bash(uniq -c -f1)",
+      "Bash(grep -nE '#[0-9a-fA-F]{3,6}' css/style.css)"
     ],
     "additionalDirectories": [
       "/Users/quytran/Workshop"
