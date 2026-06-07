@@ -41,7 +41,9 @@
       "Bash(uniq -c -f1)",
       "Bash(grep -nE '#[0-9a-fA-F]{3,6}' css/style.css)",
       "Bash(grep -nE 'style.css|<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|slideshow.js|<title>|lnav-btn|href=' bai-1.html)",
-      "Bash(grep -nE '<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|lnav-btn|href=\"bai|kicker|<title>' bai-2.html)"
+      "Bash(grep -nE '<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|lnav-btn|href=\"bai|kicker|<title>' bai-2.html)",
+      "Bash(python3 /tmp/renumber_cs.py)",
+      "Bash(sort -t- -k2 -n)"
     ],
     "additionalDirectories": [
       "/Users/quytran/Workshop"
