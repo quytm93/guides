@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thuật ngữ SwiftUI — Từ điển nhanh (Xcode 26 · iOS 17+)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .gloss-badge { display:inline-block; font-size:0.62rem; font-weight:700; letter-spacing:0.04em;
+      text-transform:uppercase; padding:0.14rem 0.5rem; border-radius:999px; vertical-align:middle; margin-left:0.45rem; }
+    .badge-new { background: rgba(48,209,88,0.16); color: var(--accent-3); }
+    .badge-legacy { background: var(--surface-2); color: var(--muted); border:1px solid var(--border); }
+    .card h3 { font-size:1.05rem; margin-bottom:0.55rem; line-height:1.35; }
+    .card p { margin:0; }
+    .card p + p { margin-top:0.45rem; }
+    .gloss-sec { margin-top:2.8rem; scroll-margin-top:1.5rem; }
+    .gloss-count { color:var(--muted); font-weight:400; }
+  </style>
+</head>
+<body class="page-home">
+
+  <div class="home">
+
+    <!-- Hero -->
+    <header class="home-hero">
+      <span class="kicker">Từ điển thuật ngữ · SwiftUI · Xcode 26 · iOS 17+</span>
+      <h1>Thuật ngữ <span class="grad">SwiftUI</span></h1>
+      <p>Tra nhanh các từ khoá quan trọng nhất khi dựng giao diện SwiftUI. Mỗi mục có <strong>“Là gì”</strong> (định nghĩa) và <strong>“Dùng khi”</strong> (công dụng). Tên API giữ nguyên tiếng Anh.</p>
+      <div class="home-badges">
+        <span class="pill">80+ thuật ngữ</span>
+        <span class="pill pill--ghost">iOS 17+</span>
+        <span class="pill pill--ghost">Observation · Xcode 26</span>
+      </div>
+    </header>
+
+    <!-- Jump nav -->
+    <section style="margin-bottom:2.4rem;">
+      <span class="kicker">Mục lục</span>
+      <h2 style="margin:0.3rem 0 1.1rem;">10 nhóm thuật ngữ</h2>
+      <nav class="roadmap" aria-label="Nhóm thuật ngữ">
+        <a class="roadmap-step" href="#s1"><span class="rs-k">Nhóm 1</span><span class="rs-t">Cốt lõi</span><span class="rs-d">View · body</span></a>
+        <a class="roadmap-step" href="#s2"><span class="rs-k">Nhóm 2</span><span class="rs-t">State &amp; dữ liệu</span><span class="rs-d">@State · @Observable</span></a>
+        <a class="roadmap-step" href="#s3"><span class="rs-k">Nhóm 3</span><span class="rs-t">Bố cục</span><span class="rs-d">VStack · frame</span></a>
+        <a class="roadmap-step" href="#s4"><span class="rs-k">Nhóm 4</span><span class="rs-t">Danh sách</span><span class="rs-d">List · ForEach</span></a>
+        <a class="roadmap-step" href="#s5"><span class="rs-k">Nhóm 5</span><span class="rs-t">Điều hướng</span><span class="rs-d">NavigationStack · sheet</span></a>
+        <a class="roadmap-step" href="#s6"><span class="rs-k">Nhóm 6</span><span class="rs-t">Điều khiển</span><span class="rs-d">Button · Picker</span></a>
+        <a class="roadmap-step" href="#s7"><span class="rs-k">Nhóm 7</span><span class="rs-t">Giao diện &amp; style</span><span class="rs-d">background · Material</span></a>
+        <a class="roadmap-step" href="#s8"><span class="rs-k">Nhóm 8</span><span class="rs-t">Animation</span><span class="rs-d">withAnimation · spring</span></a>
+        <a class="roadmap-step" href="#s9"><span class="rs-k">Nhóm 9</span><span class="rs-t">Hiệu ứng &amp; vòng đời</span><span class="rs-d">task · onChange</span></a>
+        <a class="roadmap-step" href="#s10"><span class="rs-k">Nhóm 10</span><span class="rs-t">Vẽ &amp; nâng cao</span><span class="rs-d">Canvas · Charts</span></a>
+      </nav>
+      <p class="map-hint">🟢 <span class="gloss-badge badge-new">iOS 17+</span> = mới/khuyến nghị · ⚪️ <span class="gloss-badge badge-legacy">Kế thừa</span> = code cũ, không cần học trước.</p>
+    </section>
+
+    <!-- ===== Nhóm 1: Cốt lõi ===== -->
+    <section id="s1" class="gloss-sec">
+      <div class="section-head"><h2>1 · Cốt lõi</h2><span class="sub gloss-count"><strong>Core concepts</strong> · Những khái niệm nền tảng của SwiftUI</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>View</code></h3><p><strong>Là gì:</strong> Giao thức mô tả một mảnh giao diện. Mọi thành phần UI đều là <code>View</code>.</p><p><strong>Dùng khi:</strong> Tạo màn hình/thành phần riêng bằng <code>struct ... : View</code>.</p></div>
+        <div class="card"><h3><code>body</code></h3><p><strong>Là gì:</strong> Thuộc tính tính toán mô tả nội dung của một View.</p><p><strong>Dùng khi:</strong> Nơi bạn “vẽ” giao diện — SwiftUI gọi lại mỗi khi state đổi.</p></div>
+        <div class="card"><h3><code>some View</code></h3><p><strong>Là gì:</strong> Kiểu trả về mờ (opaque) — “một View cụ thể nào đó”.</p><p><strong>Dùng khi:</strong> Kiểu trả về của <code>body</code> &amp; hàm tạo View.</p></div>
+        <div class="card"><h3><code>@ViewBuilder</code></h3><p><strong>Là gì:</strong> Bộ dựng cho phép viết nhiều View liên tiếp trong một khối.</p><p><strong>Dùng khi:</strong> Tạo hàm/khởi tạo nhận nội dung View (như <code>VStack { ... }</code>).</p></div>
+        <div class="card"><h3>Modifier</h3><p><strong>Là gì:</strong> Hàm <code>.something()</code> trả về View đã chỉnh sửa (thứ tự rất quan trọng).</p><p><strong>Dùng khi:</strong> Tuỳ biến mọi thứ: <code>.padding()</code>, <code>.foregroundStyle()</code>…</p></div>
+        <div class="card"><h3><code>ViewModifier</code></h3><p><strong>Là gì:</strong> Giao thức để gói một nhóm modifier thành style tái sử dụng.</p><p><strong>Dùng khi:</strong> Áp dụng cùng một “bộ trang trí” cho nhiều View.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 2: State & dữ liệu ===== -->
+    <section id="s2" class="gloss-sec">
+      <div class="section-head"><h2>2 · State &amp; luồng dữ liệu</h2><span class="sub gloss-count"><strong>State &amp; data flow</strong> · Trái tim của SwiftUI — UI tự cập nhật theo dữ liệu</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>@State</code></h3><p><strong>Là gì:</strong> Nguồn chân lý cục bộ do chính View sở hữu.</p><p><strong>Dùng khi:</strong> Lưu trạng thái nhỏ riêng của một View (toggle, text nhập…).</p></div>
+        <div class="card"><h3><code>@Binding</code></h3><p><strong>Là gì:</strong> Tham chiếu hai chiều tới state của View khác.</p><p><strong>Dùng khi:</strong> Cho View con đọc &amp; ghi state của View cha (truyền bằng <code>$</code>).</p></div>
+        <div class="card"><h3><code>@Observable</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Macro (Observation) biến class thường thành nguồn dữ liệu theo dõi được.</p><p><strong>Dùng khi:</strong> Tạo ViewModel hiện đại — thay cho <code>ObservableObject</code>.</p></div>
+        <div class="card"><h3><code>@Bindable</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Tạo binding (<code>$</code>) tới thuộc tính của một đối tượng <code>@Observable</code>.</p><p><strong>Dùng khi:</strong> Cần chỉnh sửa trực tiếp field của model <code>@Observable</code> trong form.</p></div>
+        <div class="card"><h3><code>@Environment</code></h3><p><strong>Là gì:</strong> Đọc giá trị dùng chung từ môi trường (colorScheme, dismiss, modelContext…).</p><p><strong>Dùng khi:</strong> Lấy thông tin/hành vi hệ thống mà không truyền tay qua nhiều tầng.</p></div>
+        <div class="card"><h3><code>@AppStorage</code></h3><p><strong>Là gì:</strong> Property wrapper đọc/ghi <code>UserDefaults</code>, tự cập nhật UI.</p><p><strong>Dùng khi:</strong> Lưu cài đặt nhỏ bền sau khi tắt app (theme, lần đầu mở…).</p></div>
+        <div class="card"><h3><code>@SceneStorage</code></h3><p><strong>Là gì:</strong> Lưu state theo từng scene để khôi phục khi app bị tắt nền.</p><p><strong>Dùng khi:</strong> Giữ vị trí cuộn, tab đang chọn… qua các lần khởi động lại.</p></div>
+        <div class="card"><h3><code>@Query</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Lấy dữ liệu SwiftData và tự cập nhật View khi dữ liệu đổi.</p><p><strong>Dùng khi:</strong> Hiển thị danh sách bản ghi từ cơ sở dữ liệu SwiftData.</p></div>
+        <div class="card"><h3><code>ObservableObject</code> <span class="gloss-badge badge-legacy">Kế thừa</span></h3><p><strong>Là gì:</strong> Giao thức ViewModel kiểu cũ với <code>@Published</code>.</p><p><strong>Dùng khi:</strong> Đọc code cũ; dự án mới dùng <code>@Observable</code>.</p></div>
+        <div class="card"><h3><code>@StateObject</code> / <code>@ObservedObject</code> <span class="gloss-badge badge-legacy">Kế thừa</span></h3><p><strong>Là gì:</strong> Giữ &amp; theo dõi một <code>ObservableObject</code> (sở hữu vs tham chiếu).</p><p><strong>Dùng khi:</strong> Cặp đôi đi với <code>ObservableObject</code> cũ; nay thay bằng <code>@State</code> + <code>@Observable</code>.</p></div>
+        <div class="card"><h3><code>@EnvironmentObject</code> <span class="gloss-badge badge-legacy">Kế thừa</span></h3><p><strong>Là gì:</strong> Tiêm một <code>ObservableObject</code> dùng chung qua môi trường.</p><p><strong>Dùng khi:</strong> Code cũ; nay dùng <code>@Environment</code> với kiểu <code>@Observable</code>.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 3: Bố cục ===== -->
+    <section id="s3" class="gloss-sec">
+      <div class="section-head"><h2>3 · Bố cục</h2><span class="sub gloss-count"><strong>Layout</strong> · Sắp xếp View trên màn hình</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>VStack</code> / <code>HStack</code> / <code>ZStack</code></h3><p><strong>Là gì:</strong> Xếp View theo chiều dọc / ngang / chồng lên nhau.</p><p><strong>Dùng khi:</strong> Bố cục cơ bản cho mọi màn hình.</p></div>
+        <div class="card"><h3><code>Spacer</code></h3><p><strong>Là gì:</strong> Khoảng trống co giãn đẩy các View ra xa nhau.</p><p><strong>Dùng khi:</strong> Đẩy nội dung sang hai mép, căn giữa linh hoạt.</p></div>
+        <div class="card"><h3><code>.padding()</code></h3><p><strong>Là gì:</strong> Thêm khoảng đệm quanh View.</p><p><strong>Dùng khi:</strong> Tạo khoảng thở cho nội dung; chỉ định cạnh &amp; độ lớn.</p></div>
+        <div class="card"><h3><code>.frame()</code></h3><p><strong>Là gì:</strong> Đặt kích thước/giới hạn (width, height, min/max) &amp; căn chỉnh.</p><p><strong>Dùng khi:</strong> Cố định kích thước hoặc cho View chiếm tối đa không gian.</p></div>
+        <div class="card"><h3>Alignment</h3><p><strong>Là gì:</strong> Quy tắc căn chỉnh trong stack/frame (leading, center, trailing…).</p><p><strong>Dùng khi:</strong> Canh lề nội dung theo ý muốn trong layout.</p></div>
+        <div class="card"><h3><code>GeometryReader</code></h3><p><strong>Là gì:</strong> Cho biết kích thước/vị trí không gian được cấp.</p><p><strong>Dùng khi:</strong> Bố cục phụ thuộc kích thước màn hình (dùng tiết kiệm vì tốn kém).</p></div>
+        <div class="card"><h3><code>Grid</code> / <code>LazyVGrid</code></h3><p><strong>Là gì:</strong> Bố cục dạng lưới. <code>Lazy*</code> chỉ dựng ô khi cần.</p><p><strong>Dùng khi:</strong> Lưới ảnh, thư viện, dashboard nhiều ô.</p></div>
+        <div class="card"><h3><code>LazyVStack</code> / <code>LazyHStack</code></h3><p><strong>Là gì:</strong> Stack chỉ dựng phần tử khi cuộn tới (tiết kiệm bộ nhớ).</p><p><strong>Dùng khi:</strong> Danh sách dài bên trong <code>ScrollView</code>.</p></div>
+        <div class="card"><h3><code>ScrollView</code></h3><p><strong>Là gì:</strong> Vùng cuộn được theo chiều dọc/ngang.</p><p><strong>Dùng khi:</strong> Nội dung dài hơn màn hình &amp; không cần tính năng của <code>List</code>.</p></div>
+        <div class="card"><h3><code>Layout</code> protocol</h3><p><strong>Là gì:</strong> Giao thức tự định nghĩa thuật toán bố cục riêng.</p><p><strong>Dùng khi:</strong> Cần layout đặc biệt như flow-layout (xếp thẻ tự xuống dòng).</p></div>
+        <div class="card"><h3>Safe area</h3><p><strong>Là gì:</strong> Vùng an toàn tránh tai thỏ/Home indicator. <code>.ignoresSafeArea()</code> để tràn ra ngoài.</p><p><strong>Dùng khi:</strong> Ảnh nền/màu tràn viền nhưng nội dung vẫn nằm trong vùng an toàn.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 4: Danh sách ===== -->
+    <section id="s4" class="gloss-sec">
+      <div class="section-head"><h2>4 · Danh sách</h2><span class="sub gloss-count"><strong>Lists</strong> · Hiển thị tập dữ liệu</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>List</code></h3><p><strong>Là gì:</strong> Danh sách cuộn tối ưu, có style hệ thống &amp; nhiều tính năng sẵn.</p><p><strong>Dùng khi:</strong> Hiển thị danh sách dữ liệu, hỗ trợ vuốt xoá, kéo sắp xếp.</p></div>
+        <div class="card"><h3><code>ForEach</code></h3><p><strong>Là gì:</strong> Lặp qua dữ liệu để sinh ra nhiều View.</p><p><strong>Dùng khi:</strong> Render từng phần tử (cần dữ liệu <code>Identifiable</code>).</p></div>
+        <div class="card"><h3><code>Section</code></h3><p><strong>Là gì:</strong> Nhóm các hàng có tiêu đề/chân trong <code>List</code> hoặc form.</p><p><strong>Dùng khi:</strong> Chia danh sách thành các nhóm rõ ràng.</p></div>
+        <div class="card"><h3><code>.swipeActions</code></h3><p><strong>Là gì:</strong> Thêm nút khi vuốt ngang một hàng.</p><p><strong>Dùng khi:</strong> Xoá, lưu trữ, đánh dấu… ngay trên hàng danh sách.</p></div>
+        <div class="card"><h3><code>.refreshable</code></h3><p><strong>Là gì:</strong> Thêm cử chỉ kéo-để-làm-mới (pull to refresh), dùng <code>async</code>.</p><p><strong>Dùng khi:</strong> Tải lại dữ liệu mới từ server cho danh sách.</p></div>
+        <div class="card"><h3><code>.searchable</code></h3><p><strong>Là gì:</strong> Thêm thanh tìm kiếm chuẩn hệ thống cho danh sách.</p><p><strong>Dùng khi:</strong> Cho phép lọc/tìm trong danh sách dài.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 5: Điều hướng & trình bày ===== -->
+    <section id="s5" class="gloss-sec">
+      <div class="section-head"><h2>5 · Điều hướng &amp; trình bày</h2><span class="sub gloss-count"><strong>Navigation &amp; presentation</strong> · Chuyển màn hình &amp; hiện lớp phủ</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>NavigationStack</code></h3><p><strong>Là gì:</strong> Ngăn xếp điều hướng đẩy/đẩy-ngược màn hình (thay <code>NavigationView</code> cũ).</p><p><strong>Dùng khi:</strong> Luồng đi sâu vào chi tiết: danh sách → chi tiết.</p></div>
+        <div class="card"><h3><code>NavigationLink</code></h3><p><strong>Là gì:</strong> Liên kết bấm vào để đẩy sang màn hình khác.</p><p><strong>Dùng khi:</strong> Mở chi tiết một mục trong danh sách.</p></div>
+        <div class="card"><h3><code>.navigationDestination</code></h3><p><strong>Là gì:</strong> Khai báo màn hình đích theo kiểu dữ liệu (điều hướng theo giá trị).</p><p><strong>Dùng khi:</strong> Điều hướng linh hoạt, theo lập trình thay vì gắn cứng.</p></div>
+        <div class="card"><h3><code>NavigationSplitView</code></h3><p><strong>Là gì:</strong> Bố cục nhiều cột (sidebar – nội dung – chi tiết).</p><p><strong>Dùng khi:</strong> App cho iPad/Mac cần giao diện hai/ba cột.</p></div>
+        <div class="card"><h3><code>NavigationPath</code></h3><p><strong>Là gì:</strong> Mảng biểu diễn ngăn xếp điều hướng, sửa được bằng code.</p><p><strong>Dùng khi:</strong> Deep link, “về gốc”, hoặc khôi phục luồng điều hướng.</p></div>
+        <div class="card"><h3><code>TabView</code></h3><p><strong>Là gì:</strong> Thanh tab chuyển giữa các khu vực chính của app.</p><p><strong>Dùng khi:</strong> App có nhiều mục lớn (Trang chủ, Tìm kiếm, Hồ sơ…).</p></div>
+        <div class="card"><h3><code>.sheet</code></h3><p><strong>Là gì:</strong> Trình bày màn hình dạng tấm trượt lên từ dưới.</p><p><strong>Dùng khi:</strong> Form thêm/sửa, màn hình phụ có thể đóng lại.</p></div>
+        <div class="card"><h3><code>.fullScreenCover</code></h3><p><strong>Là gì:</strong> Như sheet nhưng phủ kín toàn màn hình.</p><p><strong>Dùng khi:</strong> Onboarding, đăng nhập, trải nghiệm chiếm trọn màn hình.</p></div>
+        <div class="card"><h3><code>.alert</code></h3><p><strong>Là gì:</strong> Hộp thoại cảnh báo chuẩn hệ thống.</p><p><strong>Dùng khi:</strong> Xác nhận hành động, báo lỗi quan trọng.</p></div>
+        <div class="card"><h3><code>.confirmationDialog</code></h3><p><strong>Là gì:</strong> Bảng lựa chọn trượt từ dưới (action sheet).</p><p><strong>Dùng khi:</strong> Đưa nhiều lựa chọn cho một hành động (xoá, chia sẻ…).</p></div>
+        <div class="card"><h3><code>.inspector</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Bảng thông tin/chỉnh sửa bên cạnh nội dung.</p><p><strong>Dùng khi:</strong> Hiển thị chi tiết/thuộc tính trên iPad &amp; Mac.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 6: Điều khiển ===== -->
+    <section id="s6" class="gloss-sec">
+      <div class="section-head"><h2>6 · Điều khiển (Controls)</h2><span class="sub gloss-count"><strong>Controls</strong> · Thành phần tương tác cơ bản</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>Text</code></h3><p><strong>Là gì:</strong> Hiển thị chuỗi văn bản, hỗ trợ định dạng &amp; bản địa hoá.</p><p><strong>Dùng khi:</strong> Mọi nhãn, tiêu đề, đoạn mô tả.</p></div>
+        <div class="card"><h3><code>Image</code></h3><p><strong>Là gì:</strong> Hiển thị ảnh từ asset, SF Symbol hoặc hệ thống.</p><p><strong>Dùng khi:</strong> Icon, ảnh minh hoạ (dùng <code>AsyncImage</code> cho ảnh từ mạng).</p></div>
+        <div class="card"><h3><code>Button</code></h3><p><strong>Là gì:</strong> Nút bấm chạy một hành động.</p><p><strong>Dùng khi:</strong> Mọi thao tác chạm: lưu, xoá, mở màn hình…</p></div>
+        <div class="card"><h3><code>Toggle</code></h3><p><strong>Là gì:</strong> Công tắc bật/tắt gắn với một <code>Bool</code>.</p><p><strong>Dùng khi:</strong> Bật/tắt cài đặt, tuỳ chọn.</p></div>
+        <div class="card"><h3><code>TextField</code> / <code>SecureField</code></h3><p><strong>Là gì:</strong> Ô nhập văn bản; <code>SecureField</code> ẩn ký tự (mật khẩu).</p><p><strong>Dùng khi:</strong> Form nhập liệu, đăng nhập, tìm kiếm.</p></div>
+        <div class="card"><h3><code>Picker</code></h3><p><strong>Là gì:</strong> Bộ chọn một giá trị từ danh sách.</p><p><strong>Dùng khi:</strong> Chọn quốc gia, danh mục, kiểu hiển thị (segmented/menu/wheel).</p></div>
+        <div class="card"><h3><code>Slider</code></h3><p><strong>Là gì:</strong> Thanh trượt chọn giá trị trong khoảng số.</p><p><strong>Dùng khi:</strong> Âm lượng, độ sáng, mức lọc…</p></div>
+        <div class="card"><h3><code>Stepper</code></h3><p><strong>Là gì:</strong> Nút +/- để tăng giảm một số.</p><p><strong>Dùng khi:</strong> Chọn số lượng, số phần ăn…</p></div>
+        <div class="card"><h3><code>DatePicker</code></h3><p><strong>Là gì:</strong> Bộ chọn ngày/giờ.</p><p><strong>Dùng khi:</strong> Đặt lịch, hạn chót, sinh nhật.</p></div>
+        <div class="card"><h3><code>Label</code></h3><p><strong>Là gì:</strong> Kết hợp icon + chữ theo bố cục chuẩn.</p><p><strong>Dùng khi:</strong> Mục menu, hàng cài đặt, tab có biểu tượng.</p></div>
+        <div class="card"><h3><code>Menu</code></h3><p><strong>Là gì:</strong> Trình đơn bật ra khi bấm, chứa các hành động.</p><p><strong>Dùng khi:</strong> Gom nhiều lựa chọn vào một nút gọn.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 7: Giao diện & style ===== -->
+    <section id="s7" class="gloss-sec">
+      <div class="section-head"><h2>7 · Giao diện &amp; style</h2><span class="sub gloss-count"><strong>Appearance &amp; styling</strong> · Tô màu, nền, hình &amp; chữ</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>.foregroundStyle</code></h3><p><strong>Là gì:</strong> Đặt màu/gradient/material cho nội dung (thay <code>.foregroundColor</code> cũ).</p><p><strong>Dùng khi:</strong> Tô màu chữ, icon; áp gradient cho nội dung.</p></div>
+        <div class="card"><h3><code>.background</code></h3><p><strong>Là gì:</strong> Đặt nền (màu, hình, View) phía sau.</p><p><strong>Dùng khi:</strong> Tạo thẻ (card), nền màn hình, viền bo.</p></div>
+        <div class="card"><h3><code>.clipShape</code></h3><p><strong>Là gì:</strong> Cắt View theo một hình (bo góc, tròn…).</p><p><strong>Dùng khi:</strong> Avatar tròn, nút bo góc, thẻ bo mềm.</p></div>
+        <div class="card"><h3><code>.overlay</code></h3><p><strong>Là gì:</strong> Đặt View phủ lên trên nội dung.</p><p><strong>Dùng khi:</strong> Viền, huy hiệu, badge thông báo trên icon.</p></div>
+        <div class="card"><h3>Gradient</h3><p><strong>Là gì:</strong> Dải màu chuyển (Linear/Radial/Angular).</p><p><strong>Dùng khi:</strong> Nền nổi bật, nút, hiệu ứng chữ.</p></div>
+        <div class="card"><h3>Material</h3><p><strong>Là gì:</strong> Hiệu ứng nền mờ kiểu kính (frosted glass).</p><p><strong>Dùng khi:</strong> Thanh công cụ, lớp phủ trên ảnh để chữ dễ đọc.</p></div>
+        <div class="card"><h3>SF Symbols</h3><p><strong>Là gì:</strong> Bộ icon vector của Apple, dùng qua <code>Image(systemName:)</code>.</p><p><strong>Dùng khi:</strong> Icon nhất quán, tự co theo cỡ chữ &amp; màu.</p></div>
+        <div class="card"><h3>Font &amp; Dynamic Type</h3><p><strong>Là gì:</strong> <code>.font(.title)</code>… dùng cỡ chữ ngữ nghĩa, tự phóng theo cài đặt người dùng.</p><p><strong>Dùng khi:</strong> Chữ dễ đọc &amp; hỗ trợ trợ năng (accessibility).</p></div>
+        <div class="card"><h3><code>ContentUnavailableView</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> View chuẩn cho trạng thái trống/không có kết quả.</p><p><strong>Dùng khi:</strong> Danh sách rỗng, tìm kiếm không ra, mất mạng.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 8: Animation ===== -->
+    <section id="s8" class="gloss-sec">
+      <div class="section-head"><h2>8 · Animation</h2><span class="sub gloss-count"><strong>Animation</strong> · Cho giao diện chuyển động mượt mà</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>withAnimation</code></h3><p><strong>Là gì:</strong> Bọc thay đổi state để SwiftUI hoạt hoạ quá trình chuyển.</p><p><strong>Dùng khi:</strong> Muốn một thay đổi (hiện/ẩn, di chuyển) diễn ra mượt.</p></div>
+        <div class="card"><h3><code>.animation</code></h3><p><strong>Là gì:</strong> Gắn kiểu hoạt hoạ cho View khi một giá trị thay đổi.</p><p><strong>Dùng khi:</strong> Hoạt hoạ theo một <code>value</code> cụ thể (cú pháp hiện đại).</p></div>
+        <div class="card"><h3><code>.transition</code></h3><p><strong>Là gì:</strong> Cách một View xuất hiện/biến mất (mờ, trượt, scale).</p><p><strong>Dùng khi:</strong> Thêm/xoá View có hiệu ứng vào–ra.</p></div>
+        <div class="card"><h3><code>matchedGeometryEffect</code></h3><p><strong>Là gì:</strong> Hoạt hoạ một phần tử “bay” từ vị trí/khung này sang khác.</p><p><strong>Dùng khi:</strong> Hiệu ứng phóng to ảnh thumbnail → chi tiết liền mạch.</p></div>
+        <div class="card"><h3><code>phaseAnimator</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Tự động chạy qua các “pha” trạng thái lặp lại.</p><p><strong>Dùng khi:</strong> Hiệu ứng nhịp (pulse), lắc, loop nhiều bước đơn giản.</p></div>
+        <div class="card"><h3><code>keyframeAnimator</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Hoạt hoạ phức tạp theo keyframe trên nhiều thuộc tính, theo thời gian.</p><p><strong>Dùng khi:</strong> Chuyển động nhiều giai đoạn (nảy + xoay + mờ).</p></div>
+        <div class="card"><h3><code>spring</code></h3><p><strong>Là gì:</strong> Kiểu hoạt hoạ vật lý lò xo, cảm giác tự nhiên.</p><p><strong>Dùng khi:</strong> Hầu hết tương tác — mặc định nên ưu tiên spring.</p></div>
+        <div class="card"><h3><code>@Namespace</code></h3><p><strong>Là gì:</strong> Không gian định danh để nối các View trong hiệu ứng.</p><p><strong>Dùng khi:</strong> Bắt buộc cho <code>matchedGeometryEffect</code>.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 9: Hiệu ứng & vòng đời ===== -->
+    <section id="s9" class="gloss-sec">
+      <div class="section-head"><h2>9 · Hiệu ứng phụ &amp; vòng đời View</h2><span class="sub gloss-count"><strong>Side effects &amp; view lifecycle</strong> · Chạy code theo sự kiện của View</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>.onAppear</code> / <code>.onDisappear</code></h3><p><strong>Là gì:</strong> Chạy code khi View hiện ra / biến mất.</p><p><strong>Dùng khi:</strong> Khởi tạo, gửi analytics, dừng timer khi rời màn hình.</p></div>
+        <div class="card"><h3><code>.task</code></h3><p><strong>Là gì:</strong> Chạy việc <code>async</code> khi View xuất hiện, tự huỷ khi biến mất.</p><p><strong>Dùng khi:</strong> Tải dữ liệu ban đầu — cách hiện đại thay <code>.onAppear</code> + Task.</p></div>
+        <div class="card"><h3><code>.onChange</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Phản ứng khi một giá trị đổi (chữ ký mới: <code>oldValue, newValue</code>).</p><p><strong>Dùng khi:</strong> Làm gì đó mỗi khi state/đầu vào thay đổi.</p></div>
+        <div class="card"><h3><code>scenePhase</code></h3><p><strong>Là gì:</strong> Đọc trạng thái app (active/background) qua <code>@Environment</code>.</p><p><strong>Dùng khi:</strong> Lưu dữ liệu, tạm dừng khi app vào nền.</p></div>
+        <div class="card"><h3><code>.visualEffect</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Áp hiệu ứng dựa trên vị trí/kích thước mà không phá vỡ layout.</p><p><strong>Dùng khi:</strong> Hiệu ứng cuộn (parallax, mờ dần) theo vị trí phần tử.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 10: Vẽ & nâng cao ===== -->
+    <section id="s10" class="gloss-sec">
+      <div class="section-head"><h2>10 · Vẽ &amp; nâng cao</h2><span class="sub gloss-count"><strong>Drawing &amp; advanced</strong> · Đồ hoạ tuỳ biến &amp; biểu đồ</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>Canvas</code></h3><p><strong>Là gì:</strong> Vùng vẽ 2D hiệu năng cao bằng lệnh vẽ tức thời.</p><p><strong>Dùng khi:</strong> Vẽ nhiều hình động/đồ hoạ tuỳ biến (particle, biểu đồ tay).</p></div>
+        <div class="card"><h3><code>Shape</code> / <code>Path</code></h3><p><strong>Là gì:</strong> Định nghĩa hình vector; <code>Shape</code> tái sử dụng được (Circle, Rectangle…).</p><p><strong>Dùng khi:</strong> Vẽ hình tuỳ biến, viền, biểu tượng vector.</p></div>
+        <div class="card"><h3>Swift Charts</h3><p><strong>Là gì:</strong> Framework dựng biểu đồ khai báo (<code>Chart { ... }</code>).</p><p><strong>Dùng khi:</strong> Biểu đồ cột/đường/vùng cho dữ liệu thống kê.</p></div>
+        <div class="card"><h3><code>.scrollTargetBehavior</code> <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Điều khiển cuộn: bắt dính trang/ô; kèm <code>.scrollPosition</code> để theo dõi vị trí.</p><p><strong>Dùng khi:</strong> Carousel snap từng trang, theo dõi/đặt vị trí cuộn.</p></div>
+      </div>
+    </section>
+
+    <footer class="home-footer">
+      <p>← <a href="index.html">Trang chủ khóa học</a> · Xem thêm: <a href="glossary-ios.html">Thuật ngữ iOS &amp; Swift →</a></p>
+      <p style="margin-top:0.4rem;">Theo stack iOS 2026 · Xcode 26 · iOS 17+ · Observation framework</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

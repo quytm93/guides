@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thuật ngữ iOS &amp; Swift — Từ điển nhanh (Xcode 26 · iOS 17+)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .gloss-badge { display:inline-block; font-size:0.62rem; font-weight:700; letter-spacing:0.04em;
+      text-transform:uppercase; padding:0.14rem 0.5rem; border-radius:999px; vertical-align:middle; margin-left:0.45rem; }
+    .badge-new { background: rgba(48,209,88,0.16); color: var(--accent-3); }
+    .badge-legacy { background: var(--surface-2); color: var(--muted); border:1px solid var(--border); }
+    .card h3 { font-size:1.05rem; margin-bottom:0.55rem; line-height:1.35; }
+    .card p { margin:0; }
+    .card p + p { margin-top:0.45rem; }
+    .gloss-sec { margin-top:2.8rem; scroll-margin-top:1.5rem; }
+    .gloss-count { color:var(--muted); font-weight:400; }
+  </style>
+</head>
+<body class="page-home">
+
+  <div class="home">
+
+    <!-- Hero -->
+    <header class="home-hero">
+      <span class="kicker">Từ điển thuật ngữ · iOS &amp; Swift · Xcode 26 · iOS 17+</span>
+      <h1>Thuật ngữ <span class="grad">iOS &amp; Swift</span></h1>
+      <p>Tra nhanh các từ khoá quan trọng nhất khi lập trình iOS. Mỗi mục có <strong>“Là gì”</strong> (định nghĩa) và <strong>“Dùng khi”</strong> (công dụng). Tên API giữ nguyên tiếng Anh.</p>
+      <div class="home-badges">
+        <span class="pill">60+ thuật ngữ</span>
+        <span class="pill pill--ghost">iOS 17+</span>
+        <span class="pill pill--ghost">Swift 6 · Xcode 26</span>
+      </div>
+    </header>
+
+    <!-- Jump nav -->
+    <section style="margin-bottom:2.4rem;">
+      <span class="kicker">Mục lục</span>
+      <h2 style="margin:0.3rem 0 1.1rem;">7 nhóm thuật ngữ</h2>
+      <nav class="roadmap" aria-label="Nhóm thuật ngữ">
+        <a class="roadmap-step" href="#g1"><span class="rs-k">Nhóm 1</span><span class="rs-t">Ngôn ngữ Swift</span><span class="rs-d">struct · enum · optional</span></a>
+        <a class="roadmap-step" href="#g2"><span class="rs-k">Nhóm 2</span><span class="rs-t">Concurrency</span><span class="rs-d">async/await · actor</span></a>
+        <a class="roadmap-step" href="#g3"><span class="rs-k">Nhóm 3</span><span class="rs-t">Bộ nhớ &amp; hiệu năng</span><span class="rs-d">ARC · retain cycle</span></a>
+        <a class="roadmap-step" href="#g4"><span class="rs-k">Nhóm 4</span><span class="rs-t">App &amp; vòng đời</span><span class="rs-d">App · ScenePhase</span></a>
+        <a class="roadmap-step" href="#g5"><span class="rs-k">Nhóm 5</span><span class="rs-t">Dữ liệu &amp; lưu trữ</span><span class="rs-d">URLSession · SwiftData</span></a>
+        <a class="roadmap-step" href="#g6"><span class="rs-k">Nhóm 6</span><span class="rs-t">Framework &amp; dịch vụ</span><span class="rs-d">Foundation · WidgetKit</span></a>
+        <a class="roadmap-step" href="#g7"><span class="rs-k">Nhóm 7</span><span class="rs-t">Công cụ Xcode 26</span><span class="rs-d">Simulator · SPM</span></a>
+      </nav>
+      <p class="map-hint">🟢 <span class="gloss-badge badge-new">iOS 17+</span> = mới/khuyến nghị · ⚪️ <span class="gloss-badge badge-legacy">Kế thừa</span> = code cũ, không cần học trước.</p>
+    </section>
+
+    <!-- ===== Nhóm 1: Ngôn ngữ Swift ===== -->
+    <section id="g1" class="gloss-sec">
+      <div class="section-head"><h2>1 · Ngôn ngữ Swift</h2><span class="sub gloss-count"><strong>Swift language</strong> · Nền tảng của mọi dòng code iOS</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>struct</code></h3><p><strong>Là gì:</strong> Kiểu “giá trị” (value type) — khi gán/truyền đi sẽ được sao chép.</p><p><strong>Dùng khi:</strong> Mặc định nên dùng cho model dữ liệu &amp; View trong SwiftUI; an toàn, không chia sẻ trạng thái ngầm.</p></div>
+        <div class="card"><h3><code>class</code></h3><p><strong>Là gì:</strong> Kiểu “tham chiếu” (reference type) — nhiều biến cùng trỏ tới một thực thể.</p><p><strong>Dùng khi:</strong> Cần chia sẻ trạng thái, kế thừa, hoặc dùng với <code>@Observable</code> cho ViewModel.</p></div>
+        <div class="card"><h3>Value vs Reference type</h3><p><strong>Là gì:</strong> <code>struct</code>/<code>enum</code> sao chép giá trị; <code>class</code> chia sẻ tham chiếu.</p><p><strong>Dùng khi:</strong> Hiểu để tránh bug “sửa chỗ này, đổi luôn chỗ kia” và rò rỉ bộ nhớ.</p></div>
+        <div class="card"><h3><code>enum</code></h3><p><strong>Là gì:</strong> Kiểu liệt kê các trạng thái cố định, có thể kèm dữ liệu (associated values).</p><p><strong>Dùng khi:</strong> Mô tả trạng thái màn hình (loading/loaded/error), lựa chọn, kết quả.</p></div>
+        <div class="card"><h3><code>protocol</code></h3><p><strong>Là gì:</strong> Bản “hợp đồng” liệt kê thuộc tính/hàm mà kiểu tuân theo phải có.</p><p><strong>Dùng khi:</strong> Trừu tượng hoá để thay thế/giả lập (mock) khi test, vd <code>View</code>, <code>Codable</code>.</p></div>
+        <div class="card"><h3><code>extension</code></h3><p><strong>Là gì:</strong> Bổ sung hàm/thuộc tính cho một kiểu đã có (kể cả của Apple).</p><p><strong>Dùng khi:</strong> Tách code cho gọn, thêm tiện ích cho <code>String</code>, <code>Date</code>, View…</p></div>
+        <div class="card"><h3>Optional <code>?</code> / <code>!</code></h3><p><strong>Là gì:</strong> Kiểu “có thể có hoặc <code>nil</code>”. <code>!</code> là ép mở (force unwrap) — dễ crash.</p><p><strong>Dùng khi:</strong> Mô tả giá trị có thể vắng; tránh <code>!</code>, ưu tiên mở an toàn.</p></div>
+        <div class="card"><h3><code>if let</code> / <code>guard let</code></h3><p><strong>Là gì:</strong> Cách mở Optional an toàn. <code>guard</code> thoát sớm nếu <code>nil</code>.</p><p><strong>Dùng khi:</strong> Kiểm tra dữ liệu đầu vào trước khi dùng, thay cho force unwrap.</p></div>
+        <div class="card"><h3>Closure</h3><p><strong>Là gì:</strong> Khối code có thể truyền đi như một giá trị (hàm vô danh).</p><p><strong>Dùng khi:</strong> Callback, completion handler, action của Button, biến đổi mảng (<code>map</code>/<code>filter</code>).</p></div>
+        <div class="card"><h3><code>[weak self]</code></h3><p><strong>Là gì:</strong> Danh sách bắt giữ (capture list) giữ <code>self</code> dạng <em>weak</em> trong closure.</p><p><strong>Dùng khi:</strong> Closure sống lâu (network, timer) để tránh retain cycle &amp; rò rỉ bộ nhớ.</p></div>
+        <div class="card"><h3>Generics</h3><p><strong>Là gì:</strong> Viết code dùng chung cho nhiều kiểu với tham số kiểu <code>&lt;T&gt;</code>.</p><p><strong>Dùng khi:</strong> Tạo hàm/kiểu tái sử dụng, vd <code>Array&lt;T&gt;</code>, hàm decode chung.</p></div>
+        <div class="card"><h3>Property Wrapper</h3><p><strong>Là gì:</strong> Cú pháp <code>@...</code> gói logic quanh một thuộc tính.</p><p><strong>Dùng khi:</strong> Hiểu bản chất của <code>@State</code>, <code>@AppStorage</code>, <code>@Observable</code>…</p></div>
+        <div class="card"><h3><code>Codable</code></h3><p><strong>Là gì:</strong> Giao thức cho phép mã hoá/giải mã giữa Swift &amp; JSON (Encodable + Decodable).</p><p><strong>Dùng khi:</strong> Đọc dữ liệu API hoặc lưu/đọc file JSON.</p></div>
+        <div class="card"><h3><code>Result</code></h3><p><strong>Là gì:</strong> Kiểu chứa <code>.success(value)</code> hoặc <code>.failure(error)</code>.</p><p><strong>Dùng khi:</strong> Biểu diễn kết quả có thể lỗi (thường gặp trong API kiểu callback cũ).</p></div>
+        <div class="card"><h3>Error handling <code>throws</code></h3><p><strong>Là gì:</strong> Cơ chế báo lỗi với <code>throw</code>, bắt bằng <code>do</code>/<code>catch</code>, gọi với <code>try</code>.</p><p><strong>Dùng khi:</strong> Hàm có thể thất bại: đọc file, decode JSON, gọi mạng.</p></div>
+        <div class="card"><h3><code>Equatable</code> / <code>Hashable</code></h3><p><strong>Là gì:</strong> So sánh bằng nhau (<code>==</code>) và tạo mã băm để dùng trong <code>Set</code>/<code>Dictionary</code>.</p><p><strong>Dùng khi:</strong> So sánh model, dùng làm key, tối ưu cập nhật danh sách.</p></div>
+        <div class="card"><h3><code>Identifiable</code></h3><p><strong>Là gì:</strong> Giao thức yêu cầu mỗi phần tử có <code>id</code> duy nhất.</p><p><strong>Dùng khi:</strong> Bắt buộc cho dữ liệu hiển thị trong <code>List</code> / <code>ForEach</code>.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 2: Concurrency ===== -->
+    <section id="g2" class="gloss-sec">
+      <div class="section-head"><h2>2 · Concurrency (Swift 6)</h2><span class="sub gloss-count"><strong>Concurrency</strong> · Chạy song song an toàn — mặc định của Swift hiện đại</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>async</code> / <code>await</code></h3><p><strong>Là gì:</strong> Cú pháp viết code bất đồng bộ tuần tự, dễ đọc như code thường.</p><p><strong>Dùng khi:</strong> Gọi mạng, đọc file, mọi tác vụ chờ lâu — thay cho completion handler.</p></div>
+        <div class="card"><h3><code>Task</code></h3><p><strong>Là gì:</strong> Một đơn vị công việc bất đồng bộ, cầu nối từ code đồng bộ sang <code>async</code>.</p><p><strong>Dùng khi:</strong> Khởi chạy việc <code>async</code> từ Button action hoặc <code>.task</code> của View.</p></div>
+        <div class="card"><h3><code>async let</code></h3><p><strong>Là gì:</strong> Chạy nhiều việc <code>async</code> song song rồi <code>await</code> kết quả sau.</p><p><strong>Dùng khi:</strong> Tải nhiều tài nguyên cùng lúc cho nhanh (vd 2 API độc lập).</p></div>
+        <div class="card"><h3><code>TaskGroup</code></h3><p><strong>Là gì:</strong> Nhóm động nhiều task con chạy song song, gom kết quả lại.</p><p><strong>Dùng khi:</strong> Số lượng việc không cố định, vd tải N ảnh trong danh sách.</p></div>
+        <div class="card"><h3><code>actor</code></h3><p><strong>Là gì:</strong> Kiểu tham chiếu tự bảo vệ trạng thái khỏi truy cập đồng thời.</p><p><strong>Dùng khi:</strong> Chia sẻ dữ liệu giữa nhiều task mà không lo data race (vd cache).</p></div>
+        <div class="card"><h3><code>@MainActor</code></h3><p><strong>Là gì:</strong> Đánh dấu code phải chạy trên luồng chính (UI).</p><p><strong>Dùng khi:</strong> Cập nhật giao diện; ViewModel cập nhật state hiển thị.</p></div>
+        <div class="card"><h3><code>Sendable</code></h3><p><strong>Là gì:</strong> Nhãn cho biết kiểu an toàn để truyền qua ranh giới luồng/concurrency.</p><p><strong>Dùng khi:</strong> Trình biên dịch Swift 6 yêu cầu khi chia sẻ dữ liệu giữa các task.</p></div>
+        <div class="card"><h3>Data race / Strict concurrency</h3><p><strong>Là gì:</strong> Hai luồng cùng đọc/ghi một dữ liệu → lỗi khó lường. Swift 6 bật kiểm tra mặc định.</p><p><strong>Dùng khi:</strong> Hiểu lý do compiler bắt lỗi concurrency — để viết code an toàn từ đầu.</p></div>
+        <div class="card"><h3><code>@escaping</code></h3><p><strong>Là gì:</strong> Closure “thoát” khỏi hàm, được giữ lại để gọi sau.</p><p><strong>Dùng khi:</strong> Gặp ở completion handler kiểu cũ; là nơi dễ tạo retain cycle.</p></div>
+        <div class="card"><h3><code>DispatchQueue</code> (GCD) <span class="gloss-badge badge-legacy">Kế thừa</span></h3><p><strong>Là gì:</strong> API quản lý luồng cũ (Grand Central Dispatch).</p><p><strong>Dùng khi:</strong> Đọc code cũ; với code mới hãy ưu tiên <code>async/await</code> + <code>actor</code>.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 3: Bộ nhớ & hiệu năng ===== -->
+    <section id="g3" class="gloss-sec">
+      <div class="section-head"><h2>3 · Bộ nhớ &amp; hiệu năng</h2><span class="sub gloss-count"><strong>Memory &amp; performance</strong> · Tránh crash, rò rỉ bộ nhớ &amp; giật lag</span></div>
+      <div class="cards">
+        <div class="card"><h3>ARC</h3><p><strong>Là gì:</strong> Automatic Reference Counting — đếm tham chiếu để tự giải phóng bộ nhớ.</p><p><strong>Dùng khi:</strong> Luôn chạy ngầm; hiểu nó để biết vì sao cần <code>weak</code>.</p></div>
+        <div class="card"><h3>Retain cycle</h3><p><strong>Là gì:</strong> Hai đối tượng giữ tham chiếu mạnh lẫn nhau → không bao giờ được giải phóng.</p><p><strong>Dùng khi:</strong> Nhận diện &amp; phá bằng <code>[weak self]</code> / <code>weak</code> / <code>unowned</code>.</p></div>
+        <div class="card"><h3><code>weak</code> / <code>unowned</code></h3><p><strong>Là gì:</strong> Tham chiếu không làm tăng bộ đếm. <code>weak</code> thành <code>nil</code>; <code>unowned</code> giả định luôn tồn tại.</p><p><strong>Dùng khi:</strong> Phá retain cycle ở delegate, closure, quan hệ cha–con.</p></div>
+        <div class="card"><h3>Memory leak</h3><p><strong>Là gì:</strong> Bộ nhớ cấp phát nhưng không được thu hồi → app phình to dần.</p><p><strong>Dùng khi:</strong> Phát hiện bằng Instruments (Leaks) khi app ngày càng nặng.</p></div>
+        <div class="card"><h3>Instruments</h3><p><strong>Là gì:</strong> Bộ công cụ đo hiệu năng của Xcode (Time Profiler, Leaks, Allocations…).</p><p><strong>Dùng khi:</strong> Truy tìm chậm, rò rỉ, dùng CPU/bộ nhớ quá mức.</p></div>
+        <div class="card"><h3>Hang / Watchdog <code>0x8badf00d</code></h3><p><strong>Là gì:</strong> Hệ thống kết liễu app khi luồng chính bị khoá quá lâu (mã “ate bad food”).</p><p><strong>Dùng khi:</strong> Hiểu để đẩy việc nặng khỏi luồng chính, tránh “đơ” màn hình.</p></div>
+        <div class="card"><h3>Jetsam (OOM)</h3><p><strong>Là gì:</strong> Cơ chế iOS kết liễu app dùng quá nhiều RAM (out-of-memory).</p><p><strong>Dùng khi:</strong> Hiểu khi xử lý ảnh lớn/nhiều dữ liệu — cần giảm/giải phóng bộ nhớ.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 4: App & vòng đời ===== -->
+    <section id="g4" class="gloss-sec">
+      <div class="section-head"><h2>4 · App &amp; vòng đời</h2><span class="sub gloss-count"><strong>App &amp; lifecycle</strong> · Cấu trúc &amp; trạng thái của một ứng dụng</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>App</code> / <code>Scene</code></h3><p><strong>Là gì:</strong> <code>App</code> là điểm vào; <code>Scene</code> (vd <code>WindowGroup</code>) là một cửa sổ giao diện.</p><p><strong>Dùng khi:</strong> Khai báo cấu trúc gốc của ứng dụng SwiftUI.</p></div>
+        <div class="card"><h3><code>@main</code></h3><p><strong>Là gì:</strong> Đánh dấu struct là điểm khởi động của app.</p><p><strong>Dùng khi:</strong> Đặt trên struct tuân theo <code>App</code> — chỉ một nơi duy nhất.</p></div>
+        <div class="card"><h3><code>ScenePhase</code></h3><p><strong>Là gì:</strong> Trạng thái app: <code>active</code> / <code>inactive</code> / <code>background</code>.</p><p><strong>Dùng khi:</strong> Lưu dữ liệu, tạm dừng timer khi app vào nền.</p></div>
+        <div class="card"><h3>AppDelegate</h3><p><strong>Là gì:</strong> Lớp xử lý sự kiện vòng đời kiểu UIKit cũ.</p><p><strong>Dùng khi:</strong> Cần móc nối Push/SDK bên thứ ba qua <code>@UIApplicationDelegateAdaptor</code>.</p></div>
+        <div class="card"><h3>Bundle</h3><p><strong>Là gì:</strong> Gói chứa app đã build: code, ảnh, plist, tài nguyên.</p><p><strong>Dùng khi:</strong> Đọc file kèm app, ảnh, file cấu hình qua <code>Bundle.main</code>.</p></div>
+        <div class="card"><h3><code>Info.plist</code></h3><p><strong>Là gì:</strong> File cấu hình app: tên, version, quyền (camera, vị trí…).</p><p><strong>Dùng khi:</strong> Khai báo quyền truy cập &amp; thiết lập app trước khi phát hành.</p></div>
+        <div class="card"><h3>Entitlements</h3><p><strong>Là gì:</strong> Khai báo năng lực đặc biệt: Push, iCloud, App Groups…</p><p><strong>Dùng khi:</strong> Bật tính năng cần Apple cấp quyền (Capabilities trong Xcode).</p></div>
+        <div class="card"><h3>Target vs Scheme</h3><p><strong>Là gì:</strong> Target = sản phẩm build (app/extension); Scheme = cách build/run target đó.</p><p><strong>Dùng khi:</strong> Tách môi trường Dev/Staging/Prod, thêm widget/extension.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 5: Dữ liệu & lưu trữ ===== -->
+    <section id="g5" class="gloss-sec">
+      <div class="section-head"><h2>5 · Dữ liệu &amp; lưu trữ</h2><span class="sub gloss-count"><strong>Data &amp; storage</strong> · Lấy dữ liệu từ mạng &amp; lưu xuống máy</span></div>
+      <div class="cards">
+        <div class="card"><h3><code>URLSession</code></h3><p><strong>Là gì:</strong> API chuẩn để gọi mạng (HTTP) trong iOS.</p><p><strong>Dùng khi:</strong> Tải JSON/ảnh từ API, kết hợp <code>async/await</code> + <code>Codable</code>.</p></div>
+        <div class="card"><h3>JSON &amp; <code>JSONDecoder</code></h3><p><strong>Là gì:</strong> Định dạng dữ liệu phổ biến; <code>JSONDecoder</code> chuyển JSON → struct <code>Codable</code>.</p><p><strong>Dùng khi:</strong> Giải mã phản hồi API thành model Swift.</p></div>
+        <div class="card"><h3>SwiftData <span class="gloss-badge badge-new">iOS 17+</span></h3><p><strong>Là gì:</strong> Framework lưu trữ hiện đại với <code>@Model</code>, <code>@Query</code>, <code>ModelContext</code>.</p><p><strong>Dùng khi:</strong> Cơ sở dữ liệu trong app — thay thế Core Data cho dự án mới.</p></div>
+        <div class="card"><h3><code>UserDefaults</code></h3><p><strong>Là gì:</strong> Kho lưu key–value nhỏ, bền sau khi tắt app.</p><p><strong>Dùng khi:</strong> Lưu cài đặt, lựa chọn nhỏ (thường qua <code>@AppStorage</code>).</p></div>
+        <div class="card"><h3><code>FileManager</code></h3><p><strong>Là gì:</strong> API đọc/ghi/quản lý file &amp; thư mục trong sandbox của app.</p><p><strong>Dùng khi:</strong> Lưu file lớn: ảnh, tài liệu, cache xuống đĩa.</p></div>
+        <div class="card"><h3>Keychain</h3><p><strong>Là gì:</strong> Kho lưu trữ được mã hoá, an toàn của hệ thống.</p><p><strong>Dùng khi:</strong> Lưu token, mật khẩu, dữ liệu nhạy cảm (không để trong UserDefaults).</p></div>
+        <div class="card"><h3>Core Data <span class="gloss-badge badge-legacy">Kế thừa</span></h3><p><strong>Là gì:</strong> Framework lưu trữ truyền thống, mạnh nhưng phức tạp hơn SwiftData.</p><p><strong>Dùng khi:</strong> Bảo trì app cũ; dự án mới ưu tiên SwiftData.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 6: Framework & dịch vụ ===== -->
+    <section id="g6" class="gloss-sec">
+      <div class="section-head"><h2>6 · Framework &amp; dịch vụ</h2><span class="sub gloss-count"><strong>Frameworks &amp; services</strong> · Các bộ công cụ &amp; tính năng hệ thống</span></div>
+      <div class="cards">
+        <div class="card"><h3>Foundation</h3><p><strong>Là gì:</strong> Thư viện nền: <code>String</code>, <code>Date</code>, <code>URL</code>, <code>Data</code>, số học…</p><p><strong>Dùng khi:</strong> Hầu như mọi file đều dùng — nền tảng của Swift trên Apple.</p></div>
+        <div class="card"><h3>UIKit (interop)</h3><p><strong>Là gì:</strong> Framework UI thế hệ trước SwiftUI (dựa trên view tường minh).</p><p><strong>Dùng khi:</strong> Nhúng thành phần chưa có trong SwiftUI qua <code>UIViewRepresentable</code>.</p></div>
+        <div class="card"><h3>Combine <span class="gloss-badge badge-legacy">Kế thừa</span></h3><p><strong>Là gì:</strong> Framework xử lý luồng sự kiện theo thời gian (reactive).</p><p><strong>Dùng khi:</strong> Đọc code cũ; stack mới dùng <code>@Observable</code> + <code>async/await</code>.</p></div>
+        <div class="card"><h3>UserNotifications / APNs</h3><p><strong>Là gì:</strong> <code>UNUserNotificationCenter</code> cho thông báo cục bộ; APNs cho thông báo đẩy từ server.</p><p><strong>Dùng khi:</strong> Nhắc nhở người dùng, gửi tin tức/cập nhật.</p></div>
+        <div class="card"><h3>WidgetKit</h3><p><strong>Là gì:</strong> Framework tạo widget màn hình chính/khoá &amp; Live Activities.</p><p><strong>Dùng khi:</strong> Hiển thị thông tin nhanh ngoài app (thời tiết, tiến độ…).</p></div>
+        <div class="card"><h3>MapKit</h3><p><strong>Là gì:</strong> Framework hiển thị bản đồ, ghim vị trí, chỉ đường.</p><p><strong>Dùng khi:</strong> App cần bản đồ, định vị, tìm địa điểm.</p></div>
+        <div class="card"><h3>StoreKit</h3><p><strong>Là gì:</strong> Framework mua trong ứng dụng &amp; gói đăng ký (StoreKit 2).</p><p><strong>Dùng khi:</strong> Bán vật phẩm, mở khoá tính năng, subscription.</p></div>
+        <div class="card"><h3>String Catalog</h3><p><strong>Là gì:</strong> Hệ thống quản lý chuỗi đa ngôn ngữ (.xcstrings) của Xcode 15+.</p><p><strong>Dùng khi:</strong> Bản địa hoá (localization) app sang nhiều ngôn ngữ.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Nhóm 7: Công cụ Xcode 26 ===== -->
+    <section id="g7" class="gloss-sec">
+      <div class="section-head"><h2>7 · Công cụ Xcode 26</h2><span class="sub gloss-count"><strong>Xcode 26 tooling</strong> · Môi trường làm việc của lập trình viên iOS</span></div>
+      <div class="cards">
+        <div class="card"><h3>Xcode</h3><p><strong>Là gì:</strong> IDE chính thức của Apple để viết, build &amp; debug app.</p><p><strong>Dùng khi:</strong> Toàn bộ quá trình phát triển; bản hiện tại là Xcode 26.</p></div>
+        <div class="card"><h3>Simulator</h3><p><strong>Là gì:</strong> Trình giả lập iPhone/iPad chạy ngay trên máy Mac.</p><p><strong>Dùng khi:</strong> Thử app nhanh mà không cần thiết bị thật.</p></div>
+        <div class="card"><h3>Previews <code>#Preview</code></h3><p><strong>Là gì:</strong> Bản xem trước SwiftUI cập nhật trực tiếp trong Xcode.</p><p><strong>Dùng khi:</strong> Dựng &amp; tinh chỉnh giao diện mà không cần build lại app.</p></div>
+        <div class="card"><h3>Swift Package Manager</h3><p><strong>Là gì:</strong> Trình quản lý thư viện phụ thuộc (SPM) tích hợp trong Xcode.</p><p><strong>Dùng khi:</strong> Thêm thư viện bên thứ ba qua URL Git.</p></div>
+        <div class="card"><h3>LLDB / Debugger</h3><p><strong>Là gì:</strong> Trình gỡ lỗi: đặt breakpoint, xem biến, chạy lệnh <code>po</code>.</p><p><strong>Dùng khi:</strong> Tìm nguyên nhân bug khi app chạy sai.</p></div>
+        <div class="card"><h3>TestFlight</h3><p><strong>Là gì:</strong> Nền tảng của Apple để phát hành bản beta cho người thử nghiệm.</p><p><strong>Dùng khi:</strong> Cho QA/người dùng thử trước khi lên App Store.</p></div>
+        <div class="card"><h3>Signing &amp; Provisioning</h3><p><strong>Là gì:</strong> Chứng chỉ &amp; profile xác thực app được phép chạy/phân phối.</p><p><strong>Dùng khi:</strong> Chạy trên máy thật, archive &amp; nộp App Store.</p></div>
+      </div>
+    </section>
+
+    <footer class="home-footer">
+      <p>← <a href="index.html">Trang chủ khóa học</a> · Xem thêm: <a href="glossary-swiftui.html">Thuật ngữ SwiftUI →</a></p>
+      <p style="margin-top:0.4rem;">Theo stack iOS 2026 · Xcode 26 · iOS 17+ · Swift 6</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

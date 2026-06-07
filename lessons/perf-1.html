@@ -50,7 +50,7 @@
           <p>Ở <strong>heap</strong> · chia sẻ tham chiếu · <strong>ARC</strong> đếm &amp; thu hồi · mỗi lần cấp phát/đếm đều tốn CPU.</p>
         </div>
       </div>
-      <p class="note">📌 Vì sao vào Phần 3: <strong>heap + ARC</strong> là gốc của <em>rò rỉ &amp; ngốn bộ nhớ</em> (retain cycle), <em>bị Jetsam giết</em> (peak RAM), và <em>CPU/pin</em> (cấp phát thừa). Mặc định <code>struct</code>; dùng <code>class</code> khi cần chia sẻ trạng thái (ViewModel) hoặc identity. <strong>Nói gần đúng cho dễ nhớ:</strong> struct quá lớn, chứa kiểu tham chiếu, hay bị "bắt" trong closure <em>escaping</em> vẫn có thể lên heap; <code>Array</code>/<code>String</code> dùng Copy-on-Write.</p>
+      <p class="note">📌 Vì sao vào Phần 3: <strong>heap + ARC</strong> là gốc của <em>rò rỉ &amp; ngốn bộ nhớ</em> (retain cycle), <em>bị Jetsam giết</em> (peak RAM), và <em>CPU/pin</em> (cấp phát thừa). Mặc định <code>struct</code>; dùng <code>class</code> khi cần chia sẻ trạng thái (ViewModel) hoặc identity. <strong>Nói gần đúng cho dễ nhớ:</strong> struct bị "bắt" trong closure <em>escaping</em>, hoặc bị bọc trong <em>existential</em> (<code>any Protocol</code>/<code>Any</code>) quá lớn, vẫn có thể lên heap; struct <em>chứa kiểu tham chiếu</em> thì bản thân vẫn ở stack nhưng <strong>vẫn tốn ARC</strong> cho các thành phần đó; <code>Array</code>/<code>String</code> dùng Copy-on-Write.</p>
     </section>
 
     <section class="slide">

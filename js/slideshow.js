@@ -109,46 +109,29 @@
 
   // ---- Lesson sidebar menu ----
   const LESSONS = [
-    { n: '01', file: 'bai-1.html', title: 'Bắt đầu' },
-    { n: '02', file: 'bai-2.html', title: 'Cài đặt & Làm quen Xcode 26' },
-    { n: '03', file: 'bai-3.html', title: 'App tương tác đầu tiên' },
-    { n: '04', file: 'bai-4.html', title: 'Bố cục & Danh sách' },
-    { n: '05', file: 'bai-5.html', title: 'Điều hướng nhiều màn hình' },
-    { n: '06', file: 'bai-6.html', title: 'Lưu dữ liệu với @AppStorage' },
-    { n: '07', file: 'bai-7.html', title: 'Model dữ liệu với struct' },
-    { n: '08', file: 'bai-8.html', title: 'Gọi API mạng' },
-    { n: '09', file: 'bai-9.html', title: 'MVVM với @Observable' },
-    { n: '10', file: 'bai-10.html', title: 'Lưu trữ với SwiftData' },
-    { n: '11', file: 'bai-11.html', title: 'Chạy trên iPhone thật & xuất bản' },
-    { n: '12', file: 'bai-12.html', title: 'Combine với SwiftUI' },
-    { n: '13', file: 'bai-13.html', title: 'Animations & hiệu ứng' },
-    { n: '14', file: 'bai-14.html', title: 'Đa ngôn ngữ (Localization)' },
-    { n: '15', file: 'bai-15.html', title: 'Push Notifications' },
-    { n: '16', file: 'bai-16.html', title: 'Concurrency & Actors' },
-    { n: '17', file: 'bai-17.html', title: 'Vòng đời ứng dụng' },
-    { n: '18', file: 'bai-18.html', title: 'Quản lý bộ nhớ (ARC)' },
-    { n: '✓', file: 'tong-ket.html', title: 'Tổng kết & Lộ trình' },
-    { n: 'P3', file: 'perf-1.html', title: 'Phần 3: Hiệu năng & Sự cố' },
+    { n: 'G1', file: '../glossary-ios.html', title: 'Thuật ngữ iOS & Swift' },
+    { n: 'G2', file: '../glossary-swiftui.html', title: 'Thuật ngữ SwiftUI' },
     { n: 'C1', file: 'cs-1.html', title: 'CS-1: AI Photo Editor' },
     { n: 'C2', file: 'cs-2.html', title: 'CS-2: Habit & Fitness Tracker' },
     { n: 'C3', file: 'cs-3.html', title: 'CS-3: Personal Finance' },
     { n: 'C4', file: 'cs-4.html', title: 'CS-4: Social Photo Feed' },
-    { n: 'C5', file: 'cs-5.html', title: 'CS-5: Meditation / Sleep' },
+    { n: 'C5', file: 'cs-5.html', title: 'CS-5: Meditation & Sleep' },
     { n: 'C6', file: 'cs-6.html', title: 'CS-6: Food Delivery' },
-    { n: 'C7', file: 'cs-7.html', title: 'CS-7: Casual Game' },
-    { n: 'C8', file: 'cs-8.html', title: 'CS-8: E-commerce' },
-    { n: 'C9', file: 'cs-9.html', title: 'CS-9: Notes / Productivity' },
+    { n: 'C7', file: 'cs-7.html', title: 'CS-7: Casual Mobile Game' },
+    { n: 'C8', file: 'cs-8.html', title: 'CS-8: E-commerce / Retail' },
+    { n: 'C9', file: 'cs-9.html', title: 'CS-9: Notes & Productivity' },
     { n: 'C10', file: 'cs-10.html', title: 'CS-10: Language Learning' },
     { n: 'C11', file: 'cs-11.html', title: 'CS-11: Ride-Hailing' },
     { n: 'C12', file: 'cs-12.html', title: 'CS-12: Music Streaming' },
     { n: 'C13', file: 'cs-13.html', title: 'CS-13: Dating' },
-    { n: 'C14', file: 'cs-14.html', title: 'CS-14: News / Reading' },
-    { n: 'C15', file: 'cs-15.html', title: 'CS-15: AR Furniture/Measure' },
+    { n: 'C14', file: 'cs-14.html', title: 'CS-14: News & Reading' },
+    { n: 'C15', file: 'cs-15.html', title: 'CS-15: AR Furniture & Measure' },
     { n: 'C16', file: 'cs-16.html', title: 'CS-16: Smart-Home Companion' },
     { n: 'C17', file: 'cs-17.html', title: 'CS-17: Kids Education' },
     { n: 'C18', file: 'cs-18.html', title: 'CS-18: Enterprise Field App' },
     { n: 'C19', file: 'cs-19.html', title: 'CS-19: Short-Video Editor' },
     { n: 'C20', file: 'cs-20.html', title: 'CS-20: AI Chat Assistant' },
+    { n: 'P3', file: 'perf-1.html', title: 'Phần 3: Hiệu năng & Sự cố' },
   ];
 
   (function buildMenu() {
@@ -160,7 +143,7 @@
 
     const btn = document.createElement('button');
     btn.className = 'menu-toggle';
-    btn.setAttribute('aria-label', 'Danh sách bài học');
+    btn.setAttribute('aria-label', 'Danh sách nội dung');
     btn.innerHTML = '☰';
 
     const overlay = document.createElement('div');
@@ -169,7 +152,7 @@
     const aside = document.createElement('aside');
     aside.className = 'sidebar';
     aside.innerHTML =
-      '<div class="sidebar-head">Bài học</div>' +
+      '<div class="sidebar-head">Nội dung khóa học</div>' +
       '<nav class="sidebar-list">' +
       LESSONS.map(function (l) {
         const active = l.file === here ? ' is-active' : '';

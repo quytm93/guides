@@ -14,6 +14,31 @@
       "Edit(/.claude/skills/deploy-testflight/**)",
       "Edit(/.claude/skills/deploy-production/**)",
       "Edit(/.claude/skills/deploy-staging/**)",
+      "Bash(git --no-pager log --oneline -1)",
+      "Bash(git --no-pager show --stat --oneline HEAD)",
+      "Bash(xcodebuild -list -project PhotoEditorDemo.xcodeproj)",
+      "Bash(xcodebuild -project PhotoEditorDemo.xcodeproj -scheme PhotoEditorDemo -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -configuration Debug build)",
+      "Bash(sed -i '' 's/        TabView {/        TabView\\(selection: .constant\\(2\\)\\) {/' PhotoEditorDemo/App/RootView.swift)",
+      "Bash(sed -i '' 's#                .tabItem { Label\\(\"Metal\", systemImage: \"cpu\"\\) }#                .tabItem { Label\\(\"Metal\", systemImage: \"cpu\"\\) }\\\\n                .tag\\(2\\)#' PhotoEditorDemo/App/RootView.swift)",
+      "Bash(sed -i '' 's/    @State private var zoom: CGFloat = 1/    @State private var zoom: CGFloat = 6/' PhotoEditorDemo/Features/MetalPreview/MetalPreviewView.swift)",
+      "Bash(sed -i '' 's/                while !Task.isCancelled {/                await model.generate\\(\\)\\\\n                while !Task.isCancelled {/' PhotoEditorDemo/Features/MetalPreview/MetalPreviewView.swift)",
+      "Bash(sed -i '' 's/        TabView\\(selection: .constant\\(2\\)\\) {/        TabView {/' PhotoEditorDemo/App/RootView.swift)",
+      "Bash(sed -i '' '/                .tabItem { Label\\(\"Metal\", systemImage: \"cpu\"\\) }/{n;/                .tag\\(2\\)/d;}' PhotoEditorDemo/App/RootView.swift)",
+      "Bash(sed -i '' 's/    @State private var zoom: CGFloat = 6/    @State private var zoom: CGFloat = 1/' PhotoEditorDemo/Features/MetalPreview/MetalPreviewView.swift)",
+      "Bash(sed -i '' '/^                await model.generate\\(\\)$/d' PhotoEditorDemo/Features/MetalPreview/MetalPreviewView.swift)",
+      "Bash(perl -0pi -e 's/\\(\\\\.navigationTitle\\\\\\(\"Chỉnh ảnh\"\\\\\\)\\)/$1\\\\n            .task { showTestPicker = true }/' PhotoEditorDemo/Features/Editor/EditorView.swift)",
+      "Bash(perl -0pi -e 's/\\\\n            \\\\.task \\\\{ if let t = TestImageStore\\\\.all\\\\\\(\\\\\\)\\\\.last \\\\{ await model\\\\.load\\\\\\(testImage: t\\\\\\) \\\\} \\\\}//' PhotoEditorDemo/Features/Editor/EditorView.swift)",
+      "Bash(ps -A -o %cpu,comm)",
+      "Bash(sed -i '' 's/    @State private var zoom: CGFloat = 8/    @State private var zoom: CGFloat = 1/' PhotoEditorDemo/Features/MetalPreview/MetalPreviewView.swift)",
+      "Bash(sed -i '' 's/            .task { if let t = TestImageStore.all\\(\\).last { await model.load\\(testImage: t\\) } }/            .task { model.updateFootprint\\(\\) }/' PhotoEditorDemo/Features/MetalPreview/MetalPreviewView.swift)",
+      "Bash(git merge *)",
+      "Bash(git -c core.pager=cat diff samples/cs-1-photo-editor/PhotoEditorDemo/Core/Metal/MetalImageView.swift)",
+      "Bash(awk '/Lesson 18|bai-18|phan-cases|phan-perf|tong-ket/{p=1} p' index.html)",
+      "Bash(awk '/Lesson 11/{p=1} /phan-cases/{p=0} p' index.html)",
+      "Bash(cd /Users/quytran/Workshop/lessons && rm -f bai-*.html tong-ket.html && echo \"--- remaining files in lessons/ ---\" && ls)"
+    ],
+    "additionalDirectories": [
+      "/Users/quytran/Workshop"
     ]
   }
 }
