@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lập trình iOS — Bài 2: Cài đặt &amp; Làm quen Xcode 26</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Slide deck -->
+  <main class="deck" id="deck">
+
+    <!-- 1. Title -->
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Lập trình iOS · Khóa học</div>
+      <h1 class="hero-title">Cài đặt &amp; làm quen <span class="grad">Xcode 26</span></h1>
+      <p class="hero-sub">Hướng dẫn thực hành từng bước: cài Xcode, tạo project đầu tiên, đi một vòng giao diện, và chạy app trên Simulator.</p>
+      <div class="hero-meta">
+        <span class="pill">Bài 2</span>
+        <span class="pill pill--ghost">Thực hành tay</span>
+        <span class="pill pill--ghost">~25 phút</span>
+      </div>
+      <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
+    </section>
+
+    <!-- 2. Goal -->
+    <section class="slide">
+      <div class="kicker">Mục tiêu hôm nay</div>
+      <h2>Cuối bài này bạn sẽ…</h2>
+      <ul class="checklist">
+        <li>Cài <strong>Xcode 26</strong> lên máy Mac</li>
+        <li>Tạo một <strong>project iOS</strong> mới đúng cách</li>
+        <li>Hiểu <strong>5 khu vực chính</strong> trong cửa sổ Xcode</li>
+        <li>Chạy app trên <strong>Simulator</strong> bằng nút ▶︎</li>
+        <li>Dùng <strong>Preview</strong> trực tiếp ngay khi gõ code</li>
+      </ul>
+      <p class="note">Đây là bài "tay chân" nhất khóa học. Hãy mở Mac lên và làm theo từng bước nhé!</p>
+    </section>
+
+    <!-- 3. System requirements -->
+    <section class="slide">
+      <div class="kicker">Trước khi cài</div>
+      <h2>Máy bạn cần gì?</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>✅ Yêu cầu</h3>
+          <ul>
+            <li>Một chiếc <strong>máy Mac</strong> (MacBook, iMac, Mac mini…)</li>
+            <li><strong>macOS</strong> đủ mới (Xcode 26 cần phiên bản macOS gần nhất)</li>
+            <li>Còn trống khoảng <strong>40&nbsp;GB</strong> ổ cứng</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>💡 Mẹo</h3>
+          <ul>
+            <li>Cập nhật macOS trước: <em>Apple menu  → System Settings → General → Software Update</em></li>
+            <li>Cắm sạc &amp; dùng Wi-Fi khỏe — file tải khá nặng</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Chưa có Mac? Bạn vẫn xem hết bài để hiểu quy trình, rồi thực hành sau khi mượn/được dùng máy Mac.</p>
+    </section>
+
+    <!-- 4. Where to download -->
+    <section class="slide">
+      <div class="kicker">Bước 1</div>
+      <h2>Tải Xcode ở đâu?</h2>
+      <p class="lead">Cách nhanh &amp; rõ ràng nhất là vào trang <strong>xcodereleases.com</strong> — nơi liệt kê <em>mọi</em> bản Xcode kèm thông tin chi tiết.</p>
+      <pre class="code" data-lang="link"><code><span class="s">https://xcodereleases.com/?scope=release</span></code></pre>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">⚡️</div><h3>Nhanh hơn</h3><p>Tải trực tiếp, không phải chờ App Store xử lý.</p></div>
+        <div class="card"><div class="card-emoji">📋</div><h3>Đầy đủ thông tin</h3><p>Thấy ngay macOS yêu cầu &amp; bản Swift <em>trước khi</em> tải.</p></div>
+        <div class="card"><div class="card-emoji">🗂</div><h3>Mọi phiên bản</h3><p>Cả bản cũ lẫn bản thử nghiệm, không chỉ bản mới nhất.</p></div>
+      </div>
+      <p class="note">Vẫn có thể tải qua <strong>Mac App Store</strong> (tìm "Xcode" → Get) — đơn giản hơn cho người mới, nhưng chậm &amp; ít thông tin hơn.</p>
+    </section>
+
+    <!-- 5. Read the version table -->
+    <section class="slide">
+      <div class="kicker">Bước 1 · Đọc bảng</div>
+      <h2>Hiểu bảng phiên bản</h2>
+      <div class="vtable">
+        <div class="vtable-row vtable-head">
+          <span>Version</span><span>Requires</span><span>Swift</span><span>Tải</span>
+        </div>
+        <div class="vtable-row">
+          <span><strong>Xcode (Apple Silicon) 26.5</strong></span><span>macOS 26.2+</span><span>6.3.2</span><span class="vlink">Download</span>
+        </div>
+        <div class="vtable-row">
+          <span><strong>Xcode 26.5</strong></span><span>macOS 26.2+</span><span>6.3.2</span><span class="vlink">Download</span>
+        </div>
+      </div>
+      <div class="cards" style="margin-top:1.1rem">
+        <div class="card"><div class="card-emoji">💻</div><h3>Version</h3><p>Có <strong>2 loại</strong>: bản <em>Apple Silicon</em> (tối ưu chip M) và bản <em>thường</em> (Intel).</p></div>
+        <div class="card"><div class="card-emoji">🍎</div><h3>Requires</h3><p>Phiên bản <strong>macOS tối thiểu</strong> để cài &amp; chạy bản Xcode đó.</p></div>
+        <div class="card"><div class="card-emoji">🐦</div><h3>Swift</h3><p>Phiên bản <strong>Swift tối đa</strong> mà bản Xcode này hỗ trợ.</p></div>
+      </div>
+    </section>
+
+    <!-- 6. Choose the right build -->
+    <section class="slide">
+      <div class="kicker">Bước 1 · Chọn bản</div>
+      <h2>Chọn đúng bản cho máy bạn</h2>
+      <ul class="checklist">
+        <li>Máy <strong>Apple Silicon</strong> (M1, M2, M3, M2 Pro…) → tải bản <strong>"Xcode (Apple Silicon)"</strong>. Máy <strong>Intel</strong> cũ → bản <strong>"Xcode"</strong> thường.</li>
+        <li>Không chắc máy chip gì? Mở menu  → <em>About This Mac</em> để xem.</li>
+        <li><strong>Cập nhật macOS</strong> lên bản mới nhất nếu được — để cài được Xcode mới. Bản Xcode cũ hơn vẫn dùng tốt, <em>nhưng đừng quá cũ</em>.</li>
+        <li>Cần Swift khác? Đổi <strong>phiên bản Swift mục tiêu</strong> của project trong <em>Build Settings</em>.</li>
+      </ul>
+      <p class="note">Muốn thử bản mới hơn bản Release? Dùng bản <strong>RC (Release Candidate)</strong> — gần như bản cuối: <code>https://xcodereleases.com/?q=RC</code></p>
+    </section>
+
+    <!-- 5. Welcome screen / new project -->
+    <section class="slide">
+      <div class="kicker">Bước 2</div>
+      <h2>Tạo project iOS mới</h2>
+      <ol class="steps">
+        <li><span class="step-n">1</span><div>Ở màn hình chào mừng, chọn <strong>Create New Project…</strong></div></li>
+        <li><span class="step-n">2</span><div>Tab <strong>iOS</strong> → chọn mẫu <strong>App</strong> → bấm <strong>Next</strong>.</div></li>
+        <li><span class="step-n">3</span><div><strong>Product Name:</strong> gõ ví dụ <code>HelloiOS</code>.</div></li>
+        <li><span class="step-n">4</span><div>Đảm bảo <strong>Interface = SwiftUI</strong>, <strong>Language = Swift</strong>.</div></li>
+        <li><span class="step-n">5</span><div>Bấm <strong>Next</strong>, chọn thư mục lưu → <strong>Create</strong>.</div></li>
+        <li><span class="step-n">6</span><div>Chọn project ở Navigator → tab <strong>General</strong> → đặt <strong>Minimum Deployments = iOS 17.0</strong>.</div></li>
+      </ol>
+      <p class="note">Các ô như "Organization Identifier" cứ để mặc định cũng được. Ta sẽ tìm hiểu sau. Đặt <strong>iOS 17.0</strong> để dùng được các tính năng SwiftUI hiện đại như <code>@Observable</code> (Bài 9, 12, 16, 17).</p>
+    </section>
+
+    <!-- 6. Tour the interface -->
+    <section class="slide">
+      <div class="kicker">Bước 3</div>
+      <h2>Một vòng quanh cửa sổ Xcode</h2>
+      <div class="cards">
+        <div class="card"><div class="card-emoji">📁</div><h3>1 · Navigator</h3><p>Cột trái — danh sách các file trong project. <code>ContentView.swift</code> là nơi ta làm việc.</p></div>
+        <div class="card"><div class="card-emoji">✍️</div><h3>2 · Editor</h3><p>Giữa — nơi bạn gõ code Swift.</p></div>
+        <div class="card"><div class="card-emoji">🎨</div><h3>3 · Canvas</h3><p>Phải — <strong>Preview</strong> hiển thị màn hình ngay lập tức khi bạn sửa code.</p></div>
+      </div>
+      <div class="cards" style="margin-top:1rem">
+        <div class="card"><div class="card-emoji">🛠</div><h3>4 · Inspector</h3><p>Ngoài cùng phải — chỉnh thuộc tính của thành phần đang chọn.</p></div>
+        <div class="card"><div class="card-emoji">▶️</div><h3>5 · Toolbar</h3><p>Trên cùng — nút <strong>Run ▶︎</strong>, nút <strong>Stop ◼︎</strong>, và chỗ chọn Simulator.</p></div>
+        <div class="card"><div class="card-emoji">🐞</div><h3>+ · Debug area</h3><p>Dưới cùng — log &amp; thông báo lỗi hiện ở đây.</p></div>
+      </div>
+    </section>
+
+    <!-- 7. ContentView.swift -->
+    <section class="slide">
+      <div class="kicker">File đầu tiên</div>
+      <h2>Mở <span class="grad">ContentView.swift</span></h2>
+      <p>Trong Navigator (cột trái), bấm vào <code>ContentView.swift</code>. Bạn sẽ thấy đúng đoạn code kiểu này — Xcode tạo sẵn:</p>
+      <pre class="code" data-lang="swift"><code><span class="k">import</span> SwiftUI
+
+<span class="k">struct</span> <span class="t">ContentView</span>: <span class="t">View</span> {
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">VStack</span> {
+            <span class="t">Image</span>(systemName: <span class="s">"globe"</span>)
+            <span class="t">Text</span>(<span class="s">"Hello, world!"</span>)
+        }
+    }
+}</code></pre>
+      <p class="note">Đây chính là <code>VStack</code> + <code>Text</code> quen thuộc của SwiftUI. Bên phải, Canvas đang vẽ nó ra cho bạn xem.</p>
+    </section>
+
+    <!-- 8. Choose simulator + Run -->
+    <section class="slide">
+      <div class="kicker">Bước 4</div>
+      <h2>Chạy app trên Simulator</h2>
+      <ol class="steps">
+        <li><span class="step-n">1</span><div>Trên Toolbar, bấm chỗ chọn thiết bị → chọn ví dụ <strong>iPhone 17</strong>.</div></li>
+        <li><span class="step-n">2</span><div>Bấm nút <strong>▶︎ Run</strong> (hoặc nhấn <kbd>⌘</kbd> + <kbd>R</kbd>).</div></li>
+        <li><span class="step-n">3</span><div>Đợi Xcode <strong>build</strong> — lần đầu hơi lâu.</div></li>
+        <li><span class="step-n">4</span><div><strong>Simulator</strong> (iPhone ảo) mở lên và chạy app của bạn. 🎉</div></li>
+      </ol>
+      <p class="note">Muốn dừng? Bấm nút <strong>◼︎ Stop</strong> hoặc <kbd>⌘</kbd> + <kbd>.</kbd> (dấu chấm).</p>
+    </section>
+
+    <!-- 9. Preview vs Simulator -->
+    <section class="slide">
+      <div class="kicker">Hai cách "xem app"</div>
+      <h2>Preview &amp; Simulator khác gì?</h2>
+      <div class="req-grid">
+        <div class="req req--need">
+          <h3>🎨 Preview (Canvas)</h3>
+          <ul>
+            <li>Ở ngay trong Xcode, cột phải</li>
+            <li>Cập nhật <strong>tức thì</strong> khi bạn gõ</li>
+            <li>Tuyệt cho việc chỉnh giao diện nhanh</li>
+          </ul>
+        </div>
+        <div class="req">
+          <h3>📱 Simulator</h3>
+          <ul>
+            <li>Một app iPhone "ảo" riêng</li>
+            <li>Chạy app <strong>thật sự</strong>, bấm/vuốt được</li>
+            <li>Dùng để thử toàn bộ app như người dùng</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Nếu Preview hiện chữ <em>"Preview paused"</em>, bấm nút <strong>↻ Resume</strong> (hoặc <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>P</kbd>) để bật lại.</p>
+    </section>
+
+    <!-- 10. Try an edit -->
+    <section class="slide">
+      <div class="kicker">Thử ngay</div>
+      <h2>Sửa thử một dòng</h2>
+      <p>Đổi chữ trong <code>Text</code> và xem Canvas đổi theo ngay lập tức:</p>
+      <pre class="code" data-lang="swift"><code><span class="t">VStack</span> {
+    <span class="t">Image</span>(systemName: <span class="s">"swift"</span>)   <span class="c">// đổi icon</span>
+    <span class="t">Text</span>(<span class="s">"Xin chào, mình đang học iOS!"</span>)
+}</code></pre>
+      <p class="note">Vừa gõ xong, Preview bên phải đã đổi. Đây là vòng lặp <strong>sửa → thấy ngay</strong> giúp bạn học rất nhanh.</p>
+    </section>
+
+    <!-- 11. Shortcuts & troubleshooting -->
+    <section class="slide">
+      <div class="kicker">Bỏ túi</div>
+      <h2>Phím tắt &amp; xử lý sự cố</h2>
+      <div class="two-col">
+        <div>
+          <h3 style="margin-bottom:.7rem">⌨️ Phím tắt hay dùng</h3>
+          <ul class="checklist">
+            <li><kbd>⌘</kbd><kbd>R</kbd> — Chạy app</li>
+            <li><kbd>⌘</kbd><kbd>B</kbd> — Build (biên dịch)</li>
+            <li><kbd>⌘</kbd><kbd>.</kbd> — Dừng app</li>
+            <li><kbd>⌘</kbd><kbd>S</kbd> — Lưu file</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="margin-bottom:.7rem">🔧 Gặp trục trặc?</h3>
+          <ul class="checklist">
+            <li>Preview đứng → bấm <strong>Resume</strong></li>
+            <li>Simulator chậm lần đầu → đợi xíu, sẽ nhanh dần</li>
+            <li>Build lỗi → đọc dòng đỏ ở khu <strong>Debug</strong></li>
+            <li>Kẹt quá → <em>Product → Clean Build Folder</em></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. Recap -->
+    <section class="slide">
+      <div class="kicker">Cùng ôn lại</div>
+      <h2>Bạn vừa làm được gì</h2>
+      <ul class="checklist checklist--done">
+        <li>Cài <strong>Xcode 26</strong> và mở lần đầu</li>
+        <li>Tạo project <strong>App / SwiftUI</strong> mới</li>
+        <li>Nhận ra <strong>Navigator · Editor · Canvas · Inspector · Toolbar</strong></li>
+        <li>Chạy app trên <strong>Simulator</strong> bằng ▶︎</li>
+        <li>Sửa code &amp; thấy <strong>Preview</strong> cập nhật tức thì</li>
+      </ul>
+      <p class="note">Giờ bạn đã có "xưởng" sẵn sàng. Bài sau ta sẽ dùng nó để làm app tương tác đầu tiên.</p>
+    </section>
+
+    <!-- 13. End -->
+    <!-- Complete sample -->
+    <section class="slide">
+      <div class="kicker">Code hoàn chỉnh</div>
+      <h2>Chép là chạy ✅</h2>
+      <p>Đây là <code>ContentView.swift</code> sau khi bạn sửa thử ở Bước trên — dán vào Xcode 26 và bấm ▶︎:</p>
+      <pre class="code" data-lang="swift"><code><span class="k">import</span> SwiftUI
+
+<span class="k">struct</span> <span class="t">ContentView</span>: <span class="t">View</span> {
+    <span class="k">var</span> body: <span class="k">some</span> <span class="t">View</span> {
+        <span class="t">VStack</span>(spacing: <span class="n">12</span>) {
+            <span class="t">Image</span>(systemName: <span class="s">"swift"</span>)
+                .<span class="fn">font</span>(.largeTitle)
+                .<span class="fn">foregroundStyle</span>(.orange)
+            <span class="t">Text</span>(<span class="s">"Xin chào, mình đang học iOS!"</span>)
+        }
+        .<span class="fn">padding</span>()
+    }
+}
+
+<span class="k">#Preview</span> {
+    <span class="t">ContentView</span>()
+}</code></pre>
+      <p class="note">Thấy Canvas đổi theo ngay khi gõ là môi trường của bạn đã chạy đúng. 🎉</p>
+    </section>
+
+    <section class="slide slide--center slide--hero">
+      <div class="kicker">Kết thúc Bài 2</div>
+      <h1 class="hero-title">Xưởng của bạn đã <span class="grad">sẵn sàng</span>. 🛠</h1>
+      <p class="hero-sub">Xong bước chuẩn bị! Tiếp theo là <strong>Phần 1</strong> — từ điển thuật ngữ iOS &amp; SwiftUI.</p>
+      <div class="lesson-nav">
+        <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
+        <a class="lnav-btn lnav-btn--next" href="../index.html#phan-glossary">Vào Phần 1 · Thuật ngữ ›</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Controls -->
+  <nav class="controls" aria-label="Điều hướng slide">
+    <button class="ctrl" id="prevBtn" aria-label="Slide trước">‹</button>
+    <div class="counter"><span id="current">1</span> / <span id="total">16</span></div>
+    <button class="ctrl" id="nextBtn" aria-label="Slide kế tiếp">›</button>
+  </nav>
+
+  <!-- Slide dots -->
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <button class="help-toggle" id="helpToggle" aria-label="Phím tắt">?</button>
+  <div class="help-panel" id="helpPanel" hidden>
+    <h4>Phím tắt</h4>
+    <ul>
+      <li><kbd>→</kbd> <kbd>Space</kbd> Tiếp</li>
+      <li><kbd>←</kbd> Quay lại</li>
+      <li><kbd>Home</kbd> Slide đầu</li>
+      <li><kbd>End</kbd> Slide cuối</li>
+      <li><kbd>F</kbd> Toàn màn hình</li>
+    </ul>
+  </div>
+
+  <script src="../js/slideshow.js"></script>
+</body>
+</html>

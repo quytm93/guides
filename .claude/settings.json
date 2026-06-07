@@ -39,7 +39,9 @@
       "Bash(grep -noE '#[0-9a-fA-F]{3,6}' css/style.css)",
       "Bash(sort -t: -k1 -n)",
       "Bash(uniq -c -f1)",
-      "Bash(grep -nE '#[0-9a-fA-F]{3,6}' css/style.css)"
+      "Bash(grep -nE '#[0-9a-fA-F]{3,6}' css/style.css)",
+      "Bash(grep -nE 'style.css|<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|slideshow.js|<title>|lnav-btn|href=' bai-1.html)",
+      "Bash(grep -nE '<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|lnav-btn|href=\"bai|kicker|<title>' bai-2.html)"
     ],
     "additionalDirectories": [
       "/Users/quytran/Workshop"

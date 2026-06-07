@@ -109,6 +109,7 @@
 
   // ---- Lesson sidebar menu ----
   const LESSONS = [
+    { n: '🧰', file: 'bai-2.html', title: 'Chuẩn bị · Cài đặt Xcode 26' },
     { n: 'G1', file: '../glossary-ios.html', title: 'Thuật ngữ iOS & Swift' },
     { n: 'G2', file: '../glossary-swiftui.html', title: 'Thuật ngữ SwiftUI' },
     { n: 'C1', file: 'cs-1.html', title: 'CS-1: AI Photo Editor' },
