@@ -58,6 +58,43 @@
         <li><strong>StoreKit 2</strong> — quản lý subscription, restore, trạng thái entitlement.</li>
       </ul>
     </section>
+    <!-- 3b. Đào sâu: Segmentation & Super-resolution -->
+    <section class="slide">
+      <div class="kicker">Slide 2b · Đào sâu khái niệm</div>
+      <h2>Hai model AI ảnh: <span class="grad">Segmentation</span> &amp; <span class="grad">Super-resolution</span></h2>
+      <p class="lead">Cả hai chạy on-device qua <strong>Core ML / Vision</strong> — nền tảng cho xóa nền, tách chủ thể và làm nét.</p>
+      <div class="req-grid">
+        <div class="req">
+          <h3>🎭 Segmentation — phân vùng</h3>
+          <p style="margin:.2rem 0 .6rem;font-size:.92rem;opacity:.85">Phân loại <strong>từng pixel</strong> thuộc đối tượng nào → xuất ra một <em>mask</em> (vùng chủ thể vs nền).</p>
+          <div style="display:flex;gap:.6rem;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1.4rem;margin:.4rem 0 .6rem">
+            <span title="ảnh gốc">🖼️</span>
+            <span style="opacity:.6">→</span>
+            <span style="background:linear-gradient(90deg,#fff 50%,#111 50%);border-radius:6px;padding:.1rem .5rem" title="mask đen-trắng">◐</span>
+            <span style="opacity:.6">→</span>
+            <span title="đã tách nền">🧍</span>
+          </div>
+          <ul>
+            <li><strong>Dùng cho:</strong> xóa/đổi nền, làm mờ nền, "chạm chọn vật thể".</li>
+            <li><strong>iOS:</strong> <code>VNGeneratePersonSegmentationRequest</code>, <code>VNGenerateForegroundInstanceMaskRequest</code> (lift subject).</li>
+          </ul>
+        </div>
+        <div class="req req--need">
+          <h3>🔍 Super-resolution — siêu phân giải</h3>
+          <p style="margin:.2rem 0 .6rem;font-size:.92rem;opacity:.85">Phóng to <strong>kèm suy luận thêm chi tiết</strong> (1x → 2x/4x) — khác hẳn resize làm mờ/vỡ ảnh.</p>
+          <div style="display:flex;gap:.6rem;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1rem;margin:.4rem 0 .6rem">
+            <span style="filter:blur(1.5px);letter-spacing:-2px" title="ảnh nhỏ, mờ">▓▓<br>▓▓</span>
+            <span style="opacity:.6;font-size:1.4rem">→</span>
+            <span style="letter-spacing:-1px" title="ảnh nét, gấp đôi">▒▒▒▒<br>▒▒▒▒</span>
+          </div>
+          <ul>
+            <li><strong>Dùng cho:</strong> nút "Enhance / HD", upscale ảnh cũ, ảnh độ phân giải thấp.</li>
+            <li><strong>Khác resize:</strong> "vẽ thêm" texture hợp lý dựa trên dữ liệu đã học, không kéo dãn pixel.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">⚖️ <strong>On-device</strong> = nhanh + riêng tư + miễn phí GPU nhưng giới hạn RAM/chất lượng; <strong>server</strong> = mạnh hơn nhưng tốn chi phí + độ trễ mạng → đúng đánh đổi ở slide kế tiếp.</p>
+    </section>
     <!-- 4. Kiến trúc -->
     <section class="slide">
       <div class="kicker">Slide 3 · Sơ đồ kiến trúc</div>
