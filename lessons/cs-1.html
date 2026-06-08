@@ -17,7 +17,7 @@
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
       <h1 class="hero-title">🎨 AI <span class="grad">Photo Editor</span></h1>
-      <p class="hero-sub">Biến thao tác chỉnh ảnh phức tạp thành 1–2 chạm nhờ AI — pipeline Core Image / Metal / Core ML.</p>
+      <p class="hero-sub">AI gói thao tác chỉnh ảnh phức tạp vào 1–2 chạm — pipeline Core Image / Metal / Core ML.</p>
       <div class="hero-meta">
         <span class="pill">CS-1</span>
         <span class="pill pill--ghost">Công cụ sáng tạo</span>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Người dùng chạm một nút, AI lo phần khó; chất lượng ảnh xuất ra là thước đo.</p>
+      <p class="lead">Người dùng chạm một nút, AI lo phần còn lại. Thước đo là chất lượng ảnh xuất ra.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Công cụ sáng tạo ảnh — xóa vật thể, làm nét, upscale, đổi nền.</li>
-            <li><strong>Yếu tố then chốt:</strong> Chất lượng ảnh xuất ra, tốc độ xử lý, chi phí GPU server.</li>
+            <li>Sáng tạo ảnh — xóa vật thể, làm nét, upscale, đổi nền.</li>
+            <li><strong>Then chốt:</strong> chất lượng ảnh, tốc độ xử lý, chi phí GPU server.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Subscription (tuần/năm), bản free có watermark; paywall onboarding là đòn bẩy chuyển đổi số 1.</li>
+            <li>Subscription (tuần/năm), bản free có watermark. Paywall onboarding là đòn bẩy chuyển đổi số 1.</li>
           </ul>
         </div>
       </div>
@@ -51,22 +51,22 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Core Image / Metal</strong> — pipeline lọc ảnh real-time trên GPU.</li>
-        <li><strong>Core ML / Vision</strong> — model trên thiết bị: segmentation, super-resolution.</li>
-        <li><strong>On-device vs Server</strong> — đánh đổi độ trễ ↔ chi phí ↔ riêng tư cho từng tính năng.</li>
-        <li><strong>Tiling &amp; downsampling</strong> — ảnh 48MP dễ vượt RAM → chia ô, xem trước ở độ phân giải thấp, chỉ xử lý full-res khi export.</li>
-        <li><strong>StoreKit 2</strong> — quản lý subscription, restore, trạng thái entitlement.</li>
+        <li><strong>Core Image / Metal</strong> — lọc ảnh real-time trên GPU.</li>
+        <li><strong>Core ML / Vision</strong> — model on-device: segmentation, super-resolution.</li>
+        <li><strong>On-device vs Server</strong> — cân độ trễ ↔ chi phí ↔ riêng tư cho từng tính năng.</li>
+        <li><strong>Tiling &amp; downsampling</strong> — ảnh 48MP dễ vượt RAM: chia ô, xem trước ở độ phân giải thấp, chỉ xử lý full-res khi export.</li>
+        <li><strong>StoreKit 2</strong> — quản lý subscription, restore và entitlement.</li>
       </ul>
     </section>
     <!-- 3b. Đào sâu: Segmentation & Super-resolution -->
     <section class="slide">
       <div class="kicker">Slide 2b · Đào sâu khái niệm</div>
       <h2>Hai model AI ảnh: <span class="grad">Segmentation</span> &amp; <span class="grad">Super-resolution</span></h2>
-      <p class="lead">Cả hai chạy on-device qua <strong>Core ML / Vision</strong> — nền tảng cho xóa nền, tách chủ thể và làm nét.</p>
+      <p class="lead">Cả hai chạy on-device qua <strong>Core ML / Vision</strong> — nền tảng để xóa nền, tách chủ thể và làm nét.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🎭 Segmentation — phân vùng</h3>
-          <p style="margin:.2rem 0 .6rem;font-size:.92rem;opacity:.85">Phân loại <strong>từng pixel</strong> thuộc đối tượng nào → xuất ra một <em>mask</em> (vùng chủ thể vs nền).</p>
+          <p style="margin:.2rem 0 .6rem;font-size:.92rem;opacity:.85">Gán <strong>từng pixel</strong> vào một đối tượng, xuất ra <em>mask</em> tách chủ thể khỏi nền.</p>
           <div style="display:flex;gap:.6rem;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1.4rem;margin:.4rem 0 .6rem">
             <span title="ảnh gốc">🖼️</span>
             <span style="opacity:.6">→</span>
@@ -75,25 +75,25 @@
             <span title="đã tách nền">🧍</span>
           </div>
           <ul>
-            <li><strong>Dùng cho:</strong> xóa/đổi nền, làm mờ nền, "chạm chọn vật thể".</li>
+            <li><strong>Dùng cho:</strong> xóa/đổi nền, làm mờ nền, chạm chọn vật thể.</li>
             <li><strong>iOS:</strong> <code>VNGeneratePersonSegmentationRequest</code>, <code>VNGenerateForegroundInstanceMaskRequest</code> (lift subject).</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>🔍 Super-resolution — siêu phân giải</h3>
-          <p style="margin:.2rem 0 .6rem;font-size:.92rem;opacity:.85">Phóng to <strong>kèm suy luận thêm chi tiết</strong> (1x → 2x/4x) — khác hẳn resize làm mờ/vỡ ảnh.</p>
+          <p style="margin:.2rem 0 .6rem;font-size:.92rem;opacity:.85">Phóng to và <strong>vẽ thêm chi tiết</strong> (1x → 2x/4x), không mờ vỡ như resize.</p>
           <div style="display:flex;gap:.6rem;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1rem;margin:.4rem 0 .6rem">
             <span style="filter:blur(1.5px);letter-spacing:-2px" title="ảnh nhỏ, mờ">▓▓<br>▓▓</span>
             <span style="opacity:.6;font-size:1.4rem">→</span>
             <span style="letter-spacing:-1px" title="ảnh nét, gấp đôi">▒▒▒▒<br>▒▒▒▒</span>
           </div>
           <ul>
-            <li><strong>Dùng cho:</strong> nút "Enhance / HD", upscale ảnh cũ, ảnh độ phân giải thấp.</li>
-            <li><strong>Khác resize:</strong> "vẽ thêm" texture hợp lý dựa trên dữ liệu đã học, không kéo dãn pixel.</li>
+            <li><strong>Dùng cho:</strong> nút Enhance / HD, upscale ảnh cũ hoặc ảnh độ phân giải thấp.</li>
+            <li><strong>Khác resize:</strong> vẽ thêm texture hợp lý từ dữ liệu đã học, không kéo dãn pixel.</li>
           </ul>
         </div>
       </div>
-      <p class="note">⚖️ <strong>On-device</strong> = nhanh + riêng tư + miễn phí GPU nhưng giới hạn RAM/chất lượng; <strong>server</strong> = mạnh hơn nhưng tốn chi phí + độ trễ mạng → đúng đánh đổi ở slide kế tiếp.</p>
+      <p class="note">⚖️ <strong>On-device</strong>: nhanh, riêng tư, miễn phí GPU nhưng hạn chế RAM và chất lượng. <strong>Server</strong>: mạnh hơn nhưng tốn tiền và độ trễ mạng. Đánh đổi này ở slide kế tiếp.</p>
     </section>
     <!-- 4. Kiến trúc -->
     <section class="slide">
@@ -113,26 +113,26 @@ flowchart TD
   VM --> SK["StoreKit paywall"]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Quyết định <em>on-device vs server</em> theo từng tính năng. Cache mạnh tay. Bước <strong>export/share</strong> là nơi người dùng đánh giá chất lượng — đầu tư vào đó.</p>
+      <p class="note"><strong>Bài học:</strong> chọn <em>on-device hay server</em> theo từng tính năng. Cache mạnh tay. Người dùng chấm chất lượng ở bước <strong>export/share</strong> — hãy đầu tư vào đó.</p>
     </section>
     <!-- 5. Dự án mẫu -->
     <section class="slide">
       <div class="kicker">Thực hành · Dự án mẫu</div>
       <h2>📦 Tải về &amp; chạy thử: <span class="grad">PhotoEditorDemo</span></h2>
-      <p class="lead">Một photo editor <strong>on-device</strong> chạy ngay trên Simulator — không cần server, API key hay tài khoản. Minh họa đúng cạm bẫy <strong>bộ nhớ · hang · CPU</strong> của CS-1.</p>
+      <p class="lead">Photo editor <strong>on-device</strong> chạy ngay trên Simulator — không cần server, API key hay tài khoản. Minh họa đúng cạm bẫy <strong>bộ nhớ · hang · CPU</strong> của CS-1.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🧪 Memory Lab</h3>
           <ul>
-            <li>Tạo ảnh tới <strong>48MP</strong> rồi so sánh <strong>cách SAI</strong> (full-res, main thread → đứng hình, +~190 MB) với <strong>cách ĐÚNG</strong> (downsample, off-main → mượt).</li>
-            <li>Đo bộ nhớ thật bằng <code>phys_footprint</code> ngay trên màn hình.</li>
+            <li>Tạo ảnh <strong>48MP</strong>, so sánh <strong>cách SAI</strong> (full-res, main thread → đứng hình, +~190 MB) với <strong>cách ĐÚNG</strong> (downsample, off-main → mượt).</li>
+            <li>Đo bộ nhớ thật ngay trên màn hình bằng <code>phys_footprint</code>.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>🏗️ Kiến trúc</h3>
           <ul>
             <li>iOS 17+ · SwiftUI · <code>@Observable</code> MVVM · async/await · service tách protocol.</li>
-            <li>Mở Xcode 16+ → ⌘R. Files dùng <em>synchronized folders</em>.</li>
+            <li>Mở Xcode 16+, nhấn ⌘R. Files dùng <em>synchronized folders</em>.</li>
           </ul>
         </div>
       </div>
@@ -142,10 +142,10 @@ flowchart TD
     <section class="slide slide--center slide--hero">
       <div class="kicker">Kết thúc CS-1</div>
       <h1 class="hero-title">🎨 <span class="grad">AI Photo Editor</span></h1>
-      <p class="hero-sub">Biến thao tác chỉnh ảnh phức tạp thành 1–2 chạm nhờ AI — pipeline Core Image / Metal / Core ML.</p>
+      <p class="hero-sub">AI gói thao tác chỉnh ảnh phức tạp vào 1–2 chạm — pipeline Core Image / Metal / Core ML.</p>
       <div class="lesson-nav">
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-19.html">CS-2 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-2.html">CS-2 ›</a>
       </div>
     </section>
 
@@ -193,5 +193,6 @@ flowchart TD
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

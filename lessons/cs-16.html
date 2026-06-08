@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-18: Smart-Home Companion</title>
+  <title>Case study iOS — CS-16: Kids Education</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🏠 Smart-Home <span class="grad">Companion</span></h1>
-      <p class="hero-sub">Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc; khoảnh khắc ghép thiết bị quyết định thành bại.</p>
+      <h1 class="hero-title">🧸 Kids <span class="grad">Education</span></h1>
+      <p class="hero-sub">Pháp lý chi phối tất cả; cha mẹ trả tiền, trẻ dùng.</p>
       <div class="hero-meta">
-        <span class="pill">CS-18</span>
-        <span class="pill pill--ghost">IoT</span>
-        <span class="pill pill--ghost">Phần cứng + app</span>
+        <span class="pill">CS-16</span>
+        <span class="pill pill--ghost">Kids EdTech</span>
+        <span class="pill pill--ghost">Family subscription</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Điều khiển đèn / khóa / cảm biến từ điện thoại.</p>
+      <p class="lead">Nội dung an toàn, vui, chủ yếu chạy offline.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>IoT — app điều khiển thiết bị phần cứng.</li>
-            <li><strong>Yếu tố then chốt:</strong> App chạy theo lịch của phần cứng.</li>
+            <li>Kids EdTech — học mà chơi cho trẻ nhỏ.</li>
+            <li><strong>Cốt lõi:</strong> Pháp lý chi phối tất cả.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>App miễn phí; tiền nằm ở phần cứng; chất lượng app kéo review phần cứng.</li>
+            <li>Family subscription — cha mẹ trả tiền, trẻ dùng.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>CoreBluetooth (BLE)</strong> — ghép &amp; giao tiếp thiết bị.</li>
-        <li><strong>HomeKit</strong> — tích hợp nhà thông minh Apple.</li>
-        <li><strong>OTA firmware update</strong> — cập nhật firmware qua app.</li>
-        <li><strong>Reconnection handling</strong> — xử lý kết nối chập chờn.</li>
-        <li><strong>Background BLE constraints</strong> — giới hạn nền của hệ thống.</li>
+        <li><strong>COPPA</strong> — cấm quảng cáo hành vi và tracker bên thứ ba.</li>
+        <li><strong>Parental gate</strong> — câu hỏi toán chặn trước khi mua hoặc mở link.</li>
+        <li><strong>Kids Category rules</strong> — App Review xét rất gắt.</li>
+        <li><strong>Offline content</strong> — chủ yếu chạy offline.</li>
+        <li><strong>Dual UX</strong> — giao diện riêng cho phụ huynh và trẻ.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,26 +64,25 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart LR
-  DEV[Thiet bi phan cung] -. BLE .-> APP[iOS App]
-  APP --> PAIR[Pairing flow]
-  APP --> CTRL[Control state]
-  APP --> OTA[OTA firmware]
-  APP --> HK[HomeKit]
-  APP --> CLOUD[Cloud sync]
+flowchart TD
+  KID[Giao dien Tre] --> CONTENT[Offline content]
+  PARENT[Khu vuc Phu huynh] --> GATE[Parental Gate]
+  GATE --> SK[StoreKit Family]
+  APP[App] --> NOADS[Khong tracker / khong ads]
+  APP --> PRIV[COPPA compliance]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc và dễ lỗi. Khoảnh khắc <strong>ghép thiết bị</strong> quyết định thành bại.</p>
+      <p class="note"><strong>Bài học:</strong> Tuân thủ quyết định mọi thứ — cấm tracker, cẩn trọng dữ liệu. App Review Kids Category rất gắt.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-18</div>
-      <h1 class="hero-title">🏠 <span class="grad">Smart-Home Companion</span></h1>
-      <p class="hero-sub">Quản lý trạng thái BLE &amp; tự kết nối lại rất nhọc; khoảnh khắc ghép thiết bị quyết định thành bại.</p>
+      <div class="kicker">Kết thúc CS-16</div>
+      <h1 class="hero-title">🧸 <span class="grad">Kids Education</span></h1>
+      <p class="hero-sub">Pháp lý chi phối tất cả; cha mẹ trả tiền, trẻ dùng.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-15.html">‹ CS-17</a>
+        <a class="lnav-btn" href="cs-15.html">‹ CS-15</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-18.html">CS-19 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-17.html">CS-17 ›</a>
       </div>
     </section>
 
@@ -131,5 +130,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

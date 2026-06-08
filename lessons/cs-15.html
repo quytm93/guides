@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-17: AR Furniture/Measure</title>
+  <title>Case study iOS — CS-15: Notes / Productivity</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">📐 AR Furniture &amp; <span class="grad">Measure</span></h1>
-      <p class="hero-sub">UX dạy người dùng quét phòng là tất cả; thường là một tính năng, không phải mô hình độc lập.</p>
+      <h1 class="hero-title">📝 Notes &amp; <span class="grad">Productivity</span></h1>
+      <p class="hero-sub">Đồng bộ offline-first quyết định tất cả — chọn cách giải quyết xung đột ngay từ đầu.</p>
       <div class="hero-meta">
-        <span class="pill">CS-17</span>
-        <span class="pill pill--ghost">AR commerce</span>
-        <span class="pill pill--ghost">Lead-gen / bán lẻ</span>
+        <span class="pill">CS-15</span>
+        <span class="pill pill--ghost">Năng suất</span>
+        <span class="pill pill--ghost">Mua 1 lần + sub</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Thử đồ trong phòng thật trước khi mua.</p>
+      <p class="lead">Ghi nhanh, có ngay trên mọi thiết bị.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>AR commerce — đặt đồ nội thất ảo, đo kích thước.</li>
-            <li><strong>Yếu tố then chốt:</strong> Thường là một tính năng trong app bán lẻ, không phải mô hình kinh doanh độc lập.</li>
+            <li>Năng suất — ghi chú, đồng bộ đa thiết bị.</li>
+            <li><strong>Yếu tố then chốt:</strong> đồng bộ offline-first quyết định tất cả.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Lead-gen bán lẻ (“thử trước khi mua”) dẫn về doanh số cửa hàng.</li>
+            <li>Mua 1 lần, hoặc subscription cho đồng bộ và teams.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>ARKit + RealityKit</strong> — nền tảng AR.</li>
-        <li><strong>Plane detection &amp; occlusion</strong> — nhận mặt phẳng, che khuất.</li>
-        <li><strong>USDZ</strong> — định dạng model 3D.</li>
-        <li><strong>Lighting estimation</strong> — ước lượng ánh sáng cho chân thực.</li>
-        <li><strong>Device gating (LiDAR)</strong> — phân mảnh thiết bị.</li>
+        <li><strong>CloudKit</strong> — hạ tầng đồng bộ của Apple, gắn với hệ sinh thái.</li>
+        <li><strong>Local source of truth (SwiftData)</strong> — dữ liệu cục bộ là gốc.</li>
+        <li><strong>Conflict resolution</strong> — last-write-wins vs CRDT.</li>
+        <li><strong>Full-text search</strong> — tìm kiếm nhanh.</li>
+        <li><strong>Cold launch</strong> — mở app tức thì.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -65,25 +65,25 @@
       <div class="diagram">
         <pre class="mermaid">
 flowchart TD
-  CAM[Camera / ARKit] --> SCENE[RealityKit Scene]
-  SCENE --> PLANE[Plane detection]
-  SCENE --> OCC[Occlusion]
-  CAT[3D Catalog USDZ] --> SCENE
-  SCENE --> UI[SwiftUI Overlay]
-  UI --> CTA[Mua / Luu]
+  UI[SwiftUI View] --> VM["ViewModel @Observable"]
+  VM --> SD[SwiftData local]
+  SD --> SYNC[Sync Engine]
+  SYNC --> CK[CloudKit]
+  CK --> SYNC
+  SYNC --> MERGE[Conflict resolution]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> UX dạy người dùng quét phòng là tất cả — onboarding quyết định. Phân mảnh thiết bị (có / không LiDAR).</p>
+      <p class="note"><strong>Bài học:</strong> Xung đột đồng bộ quyết định app sống hay chết. <strong>Chọn cách giải quyết xung đột ngay từ đầu.</strong></p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-17</div>
-      <h1 class="hero-title">📐 <span class="grad">AR Furniture/Measure</span></h1>
-      <p class="hero-sub">UX dạy người dùng quét phòng là tất cả; thường là một tính năng, không phải mô hình độc lập.</p>
+      <div class="kicker">Kết thúc CS-15</div>
+      <h1 class="hero-title">📝 <span class="grad">Notes / Productivity</span></h1>
+      <p class="hero-sub">Đồng bộ offline-first quyết định tất cả — chọn cách giải quyết xung đột ngay từ đầu.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-17.html">‹ CS-16</a>
+        <a class="lnav-btn" href="cs-14.html">‹ CS-14</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-16.html">CS-18 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-16.html">CS-16 ›</a>
       </div>
     </section>
 
@@ -131,5 +131,6 @@ flowchart TD
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

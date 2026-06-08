@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-12: Casual Game</title>
+  <title>Case study iOS — CS-7: Food Delivery</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🎮 Casual <span class="grad">Mobile Game</span></h1>
-      <p class="hero-sub">Chỉ retention (D1/D7/D30) và ARPDAU là quan trọng; cân bằng kinh tế là việc liên tục.</p>
+      <h1 class="hero-title">🛵 Food <span class="grad">Delivery</span></h1>
+      <p class="hero-sub">Realtime + thanh toán + bản đồ = vận hành phức tạp; thực chất bạn xây một công ty logistics.</p>
       <div class="hero-meta">
-        <span class="pill">CS-12</span>
-        <span class="pill pill--ghost">Game</span>
-        <span class="pill pill--ghost">IAP + quảng cáo</span>
+        <span class="pill">CS-7</span>
+        <span class="pill pill--ghost">Logistics</span>
+        <span class="pill pill--ghost">Hoa hồng sàn</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Vòng lặp gameplay gây nghiện + live-ops events.</p>
+      <p class="lead">Đặt món và theo dõi tài xế theo thời gian thực.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Game — chơi nhanh, dễ học, khó bỏ.</li>
-            <li><strong>Yếu tố then chốt:</strong> Retention (D1/D7/D30) &amp; ARPDAU là tất cả.</li>
+            <li>Logistics — sàn 3 bên: khách, quán, tài xế.</li>
+            <li><strong>Yếu tố then chốt:</strong> thường tách thành 3 app riêng.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Free + IAP (vật phẩm tiêu hao, gỡ quảng cáo) + rewarded video.</li>
+            <li>Hoa hồng mỗi đơn + phí giao; biên lợi nhuận rất mỏng.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>SpriteKit / SceneKit / Unity</strong> — engine dựng game.</li>
-        <li><strong>Game loop (fixed timestep)</strong> — vòng lặp cập nhật–vẽ.</li>
-        <li><strong>Texture atlas</strong> — gom asset để tối ưu vẽ.</li>
-        <li><strong>GameKit</strong> — bảng xếp hạng, thành tựu.</li>
-        <li><strong>StoreKit edge cases</strong> — restore, refund, hoàn tiền.</li>
+        <li><strong>Order state machine</strong> — máy trạng thái đơn hàng.</li>
+        <li><strong>Live tracking trên MapKit</strong> — vẽ vị trí tài xế realtime.</li>
+        <li><strong>Push theo giai đoạn</strong> — đã nhận → đang nấu → đang giao.</li>
+        <li><strong>Payment + tipping</strong> — thanh toán và tip.</li>
+        <li><strong>WebSocket / realtime channel</strong> — cập nhật vị trí liên tục.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,27 +64,28 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart TD
-  LOOP[Game Loop] --> RENDER[SpriteKit Render]
-  LOOP --> PHYS[Physics]
-  LOOP --> ECON[Game Economy]
-  ECON --> IAP[StoreKit IAP]
-  ECON --> ADS[Ad SDK rewarded]
-  LOOP --> GK[GameKit Leaderboards]
-  ECON --> ANL[Analytics]
+flowchart LR
+  EATER[App Khach] --> GW[Backend]
+  MERCH[App Quan] --> GW
+  DRIVER[App Tai xe] --> GW
+  GW --> OSM[Order State Machine]
+  GW --> RT[Realtime location]
+  RT --> EATER
+  GW --> PAY[Payment]
+  GW --> PUSH[APNs]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Chỉ retention &amp; doanh thu mỗi người dùng quan trọng. Cân bằng kinh tế trong game là việc <strong>liên tục</strong>.</p>
+      <p class="note"><strong>Bài học:</strong> Bản đồ “đồ ăn của tôi đâu” là UX cảm xúc. Realtime + thanh toán + bản đồ = vận hành phức tạp; thực chất bạn xây một công ty logistics.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-12</div>
-      <h1 class="hero-title">🎮 <span class="grad">Casual Game</span></h1>
-      <p class="hero-sub">Chỉ retention (D1/D7/D30) và ARPDAU là quan trọng; cân bằng kinh tế là việc liên tục.</p>
+      <div class="kicker">Kết thúc CS-7</div>
+      <h1 class="hero-title">🛵 <span class="grad">Food Delivery</span></h1>
+      <p class="hero-sub">Realtime + thanh toán + bản đồ = vận hành phức tạp; thực chất bạn xây một công ty logistics.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-14.html">‹ CS-11</a>
+        <a class="lnav-btn" href="cs-6.html">‹ CS-6</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-2.html">CS-13 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-8.html">CS-8 ›</a>
       </div>
     </section>
 
@@ -132,5 +133,6 @@ flowchart TD
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

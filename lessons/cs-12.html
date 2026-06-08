@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-3: Music Streaming</title>
+  <title>Case study iOS — CS-12: Casual Game</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🎵 Music <span class="grad">Streaming</span></h1>
-      <p class="hero-sub">Kinh tế bản quyền chi phối mô hình kinh doanh; DRM + offline thực sự khó.</p>
+      <h1 class="hero-title">🎮 Casual <span class="grad">Mobile Game</span></h1>
+      <p class="hero-sub">Chỉ retention (D1/D7/D30) và ARPDAU mới đáng quan tâm; cân bằng kinh tế là việc làm hằng ngày.</p>
       <div class="hero-meta">
-        <span class="pill">CS-3</span>
-        <span class="pill pill--ghost">Media</span>
-        <span class="pill pill--ghost">Subscription</span>
+        <span class="pill">CS-12</span>
+        <span class="pill pill--ghost">Game</span>
+        <span class="pill pill--ghost">IAP + quảng cáo</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Nghe mọi nơi, tải về nghe không cần mạng.</p>
+      <p class="lead">Gameplay gây nghiện + sự kiện live-ops.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Media — nghe nhạc, tải offline.</li>
-            <li><strong>Yếu tố then chốt:</strong> Kinh tế bản quyền chi phối mô hình kinh doanh.</li>
+            <li>Game — chơi nhanh, dễ học, khó bỏ.</li>
+            <li><strong>Yếu tố then chốt:</strong> retention (D1/D7/D30) và ARPDAU là tất cả.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Subscription (phí Apple + bản quyền hãng đĩa = biên rất mỏng).</li>
+            <li>Miễn phí + IAP (vật phẩm tiêu hao, gỡ quảng cáo) + rewarded video.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Adaptive streaming (HLS)</strong> — đổi bitrate theo mạng.</li>
-        <li><strong>FairPlay DRM</strong> — bảo vệ tải offline.</li>
-        <li><strong>Gapless playback</strong> — phát liền mạch.</li>
-        <li><strong>CarPlay / AirPlay</strong> — bề mặt mở rộng tăng độ dính.</li>
-        <li><strong>Cache management</strong> — quản lý bộ nhớ tải về lớn.</li>
+        <li><strong>SpriteKit / SceneKit / Unity</strong> — engine dựng game.</li>
+        <li><strong>Game loop (fixed timestep)</strong> — vòng lặp cập nhật và vẽ.</li>
+        <li><strong>Texture atlas</strong> — gom asset để vẽ nhanh hơn.</li>
+        <li><strong>GameKit</strong> — bảng xếp hạng, thành tựu.</li>
+        <li><strong>StoreKit edge cases</strong> — restore, refund, hoàn tiền.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,26 +64,27 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart LR
-  APP[iOS App] --> STREAM[HLS Stream]
-  APP --> DRM[FairPlay DRM]
-  DRM --> DL[Offline Download]
-  APP --> PLAYER[AVPlayer]
-  PLAYER --> CARPLAY[CarPlay / AirPlay]
-  DL --> CACHE[Local cache]
+flowchart TD
+  LOOP[Game Loop] --> RENDER[SpriteKit Render]
+  LOOP --> PHYS[Physics]
+  LOOP --> ECON[Game Economy]
+  ECON --> IAP[StoreKit IAP]
+  ECON --> ADS[Ad SDK rewarded]
+  LOOP --> GK[GameKit Leaderboards]
+  ECON --> ANL[Analytics]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Bản quyền quyết định kinh doanh. DRM + offline thực sự khó. CarPlay / Watch tăng độ gắn bó.</p>
+      <p class="note"><strong>Bài học:</strong> Chỉ retention và doanh thu mỗi người dùng mới quan trọng. Cân bằng kinh tế trong game là việc <strong>làm liên tục</strong>.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-3</div>
-      <h1 class="hero-title">🎵 <span class="grad">Music Streaming</span></h1>
-      <p class="hero-sub">Kinh tế bản quyền chi phối mô hình kinh doanh; DRM + offline thực sự khó.</p>
+      <div class="kicker">Kết thúc CS-12</div>
+      <h1 class="hero-title">🎮 <span class="grad">Casual Game</span></h1>
+      <p class="hero-sub">Chỉ retention (D1/D7/D30) và ARPDAU mới đáng quan tâm; cân bằng kinh tế là việc làm hằng ngày.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-19.html">‹ CS-2</a>
+        <a class="lnav-btn" href="cs-11.html">‹ CS-11</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-5.html">CS-4 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-13.html">CS-13 ›</a>
       </div>
     </section>
 
@@ -131,5 +132,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

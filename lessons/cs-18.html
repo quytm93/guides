@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-19: Enterprise Field App</title>
+  <title>Case study iOS — CS-18: Smart-Home Companion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🔧 Enterprise <span class="grad">Field App</span></h1>
-      <p class="hero-sub">Người mua ≠ người dùng; độ tin cậy quan trọng hơn độ bóng bẩy.</p>
+      <h1 class="hero-title">🏠 Smart-Home <span class="grad">Companion</span></h1>
+      <p class="hero-sub">Quản lý trạng thái BLE và tự kết nối lại rất khó; ghép thiết bị quyết định thành bại.</p>
       <div class="hero-meta">
-        <span class="pill">CS-19</span>
-        <span class="pill pill--ghost">Doanh nghiệp</span>
-        <span class="pill pill--ghost">B2B SaaS / seat</span>
+        <span class="pill">CS-18</span>
+        <span class="pill pill--ghost">IoT</span>
+        <span class="pill pill--ghost">Phần cứng + app</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Nhập liệu hiện trường, thường không có sóng, đồng bộ sau.</p>
+      <p class="lead">Điều khiển đèn, khóa, cảm biến từ điện thoại.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Doanh nghiệp / B2B — kỹ thuật viên hiện trường.</li>
-            <li><strong>Yếu tố then chốt:</strong> Người mua ≠ người dùng; độ tin cậy > độ bóng bẩy.</li>
+            <li>IoT — app điều khiển thiết bị phần cứng.</li>
+            <li><strong>Cốt lõi:</strong> App phụ thuộc nhịp của phần cứng.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>B2B SaaS — license theo seat, chu kỳ bán dài.</li>
+            <li>App miễn phí; tiền nằm ở phần cứng; app tốt kéo review phần cứng lên.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Offline-first capture</strong> — nhập liệu khi mất mạng, đồng bộ sau.</li>
-        <li><strong>MDM / Apple Business Manager</strong> — phân phối nội bộ, không qua App Store.</li>
-        <li><strong>SSO (ASWebAuthenticationSession)</strong> — đăng nhập doanh nghiệp.</li>
-        <li><strong>Encryption &amp; security</strong> — mã hóa mạnh.</li>
-        <li><strong>Legacy integration</strong> — tích hợp hệ thống cũ chi phối khối lượng việc.</li>
+        <li><strong>CoreBluetooth (BLE)</strong> — ghép và giao tiếp thiết bị.</li>
+        <li><strong>HomeKit</strong> — tích hợp nhà thông minh của Apple.</li>
+        <li><strong>OTA firmware update</strong> — cập nhật firmware qua app.</li>
+        <li><strong>Reconnection handling</strong> — xử lý kết nối chập chờn.</li>
+        <li><strong>Background BLE constraints</strong> — giới hạn BLE khi chạy nền.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -65,24 +65,25 @@
       <div class="diagram">
         <pre class="mermaid">
 flowchart LR
-  FIELD[App hien truong] --> LOCAL[Local store offline]
-  LOCAL --> SYNC[Sync khi co mang]
-  SYNC --> ERP[ERP / Legacy systems]
-  FIELD --> SSO[SSO / Identity]
-  MDM[MDM] --> FIELD
+  DEV[Thiet bi phan cung] -. BLE .-> APP[iOS App]
+  APP --> PAIR[Pairing flow]
+  APP --> CTRL[Control state]
+  APP --> OTA[OTA firmware]
+  APP --> HK[HomeKit]
+  APP --> CLOUD[Cloud sync]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Phân phối qua MDM, không qua Store công khai. Độ tin cậy > polish. Tích hợp hệ thống cũ chiếm phần lớn công sức.</p>
+      <p class="note"><strong>Bài học:</strong> Quản lý trạng thái BLE và tự kết nối lại rất khó, dễ lỗi. Bước <strong>ghép thiết bị</strong> quyết định thành bại.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-19</div>
-      <h1 class="hero-title">🔧 <span class="grad">Enterprise Field App</span></h1>
-      <p class="hero-sub">Người mua ≠ người dùng; độ tin cậy quan trọng hơn độ bóng bẩy.</p>
+      <div class="kicker">Kết thúc CS-18</div>
+      <h1 class="hero-title">🏠 <span class="grad">Smart-Home Companion</span></h1>
+      <p class="hero-sub">Quản lý trạng thái BLE và tự kết nối lại rất khó; ghép thiết bị quyết định thành bại.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-16.html">‹ CS-18</a>
+        <a class="lnav-btn" href="cs-17.html">‹ CS-17</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-20.html">CS-20 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-19.html">CS-19 ›</a>
       </div>
     </section>
 
@@ -130,5 +131,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

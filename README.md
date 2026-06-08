@@ -9,27 +9,40 @@ A teaching workshop for iOS development, made of two parts:
 
 ## 1. The course
 
-Open [index.html](index.html) in a browser for the lesson index. Slides live in [lessons/](lessons/).
+Open [index.html](index.html) in a browser for the course home. It's organized into a **prep step + 3 parts**; the decks live in [lessons/](lessons/), the glossaries at the site root.
 
-**iOS track** (`bai-1`…`bai-18`):
+**Prep · Chuẩn bị** — [lessons/bai-2.html](lessons/bai-2.html): install & get comfortable with Xcode 26 (download the right build, create a project, tour the UI, run on the Simulator).
 
-| # | Topic | # | Topic |
+**Phần 1 · Glossary** — quick-reference term pages:
+- [glossary-ios.html](glossary-ios.html) — 60+ iOS & Swift terms (language, concurrency, memory & performance, data, frameworks, Xcode 26 tooling).
+- [glossary-swiftui.html](glossary-swiftui.html) — 80+ SwiftUI terms (views & state, layout, lists, navigation, controls, style, animation & drawing).
+
+**Phần 2 · Case studies** — [lessons/cs-1.html](lessons/cs-1.html) … [lessons/cs-20.html](lessons/cs-20.html): 20 real-app case-study decks (in **Vietnamese**), each in ≤5 slides with key concepts, terms, the business/domain factors, and a Mermaid architecture diagram. Files are numbered in **reading order** (`cs-N.html` = **CS-N**). Source notes: [case-studies.md](case-studies.md).
+
+| # | App | # | App |
 |---|---|---|---|
-| 1 | Getting started | 10 | SwiftData |
-| 2 | Install & learn Xcode 26 | 11 | Run on a real iPhone & publish |
-| 3 | First interactive app | 12 | Combine with SwiftUI |
-| 4 | Layout & lists | 13 | Animations & effects |
-| 5 | Multi-screen navigation | 14 | Localization |
-| 6 | Persisting data with `@AppStorage` | 15 | Push notifications |
-| 7 | Data models with `struct` & `Identifiable` | 16 | Concurrency & actors |
-| 8 | Calling a network API | 17 | App lifecycle |
-| 9 | MVVM with `@Observable` | 18 | Memory management (ARC) |
+| 1 | AI Photo Editor | 11 | News / Reading |
+| 2 | Short-Video Editor | 12 | Casual Game |
+| 3 | Music Streaming | 13 | Habit & Fitness Tracker |
+| 4 | Meditation / Sleep | 14 | Language Learning |
+| 5 | E-commerce | 15 | Notes / Productivity |
+| 6 | Personal Finance | 16 | Kids Education |
+| 7 | Food Delivery | 17 | AR Furniture / Measure |
+| 8 | Ride-Hailing | 18 | Smart-Home Companion |
+| 9 | Social Photo Feed | 19 | Enterprise Field App |
+| 10 | Dating | 20 | AI Chat Assistant |
 
-Plus [tong-ket.html](lessons/tong-ket.html) — wrap-up & roadmap.
+**Phần 3 · Performance & critical issues** — [performance-critical-issues.md](performance-critical-issues.md) + slide deck [lessons/perf-1.html](lessons/perf-1.html): a concept catalog of what makes iOS apps **crash, get terminated, leak memory, hang, hitch, and drain CPU/battery/disk/network** — grouped by **symptom**, aligned with Apple's Xcode Organizer metric categories. Opens with a memory-model primer (value vs reference, stack vs heap, ARC) since that underlies the memory/CPU symptoms. Focuses on *what to watch for in production* (not syntax).
 
-**Case studies** — [case-studies.md](case-studies.md): 20 real-app case-study lessons (in **Vietnamese**), one app per lesson in ≤3 "slides" with key concepts, terms, factors, and a Mermaid architecture diagram. Spans technical, business, and domain aspects (photo editor, fintech, ride-hailing, AR, IoT, AI chat, …).
+**Đọc thêm · Apple resources** — a small section at the end of the home page links out to Apple's App Store submission, platforms/ecosystem, sample code, and developer community (WWDC).
 
-**Performance & critical issues** — [performance-critical-issues.md](performance-critical-issues.md) + slide deck [lessons/perf-1.html](lessons/perf-1.html) ("Phần 3"): a concept catalog of what makes iOS apps **crash, get terminated, leak memory, hang, hitch, and drain CPU/battery/disk/network** — grouped by **symptom**, aligned with Apple's Xcode Organizer metric categories. Opens with a memory-model primer (value vs reference, stack vs heap, ARC) since that underlies the memory/CPU symptoms. Focuses on *what to watch for in production* (not syntax).
+### Navigating the decks
+
+Every lesson is a self-contained browser slideshow ([js/slideshow.js](js/slideshow.js)):
+
+- **← / →** (or `Space` / `PageUp`·`PageDown`) move between slides; **Home / End** jump to first/last; **F** toggles fullscreen; **?** shows the shortcut help.
+- The **☰** button (or **M** / **Esc**) opens a shared **content sidebar** listing every prep/glossary/case-study/performance page, built from a single source of truth in [js/sidebar.js](js/sidebar.js) and loaded on both the decks and the glossary pages.
+- Styling is shared via [css/style.css](css/style.css); the home page also has a scroll-to-top button.
 
 **House style** (taught throughout, and enforced by the skills): iOS 17+, Xcode 26, SwiftUI-first, **MVVM with `@Observable`**, `async/await` + actors, SwiftData, Combine reserved for event streams. Every code lesson ends with a complete copy-paste-runnable sample.
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-16: Kids Education</title>
+  <title>Case study iOS — CS-17: AR Furniture/Measure</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🧸 Kids <span class="grad">Education</span></h1>
-      <p class="hero-sub">Tuân thủ pháp lý ràng buộc mọi thứ; cha mẹ mua, trẻ dùng.</p>
+      <h1 class="hero-title">📐 AR Furniture &amp; <span class="grad">Measure</span></h1>
+      <p class="hero-sub">Dạy người dùng quét phòng là quan trọng nhất. Thường chỉ là một tính năng, không phải app riêng.</p>
       <div class="hero-meta">
-        <span class="pill">CS-16</span>
-        <span class="pill pill--ghost">Kids EdTech</span>
-        <span class="pill pill--ghost">Family subscription</span>
+        <span class="pill">CS-17</span>
+        <span class="pill pill--ghost">AR commerce</span>
+        <span class="pill pill--ghost">Lead-gen / bán lẻ</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Nội dung an toàn, vui, phần lớn chạy offline.</p>
+      <p class="lead">Đặt thử đồ vào phòng thật trước khi mua.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Kids EdTech — học mà chơi cho trẻ nhỏ.</li>
-            <li><strong>Yếu tố then chốt:</strong> Tuân thủ pháp lý ràng buộc mọi thứ.</li>
+            <li>AR commerce — đặt nội thất ảo, đo kích thước.</li>
+            <li><strong>Yếu tố then chốt:</strong> Thường chỉ là một tính năng trong app bán lẻ, không phải app kiếm tiền riêng.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Family subscription — cha mẹ mua, trẻ dùng.</li>
+            <li>Lead-gen bán lẻ — “thử trước khi mua” để đẩy doanh số cửa hàng.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>COPPA</strong> — không quảng cáo hành vi, không tracker bên thứ ba.</li>
-        <li><strong>Parental gate</strong> — cổng (câu hỏi toán) trước khi mua / mở link.</li>
-        <li><strong>Kids Category rules</strong> — App Review nghiêm ngặt.</li>
-        <li><strong>Offline content</strong> — phần lớn chạy offline.</li>
-        <li><strong>Dual UX</strong> — giao diện cho cả phụ huynh &amp; trẻ.</li>
+        <li><strong>ARKit + RealityKit</strong> — nền tảng AR.</li>
+        <li><strong>Plane detection &amp; occlusion</strong> — nhận mặt phẳng và che khuất.</li>
+        <li><strong>USDZ</strong> — định dạng model 3D.</li>
+        <li><strong>Lighting estimation</strong> — ước lượng ánh sáng cho chân thực.</li>
+        <li><strong>Device gating (LiDAR)</strong> — máy có / không LiDAR, gây phân mảnh.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -65,24 +65,25 @@
       <div class="diagram">
         <pre class="mermaid">
 flowchart TD
-  KID[Giao dien Tre] --> CONTENT[Offline content]
-  PARENT[Khu vuc Phu huynh] --> GATE[Parental Gate]
-  GATE --> SK[StoreKit Family]
-  APP[App] --> NOADS[Khong tracker / khong ads]
-  APP --> PRIV[COPPA compliance]
+  CAM[Camera / ARKit] --> SCENE[RealityKit Scene]
+  SCENE --> PLANE[Plane detection]
+  SCENE --> OCC[Occlusion]
+  CAT[3D Catalog USDZ] --> SCENE
+  SCENE --> UI[SwiftUI Overlay]
+  UI --> CTA[Mua / Luu]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Tuân thủ định hình mọi thứ (cấm tracker, cẩn trọng dữ liệu). App Review cho Kids Category rất khắt khe.</p>
+      <p class="note"><strong>Bài học:</strong> Dạy người dùng quét phòng là quan trọng nhất — onboarding quyết định. Lưu ý phân mảnh thiết bị (có / không LiDAR).</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-16</div>
-      <h1 class="hero-title">🧸 <span class="grad">Kids Education</span></h1>
-      <p class="hero-sub">Tuân thủ pháp lý ràng buộc mọi thứ; cha mẹ mua, trẻ dùng.</p>
+      <div class="kicker">Kết thúc CS-17</div>
+      <h1 class="hero-title">📐 <span class="grad">AR Furniture/Measure</span></h1>
+      <p class="hero-sub">Dạy người dùng quét phòng là quan trọng nhất. Thường chỉ là một tính năng, không phải app riêng.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-9.html">‹ CS-15</a>
+        <a class="lnav-btn" href="cs-16.html">‹ CS-16</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-15.html">CS-17 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-18.html">CS-18 ›</a>
       </div>
     </section>
 
@@ -130,5 +131,6 @@ flowchart TD
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

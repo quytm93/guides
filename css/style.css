@@ -309,7 +309,7 @@ strong { color: var(--text); font-weight: 700; }
   font-size: 0.78rem; font-weight: 700; background: var(--surface-2); color: var(--muted);
 }
 .sidebar-home {
-  margin-top: auto; padding: 0.8rem; text-align: center; border-radius: 10px;
+  margin-bottom: 0.4rem; padding: 0.8rem; text-align: center; border-radius: 10px;
   text-decoration: none; color: var(--text); font-weight: 600;
   background: var(--surface); border: 1px solid var(--border);
   transition: border-color 0.2s ease;
@@ -425,6 +425,29 @@ body.page-home { overflow: auto; }
 html { scroll-behavior: smooth; }
 .page-home :target { scroll-margin-top: 1.5rem; }
 .roadmap { display: flex; align-items: stretch; gap: 0.55rem; flex-wrap: wrap; }
+.roadmap-row { flex: 1 1 100%; display: flex; align-items: stretch; gap: 0.55rem; flex-wrap: wrap; }
+.roadmap-step.roadmap-step--full { width: 100%; flex: none; }
+.map-more {
+  display: inline-block; margin-top: 0.8rem;
+  padding: 0.45rem 0.95rem; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted); font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; transition: border-color 0.2s ease, color 0.2s ease;
+}
+.map-more:hover { border-color: var(--accent); color: var(--text); }
+
+.to-top {
+  position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 90;
+  width: 2.8rem; height: 2.8rem; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  font-size: 1.2rem; line-height: 1;
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.to-top.is-visible { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 .roadmap-step {
   flex: 1 1 200px;
   display: flex; flex-direction: column; gap: 0.12rem;

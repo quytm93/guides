@@ -16,8 +16,8 @@
     <!-- Hero -->
     <header class="home-hero">
       <span class="kicker">Khóa học · Xcode 26 · SwiftUI</span>
-      <h1>Lập trình <span class="grad">iOS</span> từ con số 0</h1>
-      <p>Học làm ứng dụng iPhone bằng tiếng Việt: tra cứu thuật ngữ, mổ xẻ ứng dụng thật, và làm chủ hiệu năng &amp; sự cố. Mỗi mục là một trang tra cứu hoặc slideshow ngắn.</p>
+      <h1>Lập trình <span class="grad">iOS</span></h1>
+      <p>Học làm ứng dụng iPhone: tra cứu thuật ngữ, mổ xẻ ứng dụng thật, và làm chủ hiệu năng &amp; sự cố. Mỗi mục là một trang tra cứu hoặc slideshow ngắn.</p>
       <div class="home-badges">
         <span class="pill">Người mới bắt đầu</span>
         <span class="pill pill--ghost">Tiếng Việt</span>
@@ -30,31 +30,33 @@
       <span class="kicker">Mục lục</span>
       <h2 style="margin: 0.3rem 0 1.1rem;">Khóa học gồm <span class="grad">3 phần</span></h2>
       <nav class="roadmap" aria-label="Mục lục khóa học">
-        <a class="roadmap-step" href="#phan-chuan-bi">
+        <a class="roadmap-step roadmap-step--full" href="#phan-chuan-bi">
           <span class="rs-k">Chuẩn bị</span>
           <span class="rs-t">Cài đặt công cụ</span>
           <span class="rs-d">Xcode 26 · Swift</span>
         </a>
-        <span class="roadmap-arrow" aria-hidden="true">→</span>
-        <a class="roadmap-step" href="#phan-glossary">
-          <span class="rs-k">Phần 1</span>
-          <span class="rs-t">Từ điển thuật ngữ</span>
-          <span class="rs-d">iOS &amp; SwiftUI</span>
-        </a>
-        <span class="roadmap-arrow" aria-hidden="true">→</span>
-        <a class="roadmap-step" href="#phan-cases">
-          <span class="rs-k">Phần 2</span>
-          <span class="rs-t">20 Case study</span>
-          <span class="rs-d">thực chiến · có sơ đồ</span>
-        </a>
-        <span class="roadmap-arrow" aria-hidden="true">→</span>
-        <a class="roadmap-step" href="#phan-perf">
-          <span class="rs-k">Phần 3</span>
-          <span class="rs-t">Hiệu năng &amp; Sự cố</span>
-          <span class="rs-d">crash · bộ nhớ · CPU</span>
-        </a>
+        <div class="roadmap-row">
+          <a class="roadmap-step" href="#phan-glossary">
+            <span class="rs-k">Phần 1</span>
+            <span class="rs-t">Từ điển thuật ngữ</span>
+            <span class="rs-d">iOS &amp; SwiftUI</span>
+          </a>
+          <span class="roadmap-arrow" aria-hidden="true">→</span>
+          <a class="roadmap-step" href="#phan-cases">
+            <span class="rs-k">Phần 2</span>
+            <span class="rs-t">20 Case study</span>
+            <span class="rs-d">thực chiến · có sơ đồ</span>
+          </a>
+          <span class="roadmap-arrow" aria-hidden="true">→</span>
+          <a class="roadmap-step" href="#phan-perf">
+            <span class="rs-k">Phần 3</span>
+            <span class="rs-t">Hiệu năng &amp; Sự cố</span>
+            <span class="rs-d">crash · bộ nhớ · CPU</span>
+          </a>
+        </div>
       </nav>
       <p class="map-hint">💡 Mỗi mục mở ra một trang tra cứu hoặc <strong>slideshow</strong> — bấm <kbd>→</kbd> / <kbd>Space</kbd> để chuyển slide, <kbd>☰</kbd> để mở danh sách. Mới bắt đầu? Đi từ <strong>Bước chuẩn bị</strong>.</p>
+      <a class="map-more" href="#phan-tai-nguyen">Tham khảo thêm →</a>
     </section>
 
     <section id="phan-chuan-bi">
@@ -141,20 +143,20 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-19.html">
+        <a class="lesson lesson--ready" href="lessons/cs-2.html">
           <div class="lesson-top">
             <div class="lesson-num">C2</div>
             <span class="lesson-tag tag-ready">Creator economy</span>
           </div>
           <h3>🎬 Short-Video Editor</h3>
-          <p>Độ tin cậy &amp; tốc độ export là thước đo niềm tin; video ngốn nhiệt và RAM.</p>
+          <p>Độ tin cậy &amp; tốc độ export là thước đo niềm tin; video ngốn CPU (nóng máy) và RAM.</p>
           <div class="lesson-meta">
             <span>📊 5 slide</span>
             <span>🏗 Creator subscription</span>
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-12.html">
+        <a class="lesson lesson--ready" href="lessons/cs-3.html">
           <div class="lesson-top">
             <div class="lesson-num">C3</div>
             <span class="lesson-tag tag-ready">Media</span>
@@ -167,7 +169,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-5.html">
+        <a class="lesson lesson--ready" href="lessons/cs-4.html">
           <div class="lesson-top">
             <div class="lesson-num">C4</div>
             <span class="lesson-tag tag-ready">Wellness</span>
@@ -187,7 +189,7 @@
       </div>
       <div class="lesson-grid" style="margin-bottom: 2.2rem;">
 
-        <a class="lesson lesson--ready" href="lessons/cs-8.html">
+        <a class="lesson lesson--ready" href="lessons/cs-5.html">
           <div class="lesson-top">
             <div class="lesson-num">C5</div>
             <span class="lesson-tag tag-ready">Bán lẻ</span>
@@ -200,7 +202,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-3.html">
+        <a class="lesson lesson--ready" href="lessons/cs-6.html">
           <div class="lesson-top">
             <div class="lesson-num">C6</div>
             <span class="lesson-tag tag-ready">Fintech</span>
@@ -213,7 +215,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-6.html">
+        <a class="lesson lesson--ready" href="lessons/cs-7.html">
           <div class="lesson-top">
             <div class="lesson-num">C7</div>
             <span class="lesson-tag tag-ready">Logistics</span>
@@ -226,7 +228,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-11.html">
+        <a class="lesson lesson--ready" href="lessons/cs-8.html">
           <div class="lesson-top">
             <div class="lesson-num">C8</div>
             <span class="lesson-tag tag-ready">Di chuyển</span>
@@ -246,7 +248,7 @@
       </div>
       <div class="lesson-grid" style="margin-bottom: 2.2rem;">
 
-        <a class="lesson lesson--ready" href="lessons/cs-4.html">
+        <a class="lesson lesson--ready" href="lessons/cs-9.html">
           <div class="lesson-top">
             <div class="lesson-num">C9</div>
             <span class="lesson-tag tag-ready">Mạng xã hội</span>
@@ -259,7 +261,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-13.html">
+        <a class="lesson lesson--ready" href="lessons/cs-10.html">
           <div class="lesson-top">
             <div class="lesson-num">C10</div>
             <span class="lesson-tag tag-ready">Mạng xã hội</span>
@@ -272,7 +274,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-14.html">
+        <a class="lesson lesson--ready" href="lessons/cs-11.html">
           <div class="lesson-top">
             <div class="lesson-num">C11</div>
             <span class="lesson-tag tag-ready">Báo chí</span>
@@ -285,7 +287,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-7.html">
+        <a class="lesson lesson--ready" href="lessons/cs-12.html">
           <div class="lesson-top">
             <div class="lesson-num">C12</div>
             <span class="lesson-tag tag-ready">Game</span>
@@ -305,7 +307,7 @@
       </div>
       <div class="lesson-grid" style="margin-bottom: 2.2rem;">
 
-        <a class="lesson lesson--ready" href="lessons/cs-2.html">
+        <a class="lesson lesson--ready" href="lessons/cs-13.html">
           <div class="lesson-top">
             <div class="lesson-num">C13</div>
             <span class="lesson-tag tag-ready">Sức khỏe</span>
@@ -318,7 +320,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-10.html">
+        <a class="lesson lesson--ready" href="lessons/cs-14.html">
           <div class="lesson-top">
             <div class="lesson-num">C14</div>
             <span class="lesson-tag tag-ready">EdTech</span>
@@ -331,7 +333,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-9.html">
+        <a class="lesson lesson--ready" href="lessons/cs-15.html">
           <div class="lesson-top">
             <div class="lesson-num">C15</div>
             <span class="lesson-tag tag-ready">Năng suất</span>
@@ -344,7 +346,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-17.html">
+        <a class="lesson lesson--ready" href="lessons/cs-16.html">
           <div class="lesson-top">
             <div class="lesson-num">C16</div>
             <span class="lesson-tag tag-ready">Kids EdTech</span>
@@ -364,7 +366,7 @@
       </div>
       <div class="lesson-grid" style="margin-bottom: 2.2rem;">
 
-        <a class="lesson lesson--ready" href="lessons/cs-15.html">
+        <a class="lesson lesson--ready" href="lessons/cs-17.html">
           <div class="lesson-top">
             <div class="lesson-num">C17</div>
             <span class="lesson-tag tag-ready">AR commerce</span>
@@ -377,7 +379,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-16.html">
+        <a class="lesson lesson--ready" href="lessons/cs-18.html">
           <div class="lesson-top">
             <div class="lesson-num">C18</div>
             <span class="lesson-tag tag-ready">IoT</span>
@@ -390,7 +392,7 @@
           </div>
         </a>
 
-        <a class="lesson lesson--ready" href="lessons/cs-18.html">
+        <a class="lesson lesson--ready" href="lessons/cs-19.html">
           <div class="lesson-top">
             <div class="lesson-num">C19</div>
             <span class="lesson-tag tag-ready">Doanh nghiệp</span>
@@ -421,7 +423,7 @@
     <section id="phan-perf" style="margin-top: 3rem;">
       <div class="section-head">
         <h2>Phần 3 · Hiệu năng &amp; Sự cố nghiêm trọng</h2>
-        <span class="sub">Nền tảng bộ nhớ + 10 nhóm theo triệu chứng — crash · terminations · bộ nhớ · treo · giật · CPU/pin · đĩa · mạng. Kèm bản tra cứu <code>performance-critical-issues.md</code> 🔍</span>
+        <span class="sub">Nền tảng bộ nhớ + 10 nhóm theo triệu chứng — crash · terminations · bộ nhớ · treo · giật · CPU/pin · đĩa · mạng. Kèm bản tra cứu <a href="https://github.com/quytm93/guides/blob/main/performance-critical-issues.md" target="_blank" rel="noopener"><code>performance-critical-issues.md</code></a> 🔍</span>
       </div>
 
       <div class="lesson-grid">
@@ -509,7 +511,7 @@
             <div class="lesson-num">🔵</div>
             <span class="lesson-tag tag-ready">Hiệu năng</span>
           </div>
-          <h3>CPU, pin &amp; nhiệt</h3>
+          <h3>CPU, pin &amp; nhiệt độ</h3>
           <p>Nóng máy &amp; tụt pin</p>
           <div class="lesson-meta">
             <span>🔎 5 điểm</span>
@@ -571,11 +573,110 @@
       </div>
     </section>
 
+    <section id="phan-tai-nguyen" style="margin-top: 3rem;">
+      <div class="section-head">
+        <h2>Tài nguyên · Sau khóa học</h2>
+        <span class="sub">Đọc thêm từ Apple, kỹ năng Claude Code &amp; code mẫu của khóa học 🧰</span>
+      </div>
+
+      <div class="lesson-grid">
+
+        <a class="lesson lesson--ready" href="https://developer.apple.com/app-store/submitting/" target="_blank" rel="noopener">
+          <div class="lesson-top">
+            <div class="lesson-num">🚀</div>
+            <span class="lesson-tag tag-ready">App Store</span>
+          </div>
+          <h3>Phát hành lên App Store</h3>
+          <p>Yêu cầu, quy định &amp; hướng dẫn submit bản mới nhất — đọc trước khi nộp app.</p>
+          <div class="lesson-meta">
+            <span>🔗 developer.apple.com</span>
+            <span>↗ Mở tab mới</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="https://developer.apple.com/platforms/" target="_blank" rel="noopener">
+          <div class="lesson-top">
+            <div class="lesson-num">🍎</div>
+            <span class="lesson-tag tag-ready">Nền tảng</span>
+          </div>
+          <h3>Hệ sinh thái Apple</h3>
+          <p>Một nền tảng cho iOS, iPadOS, macOS, watchOS, visionOS &amp; tvOS — code chung, chạy khắp thiết bị.</p>
+          <div class="lesson-meta">
+            <span>🔗 developer.apple.com</span>
+            <span>↗ Mở tab mới</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="https://developer.apple.com/documentation/samplecode" target="_blank" rel="noopener">
+          <div class="lesson-top">
+            <div class="lesson-num">💾</div>
+            <span class="lesson-tag tag-ready">Code mẫu</span>
+          </div>
+          <h3>Sample Code</h3>
+          <p>Dự án mẫu chính thức từ Apple — tải về, mở Xcode, học theo code thật.</p>
+          <div class="lesson-meta">
+            <span>🔗 developer.apple.com</span>
+            <span>↗ Mở tab mới</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="https://developer.apple.com/community/" target="_blank" rel="noopener">
+          <div class="lesson-top">
+            <div class="lesson-num">👥</div>
+            <span class="lesson-tag tag-ready">Cộng đồng</span>
+          </div>
+          <h3>Cộng đồng &amp; WWDC</h3>
+          <p>Sự kiện, lab &amp; video — nổi bật là <strong>WWDC</strong>, nơi Apple công bố API mới mỗi năm.</p>
+          <div class="lesson-meta">
+            <span>🔗 developer.apple.com</span>
+            <span>↗ Mở tab mới</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="https://github.com/quytm93/guides/tree/main/.claude/skills" target="_blank" rel="noopener">
+          <div class="lesson-top">
+            <div class="lesson-num">🤖</div>
+            <span class="lesson-tag tag-ready">Claude Code</span>
+          </div>
+          <h3>Kỹ năng Claude Code</h3>
+          <p>Bộ skills dùng chung cho iOS — build, cấu hình, ký &amp; ship app theo đúng quy ước khóa học.</p>
+          <div class="lesson-meta">
+            <span>🔗 github.com/quytm93/guides</span>
+            <span>↗ Mở tab mới</span>
+          </div>
+        </a>
+
+        <a class="lesson lesson--ready" href="https://github.com/quytm93/guides/tree/main/samples" target="_blank" rel="noopener">
+          <div class="lesson-top">
+            <div class="lesson-num">📦</div>
+            <span class="lesson-tag tag-ready">Code mẫu</span>
+          </div>
+          <h3>Dự án mẫu của khóa học</h3>
+          <p>Mã nguồn các dự án demo đi kèm case study — tải về, mở Xcode, chạy thử ngay.</p>
+          <div class="lesson-meta">
+            <span>🔗 github.com/quytm93/guides</span>
+            <span>↗ Mở tab mới</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <footer class="home-footer">
       Tạo bằng ❤️ để dạy lập trình iOS · Mở một mục bất kỳ rồi dùng phím <kbd>→</kbd> <kbd>←</kbd> để trình chiếu.
     </footer>
 
   </div>
+
+  <button class="to-top" id="toTop" aria-label="Lên đầu trang" title="Lên đầu trang">↑</button>
+  <script>
+    (function () {
+      var btn = document.getElementById('toTop');
+      function onScroll() { btn.classList.toggle('is-visible', window.scrollY > 400); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      onScroll();
+    })();
+  </script>
 
 </body>
 </html>

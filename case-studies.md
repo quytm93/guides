@@ -580,7 +580,7 @@ flowchart LR
 - **AVAssetExportSession:** pipeline xuất video tin cậy.
 - **Metal effects:** hiệu ứng trên GPU.
 - **Background export:** xuất khi app vào nền.
-- **Thermal & memory:** video ngốn nhiệt và RAM.
+- **Thermal & memory:** video ngốn CPU (nóng máy) và RAM.
 
 ### Slide 3 · Kiến trúc & bài học
 ```mermaid
@@ -593,7 +593,7 @@ flowchart TD
   EXP --> OUT[Video xuất ra]
   VM["ViewModel @Observable"] --> COMP
 ```
-- **Bài học:** export ổn định & nhanh là thước đo niềm tin. Quản lý nhiệt và bộ nhớ. **Template** hạ rào kỹ năng, thúc đẩy chấp nhận.
+- **Bài học:** export ổn định & nhanh là thước đo niềm tin. Quản lý nhiệt độ và bộ nhớ. **Template** hạ rào kỹ năng, thúc đẩy chấp nhận.
 
 ---
 

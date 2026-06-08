@@ -15,7 +15,7 @@
     <section class="slide slide--center slide--hero">
       <div class="kicker">Lập trình iOS · Phần 3</div>
       <h1 class="hero-title">Hiệu năng &amp; <span class="grad">Sự cố nghiêm trọng</span></h1>
-      <p class="hero-sub">Không phải cú pháp — mà là biết app sẽ <strong>crash, bị giết, ngốn RAM, treo, giật, tốn pin</strong> ở đâu. Xếp theo triệu chứng.</p>
+      <p class="hero-sub">Không phải cú pháp — mà là biết app <strong>crash, bị giết, ngốn RAM, treo, giật, tốn pin</strong> ở đâu. Xếp theo triệu chứng.</p>
       <div class="hero-meta">
         <span class="pill">Phần 3</span>
         <span class="pill pill--ghost">10 nhóm triệu chứng</span>
@@ -27,30 +27,30 @@
     <section class="slide">
       <div class="kicker">Vì sao có phần này</div>
       <h2>AI lo cú pháp — bạn lo <span class="grad">điểm hỏng</span></h2>
-      <p class="lead">AI viết được <strong>cú pháp</strong> trong vài giây. Việc khó — và là giá trị của kỹ sư — là biết <strong>app sẽ hỏng ở đâu</strong>. Đây là danh mục lỗi nghiêm trọng &amp; điểm hại hiệu năng, xếp theo <strong>triệu chứng</strong> (khớp 7 nhóm số liệu Apple đo ở máy thật), để soi code của bạn hoặc do AI sinh ra.</p>
+      <p class="lead">AI viết <strong>cú pháp</strong> trong vài giây. Việc khó — giá trị của kỹ sư — là biết <strong>app hỏng ở đâu</strong>. Đây là danh mục lỗi nghiêm trọng &amp; điểm hại hiệu năng, xếp theo <strong>triệu chứng</strong> (khớp 7 nhóm số liệu Apple đo trên máy thật) — để soi code bạn viết hoặc AI sinh.</p>
       <div style="display:flex; flex-wrap:wrap; gap:0.55rem; margin:0.6rem 0;">
-        <span class="pill pill--ghost">🔴 Crash — app văng</span><span class="pill pill--ghost">⚫ Bị hệ thống giết (terminations)</span><span class="pill pill--ghost">🟠 Rò rỉ &amp; ngốn bộ nhớ</span><span class="pill pill--ghost">🟡 Treo UI (hangs)</span><span class="pill pill--ghost">🟤 Giật khung hình (hitches)</span><span class="pill pill--ghost">🔵 CPU, pin &amp; nhiệt</span><span class="pill pill--ghost">💾 Đĩa &amp; I/O</span><span class="pill pill--ghost">🌐 Mạng</span><span class="pill pill--ghost">🟣 Khởi động (launch)</span><span class="pill pill--ghost">🟢 Concurrency (Swift 6)</span>
+        <span class="pill pill--ghost">🔴 Crash — app văng</span><span class="pill pill--ghost">⚫ Bị hệ thống giết (terminations)</span><span class="pill pill--ghost">🟠 Rò rỉ &amp; ngốn bộ nhớ</span><span class="pill pill--ghost">🟡 Treo UI (hangs)</span><span class="pill pill--ghost">🟤 Giật khung hình (hitches)</span><span class="pill pill--ghost">🔵 CPU, pin &amp; nhiệt độ</span><span class="pill pill--ghost">💾 Đĩa &amp; I/O</span><span class="pill pill--ghost">🌐 Mạng</span><span class="pill pill--ghost">🟣 Khởi động (launch)</span><span class="pill pill--ghost">🟢 Concurrency (Swift 6)</span>
       </div>
-      <p class="note">Bản tra cứu đầy đủ (dấu hiệu &amp; cách tránh từng mục): <code>performance-critical-issues.md</code>.</p>
+      <p class="note">Tra cứu đầy đủ (dấu hiệu &amp; cách tránh từng mục): <code>performance-critical-issues.md</code>.</p>
     </section>
 
     <section class="slide">
       <div class="kicker">Nền tảng bộ nhớ</div>
       <h2>struct vs class · <span class="grad">stack vs heap</span></h2>
-      <p class="lead">Trước khi soi triệu chứng: một lựa chọn nền tảng quyết định <strong>tốc độ &amp; bộ nhớ</strong> — kiểu <em>giá trị</em> hay <em>tham chiếu</em>, nằm ở <strong>stack</strong> hay <strong>heap</strong>.</p>
+      <p class="lead">Trước khi soi triệu chứng: một lựa chọn nền tảng quyết định <strong>tốc độ &amp; bộ nhớ</strong> — kiểu <em>giá trị</em> hay <em>tham chiếu</em>, ở <strong>stack</strong> hay <strong>heap</strong>.</p>
       <div class="two-col">
         <div class="card">
           <div class="card-emoji">📦</div>
           <h3>struct · giá trị</h3>
-          <p>Thường ở <strong>stack</strong> · sao chép khi gán · cấp phát/thu hồi <strong>gần như tức thì</strong> · <strong>không tốn ARC</strong>.</p>
+          <p>Thường ở <strong>stack</strong> · sao chép khi gán · cấp phát <strong>gần như tức thì</strong> · <strong>không tốn ARC</strong>.</p>
         </div>
         <div class="card">
           <div class="card-emoji">🔗</div>
           <h3>class · tham chiếu</h3>
-          <p>Ở <strong>heap</strong> · chia sẻ tham chiếu · <strong>ARC</strong> đếm &amp; thu hồi · mỗi lần cấp phát/đếm đều tốn CPU.</p>
+          <p>Ở <strong>heap</strong> · chia sẻ tham chiếu · <strong>ARC</strong> đếm &amp; thu hồi · mỗi lần cấp phát/đếm tốn CPU.</p>
         </div>
       </div>
-      <p class="note">📌 Vì sao vào Phần 3: <strong>heap + ARC</strong> là gốc của <em>rò rỉ &amp; ngốn bộ nhớ</em> (retain cycle), <em>bị Jetsam giết</em> (peak RAM), và <em>CPU/pin</em> (cấp phát thừa). Mặc định <code>struct</code>; dùng <code>class</code> khi cần chia sẻ trạng thái (ViewModel) hoặc identity. <strong>Nói gần đúng cho dễ nhớ:</strong> struct bị "bắt" trong closure <em>escaping</em>, hoặc bị bọc trong <em>existential</em> (<code>any Protocol</code>/<code>Any</code>) quá lớn, vẫn có thể lên heap; struct <em>chứa kiểu tham chiếu</em> thì bản thân vẫn ở stack nhưng <strong>vẫn tốn ARC</strong> cho các thành phần đó; <code>Array</code>/<code>String</code> dùng Copy-on-Write.</p>
+      <p class="note">📌 Vì sao quan trọng: <strong>heap + ARC</strong> là gốc của <em>rò rỉ &amp; ngốn RAM</em> (retain cycle), <em>bị Jetsam giết</em> (peak RAM), và <em>tốn CPU/pin</em> (cấp phát thừa). Mặc định <code>struct</code>; dùng <code>class</code> khi cần chia sẻ trạng thái (ViewModel) hoặc identity. <strong>Lưu ý:</strong> struct vẫn có thể lên heap nếu bị bắt trong closure <em>escaping</em> hoặc bọc trong <em>existential</em> lớn (<code>any Protocol</code>/<code>Any</code>); struct chứa kiểu tham chiếu vẫn <strong>tốn ARC</strong> cho phần đó; <code>Array</code>/<code>String</code> dùng Copy-on-Write.</p>
     </section>
 
     <section class="slide">
@@ -118,14 +118,14 @@
     </section>
 
     <section class="slide">
-      <div class="kicker">🔵 CPU, pin &amp; nhiệt</div>
+      <div class="kicker">🔵 CPU, pin &amp; nhiệt độ</div>
       <h2>Nóng máy &amp; tụt pin</h2>
       <ul class="checklist">
         <li><strong>Vẽ lại thừa (body churn)</strong> — Thu hẹp state; tách view nhỏ; <code>@Observable</code> đúng phạm vi.</li>
         <li><strong>Timer/loop chạy quá dày</strong> — Giảm tần suất; dừng khi không cần.</li>
         <li><strong>Polling thay vì event</strong> — Dùng push / async stream / callback.</li>
         <li><strong>Location accuracy cao luôn bật</strong> — Giảm accuracy; significant-change; tắt khi nền.</li>
-        <li><strong>Bỏ qua nhiệt &amp; Low Power Mode</strong> — Theo dõi <code>ProcessInfo.thermalState</code> &amp; <code>isLowPowerModeEnabled</code>, giảm tải.</li>
+        <li><strong>Bỏ qua nhiệt độ &amp; Low Power Mode</strong> — Theo dõi <code>ProcessInfo.thermalState</code> &amp; <code>isLowPowerModeEnabled</code>, giảm tải.</li>
       </ul>
       <p class="note">🔍 Phát hiện bằng: Instruments › Time Profiler &amp; Energy Log; ProcessInfo.thermalState.</p>
     </section>
@@ -185,7 +185,7 @@
       <ul class="checklist">
         <li><strong>Xcode Organizer</strong> — 7 nhóm số liệu máy thật: Launches · Hangs · Hitches · Memory · Disk · Battery · Terminations</li>
         <li><strong>MetricKit</strong> — MXHangDiagnostic · MXDiskWriteExceptionDiagnostic · MXCPUExceptionDiagnostic · hitch · exit reasons</li>
-        <li><strong>Instruments (<code>⌘I</code> → Profile)</strong> — bộ profiler chọn <em>template theo triệu chứng</em>: <code>Time Profiler</code> (CPU/hang) · <code>Allocations</code>+<code>Leaks</code> (RAM/rò rỉ) · <code>Animation Hitches</code> (giật) · <code>App Launch</code> (khởi động) · <code>Energy Log</code> (pin/nhiệt) · <code>File Activity</code> (đĩa) · <code>Network</code> (mạng). ⚠️ Profile bản <strong>Release</strong> trên <strong>máy thật</strong>, không dùng Simulator.</li>
+        <li><strong>Instruments (<code>⌘I</code> → Profile)</strong> — chọn <em>template theo triệu chứng</em>: <code>Time Profiler</code> (CPU/hang) · <code>Allocations</code>+<code>Leaks</code> (RAM/rò rỉ) · <code>Animation Hitches</code> (giật) · <code>App Launch</code> (khởi động) · <code>Energy Log</code> (pin/nhiệt độ) · <code>File Activity</code> (đĩa) · <code>Network</code> (mạng). ⚠️ Profile bản <strong>Release</strong> trên <strong>máy thật</strong>.</li>
         <li><strong>Main Thread Checker</strong> — bắt cập nhật UI sai thread (bật khi Debug)</li>
         <li><strong>Thread / Address Sanitizer</strong> — bắt data race &amp; truy cập bộ nhớ hỏng</li>
         <li><strong>Memory Graph Debugger</strong> — tìm retain cycle (đối tượng không giải phóng)</li>
@@ -198,22 +198,22 @@
     <section class="slide">
       <div class="kicker">🛠️ Xcode Instruments</div>
       <h2>Profiler theo <span class="grad">triệu chứng</span></h2>
-      <p class="lead">Mở bằng <code>⌘I</code> (Product › Profile) → chọn <strong>template</strong> đúng với triệu chứng đang nghi. Mỗi template gắn sẵn instrument phù hợp để đo trên timeline thật.</p>
+      <p class="lead">Mở bằng <code>⌘I</code> (Product › Profile) → chọn <strong>template</strong> đúng triệu chứng đang nghi. Mỗi template gắn sẵn instrument để đo trên timeline thật.</p>
       <ul class="checklist">
-        <li><strong>Time Profiler</strong> — CPU nóng &amp; hang: xem call tree, tìm hàm chiếm nhiều thời gian trên main thread.</li>
-        <li><strong>Allocations + Leaks</strong> — RAM phình &amp; rò rỉ: theo dõi peak memory, bắt retain cycle (xem cùng Memory Graph).</li>
-        <li><strong>Animation Hitches</strong> — cuộn/animation rớt frame: định vị commit/render quá hạn deadline.</li>
+        <li><strong>Time Profiler</strong> — CPU &amp; hang: đọc call tree, tìm hàm tốn thời gian trên main thread.</li>
+        <li><strong>Allocations + Leaks</strong> — RAM phình &amp; rò rỉ: theo dõi peak memory, bắt retain cycle.</li>
+        <li><strong>Animation Hitches</strong> — cuộn/animation rớt frame: định vị commit/render trễ deadline.</li>
         <li><strong>App Launch</strong> — khởi động chậm: bóc tách pha pre-main / khởi tạo lúc mở app.</li>
-        <li><strong>Energy Log</strong> — pin &amp; nhiệt: quy chiếu CPU, mạng, location, GPU về mức tiêu thụ.</li>
+        <li><strong>Energy Log</strong> — pin &amp; nhiệt độ: quy CPU, mạng, location, GPU về mức tiêu thụ.</li>
         <li><strong>File Activity · Network</strong> — đĩa &amp; mạng: đo lượng ghi đĩa, request lãng phí.</li>
       </ul>
-      <p class="note">⚠️ Luôn profile bản <strong>Release</strong> trên <strong>máy thật</strong> — Simulator dùng CPU/GPU/RAM của Mac nên số liệu hiệu năng <em>không phản ánh</em> thiết bị thật.</p>
+      <p class="note">⚠️ Luôn profile bản <strong>Release</strong> trên <strong>máy thật</strong> — Simulator dùng CPU/GPU/RAM của Mac nên số liệu <em>không phản ánh</em> thiết bị thật.</p>
     </section>
 
     <section class="slide slide--center slide--hero">
       <div class="kicker">Kết phần</div>
       <h1 class="hero-title">Soi code theo <span class="grad">triệu chứng</span></h1>
-      <p class="hero-sub">Crash · Terminations · Bộ nhớ · Hang · Hitch · CPU/pin/nhiệt · Đĩa · Mạng · Khởi động · Concurrency — hỏi cho mọi màn hình &amp; mọi PR.</p>
+      <p class="hero-sub">Crash · Terminations · Bộ nhớ · Hang · Hitch · CPU/pin/nhiệt độ · Đĩa · Mạng · Khởi động · Concurrency — soi mọi màn hình &amp; mọi PR.</p>
       <div class="lesson-nav">
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
         <a class="lnav-btn lnav-btn--next" href="../performance-critical-issues.md">Bản tra cứu ›</a>
@@ -243,5 +243,6 @@
   </div>
 
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

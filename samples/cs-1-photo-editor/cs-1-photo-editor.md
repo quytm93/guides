@@ -490,7 +490,7 @@ chỉnh, rồi **một lần** `CIContext.render` full-res ra file ở bước *
 1. **Tiled export:** xuất full-res bằng cách chia ô (tile) thay vì downsample — giữ
    RAM thấp mà vẫn ra ảnh chất lượng cao.
 2. **Xóa nền (Vision):** thêm `VNGeneratePersonSegmentationRequest` → tách người/nền.
-3. **Đo CPU/nhiệt:** thêm cảnh báo `ProcessInfo.thermalState` khi xử lý liên tục.
+3. **Đo CPU/nhiệt độ:** thêm cảnh báo `ProcessInfo.thermalState` khi xử lý liên tục.
 4. **StoreKit 2:** thêm paywall + watermark cho bản free như slide CS-1.
 5. **Cache:** nhớ kết quả filter theo (ảnh, filter) để khỏi xử lý lại.
 

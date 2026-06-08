@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-7: Food Delivery</title>
+  <title>Case study iOS — CS-6: Personal Finance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🛵 Food <span class="grad">Delivery</span></h1>
-      <p class="hero-sub">Realtime + payment + maps = vận hành phức tạp; bạn đang xây một công ty logistics.</p>
+      <h1 class="hero-title">💰 Personal <span class="grad">Finance</span></h1>
+      <p class="hero-sub">Gom mọi tài khoản về một chỗ, tự phân loại chi tiêu — bảo mật chính là sản phẩm.</p>
       <div class="hero-meta">
-        <span class="pill">CS-7</span>
-        <span class="pill pill--ghost">Logistics</span>
-        <span class="pill pill--ghost">Hoa hồng sàn</span>
+        <span class="pill">CS-6</span>
+        <span class="pill pill--ghost">Fintech</span>
+        <span class="pill pill--ghost">Freemium + premium</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Đặt món, theo dõi tài xế thời gian thực.</p>
+      <p class="lead">Một bức tranh tài chính duy nhất, giao dịch tự phân loại.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Logistics — sàn 3 bên (khách · quán · tài xế).</li>
-            <li><strong>Yếu tố then chốt:</strong> Thường là 3 app riêng (khách, quán, tài xế).</li>
+            <li>Fintech — tài khoản, giao dịch, ngân sách.</li>
+            <li><strong>Then chốt:</strong> niềm tin — một lần rò rỉ là kết thúc.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Hoa hồng mỗi đơn + phí giao; biên lợi nhuận khắc nghiệt.</li>
+            <li>Freemium + premium (đa tài khoản, dự báo), hoặc B2B2C white-label.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Order state machine</strong> — máy trạng thái đơn hàng.</li>
-        <li><strong>Live tracking trên MapKit</strong> — vẽ vị trí tài xế theo thời gian thực.</li>
-        <li><strong>Push theo giai đoạn</strong> — đã nhận → đang nấu → đang giao.</li>
-        <li><strong>Payment + tipping</strong> — thanh toán, tip.</li>
-        <li><strong>WebSocket / realtime channel</strong> — cập nhật vị trí liên tục.</li>
+        <li><strong>Aggregation (Plaid / Open Banking)</strong> — kết nối dữ liệu ngân hàng.</li>
+        <li><strong>Keychain</strong> — lưu token an toàn.</li>
+        <li><strong>LocalAuthentication</strong> — cổng sinh trắc học Face ID / Touch ID.</li>
+        <li><strong>Certificate pinning</strong> — chặn tấn công trung gian (MITM).</li>
+        <li><strong>Quy định (PSD2, data residency)</strong> — định hình kiến trúc từ đầu.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,28 +64,26 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart LR
-  EATER[App Khach] --> GW[Backend]
-  MERCH[App Quan] --> GW
-  DRIVER[App Tai xe] --> GW
-  GW --> OSM[Order State Machine]
-  GW --> RT[Realtime location]
-  RT --> EATER
-  GW --> PAY[Payment]
-  GW --> PUSH[APNs]
+flowchart TD
+  BANK[Bank API / Aggregator] --> BE[Backend bao mat]
+  BE --> APP[iOS App]
+  APP --> KC[Keychain token]
+  APP --> BIO[LocalAuthentication]
+  APP --> ENC[Local store ma hoa]
+  APP -. cert pinning .-> BE
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Bản đồ “đồ ăn của tôi đâu” là UX cảm xúc. Realtime + payment + maps = vận hành phức tạp; bạn đang xây một công ty logistics.</p>
+      <p class="note"><strong>Bài học:</strong> bảo mật chính là sản phẩm. App Review soi app tài chính rất kỹ. Ràng buộc pháp lý định hình kiến trúc.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-7</div>
-      <h1 class="hero-title">🛵 <span class="grad">Food Delivery</span></h1>
-      <p class="hero-sub">Realtime + payment + maps = vận hành phức tạp; bạn đang xây một công ty logistics.</p>
+      <div class="kicker">Kết thúc CS-6</div>
+      <h1 class="hero-title">💰 <span class="grad">Personal Finance</span></h1>
+      <p class="hero-sub">Gom mọi tài khoản về một chỗ, tự phân loại chi tiêu — bảo mật chính là sản phẩm.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-3.html">‹ CS-6</a>
+        <a class="lnav-btn" href="cs-5.html">‹ CS-5</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-11.html">CS-8 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-7.html">CS-7 ›</a>
       </div>
     </section>
 
@@ -133,5 +131,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

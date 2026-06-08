@@ -43,7 +43,9 @@
       "Bash(grep -nE 'style.css|<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|slideshow.js|<title>|lnav-btn|href=' bai-1.html)",
       "Bash(grep -nE '<style|#[0-9a-fA-F]{3,6}|rgba\\\\\\(|lnav-btn|href=\"bai|kicker|<title>' bai-2.html)",
       "Bash(python3 /tmp/renumber_cs.py)",
-      "Bash(sort -t- -k2 -n)"
+      "Bash(sort -t- -k2 -n)",
+      "Bash(git diff *)",
+      "Bash(awk '/href=\"lessons\\\\/cs-[0-9]+\\\\.html\"/{match\\($0,/cs-[0-9]+/\\);f=substr\\($0,RSTART,RLENGTH\\);getline;getline;gsub\\(/<[^>]*>|^ +/,\"\"\\);print f\": \"$0}' index.html)"
     ],
     "additionalDirectories": [
       "/Users/quytran/Workshop"

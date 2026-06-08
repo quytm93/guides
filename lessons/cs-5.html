@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-4: Meditation / Sleep</title>
+  <title>Case study iOS — CS-5: E-commerce</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🧘 Meditation &amp; <span class="grad">Sleep</span></h1>
-      <p class="hero-sub">Thực chất là bài toán nội dung — và nhạc không được tắt khi khóa máy.</p>
+      <h1 class="hero-title">🛒 <span class="grad">E-commerce</span> / Retail</h1>
+      <p class="hero-sub">Apple Pay tăng chuyển đổi mạnh; lưới sản phẩm chạy mượt = doanh thu.</p>
       <div class="hero-meta">
-        <span class="pill">CS-4</span>
-        <span class="pill pill--ghost">Wellness</span>
-        <span class="pill pill--ghost">Content subscription</span>
+        <span class="pill">CS-5</span>
+        <span class="pill pill--ghost">Bán lẻ</span>
+        <span class="pill pill--ghost">Giao dịch</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Thư giãn theo phiên, kèm hẹn giờ ngủ.</p>
+      <p class="lead">Mua hàng nhanh, ít thao tác.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Wellness — audio dẫn thiền, âm thanh ru ngủ.</li>
-            <li><strong>Yếu tố then chốt:</strong> Bài toán nội dung; chi phí sản xuất &amp; bản quyền chiếm ưu thế.</li>
+            <li>Bán lẻ — duyệt, bỏ giỏ, thanh toán.</li>
+            <li><strong>Yếu tố then chốt:</strong> lưới sản phẩm và ảnh chạy mượt = doanh thu.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Content subscription — giá trị = quy mô thư viện + nhịp ra nội dung mới.</li>
+            <li>Hàng vật lý không chịu phí 30% của Apple → app có thể miễn phí.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>AVAudioSession</strong> — cấu hình phát nền + mixing.</li>
-        <li><strong>MPNowPlayingInfoCenter</strong> — điều khiển trên Lock Screen.</li>
-        <li><strong>Streaming + offline download</strong> — nghe khi không mạng.</li>
-        <li><strong>Sleep timer</strong> — chạy bền khi app vào nền.</li>
-        <li><strong>Background Modes (audio)</strong> — capability bắt buộc.</li>
+        <li><strong>Apple Pay (PassKit)</strong> — chuyển đổi cao hơn hẳn nhập thẻ tay.</li>
+        <li><strong>Cart / checkout funnel</strong> — phễu mua hàng.</li>
+        <li><strong>Deep links</strong> — mở thẳng tới sản phẩm.</li>
+        <li><strong>Abandoned-cart push</strong> — nhắc giỏ hàng bỏ quên.</li>
+        <li><strong>Analytics funnel</strong> — đo từng bước rơi rớt.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,26 +64,27 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart TD
-  LIB[Content Library / CDN] --> PLAYER[AVPlayer]
-  PLAYER --> SESS[AVAudioSession nen]
-  SESS --> LOCK[NowPlaying / Lock Screen]
-  PLAYER --> CACHE[Offline cache]
-  VM["ViewModel @Observable"] --> PLAYER
-  VM --> TIMER[Sleep timer]
+flowchart LR
+  APP[iOS App] --> CAT[Catalog API]
+  APP --> CART[Cart Service]
+  CART --> CHK[Checkout]
+  CHK --> APAY[Apple Pay / PassKit]
+  CHK --> PG[Payment Gateway]
+  APP --> ANL[Analytics]
+  APP --> PUSH[Abandoned-cart push]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Cấu hình background audio rườm rà nhưng quyết định thành bại — nhạc <strong>không được tắt khi khóa máy</strong>. Đây là business nội dung.</p>
+      <p class="note"><strong>Bài học:</strong> Apple Pay đẩy chuyển đổi mạnh — làm cho chuẩn. Tồn kho, xác thực, đổi trả để ở server.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-4</div>
-      <h1 class="hero-title">🧘 <span class="grad">Meditation / Sleep</span></h1>
-      <p class="hero-sub">Thực chất là bài toán nội dung — và nhạc không được tắt khi khóa máy.</p>
+      <div class="kicker">Kết thúc CS-5</div>
+      <h1 class="hero-title">🛒 <span class="grad">E-commerce</span></h1>
+      <p class="hero-sub">Apple Pay tăng chuyển đổi mạnh; lưới sản phẩm chạy mượt = doanh thu.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-12.html">‹ CS-3</a>
+        <a class="lnav-btn" href="cs-4.html">‹ CS-4</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-8.html">CS-5 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-6.html">CS-6 ›</a>
       </div>
     </section>
 
@@ -131,5 +132,6 @@ flowchart TD
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

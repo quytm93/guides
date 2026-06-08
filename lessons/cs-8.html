@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-5: E-commerce</title>
+  <title>Case study iOS — CS-8: Ride-Hailing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🛒 <span class="grad">E-commerce</span> / Retail</h1>
-      <p class="hero-sub">Apple Pay là siêu năng lực chuyển đổi; hiệu năng lưới sản phẩm = doanh thu.</p>
+      <h1 class="hero-title">🚗 <span class="grad">Ride-Hailing</span></h1>
+      <p class="hero-sub">Định vị nền luôn phải đánh đổi với pin. Khó nhất là cân thanh khoản hai phía.</p>
       <div class="hero-meta">
-        <span class="pill">CS-5</span>
-        <span class="pill pill--ghost">Bán lẻ</span>
-        <span class="pill pill--ghost">Giao dịch</span>
+        <span class="pill">CS-8</span>
+        <span class="pill pill--ghost">Di chuyển</span>
+        <span class="pill pill--ghost">Hoa hồng</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Mua hàng vật lý nhanh, ít ma sát.</p>
+      <p class="lead">Gọi xe, ghép tài xế gần nhất, theo dõi chuyến đi.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Bán lẻ — duyệt sản phẩm, bỏ giỏ, thanh toán.</li>
-            <li><strong>Yếu tố then chốt:</strong> Hiệu năng lưới sản phẩm / ảnh = doanh thu.</li>
+            <li>Di chuyển — sàn hai chiều, thời gian thực.</li>
+            <li><strong>Yếu tố then chốt:</strong> Thanh khoản — đủ cả tài xế và khách trong một thành phố. Viết app là phần dễ.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Giao dịch (hàng vật lý → không mất 30% của Apple → app có thể miễn phí).</li>
+            <li>Hoa hồng mỗi chuyến.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Apple Pay (PassKit)</strong> — chuyển đổi cao hơn nhiều so với nhập thẻ tay.</li>
-        <li><strong>Cart / checkout funnel</strong> — phễu mua hàng.</li>
-        <li><strong>Deep links</strong> — dẫn thẳng tới sản phẩm.</li>
-        <li><strong>Abandoned-cart push</strong> — nhắc giỏ hàng bỏ quên.</li>
-        <li><strong>Analytics funnel</strong> — đo từng bước rơi rớt.</li>
+        <li><strong>CoreLocation (battery-aware)</strong> — định vị liên tục, cân pin theo độ chính xác.</li>
+        <li><strong>Background location authorization</strong> — xin đúng cấp quyền.</li>
+        <li><strong>Dispatch / matching</strong> — thuật toán ghép cặp.</li>
+        <li><strong>ETA &amp; surge</strong> — giờ tới dự kiến và giá động.</li>
+        <li><strong>Geofencing</strong> — ranh giới khu vực, pháp lý.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,27 +64,27 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart LR
-  APP[iOS App] --> CAT[Catalog API]
-  APP --> CART[Cart Service]
-  CART --> CHK[Checkout]
-  CHK --> APAY[Apple Pay / PassKit]
-  CHK --> PG[Payment Gateway]
-  APP --> ANL[Analytics]
-  APP --> PUSH[Abandoned-cart push]
+flowchart TD
+  RIDER[App Khach] --> GW[Backend]
+  DRIVER[App Tai xe] --> GW
+  GW --> MATCH[Matching / Dispatch]
+  DRIVER --> LOC[CoreLocation nen]
+  LOC --> GW
+  GW --> ETA[ETA / Surge]
+  GW --> PAY[In-app Payment]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Apple Pay là “siêu năng lực” chuyển đổi — làm cho chuẩn. Tồn kho / auth / đổi trả nằm ở server.</p>
+      <p class="note"><strong>Bài học:</strong> Định vị nền luôn đánh đổi với pin. Khó nhất là <strong>thanh khoản hai phía</strong>.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-5</div>
-      <h1 class="hero-title">🛒 <span class="grad">E-commerce</span></h1>
-      <p class="hero-sub">Apple Pay là siêu năng lực chuyển đổi; hiệu năng lưới sản phẩm = doanh thu.</p>
+      <div class="kicker">Kết thúc CS-8</div>
+      <h1 class="hero-title">🚗 <span class="grad">Ride-Hailing</span></h1>
+      <p class="hero-sub">Định vị nền luôn phải đánh đổi với pin. Khó nhất là cân thanh khoản hai phía.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-5.html">‹ CS-4</a>
+        <a class="lnav-btn" href="cs-7.html">‹ CS-7</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-3.html">CS-6 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-9.html">CS-9 ›</a>
       </div>
     </section>
 
@@ -132,5 +132,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-9: Social Photo Feed</title>
+  <title>Case study iOS — CS-4: Meditation / Sleep</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">📸 Social <span class="grad">Photo Feed</span></h1>
-      <p class="hero-sub">Một app mạng xã hội là bài toán hệ phân tán khoác áo UI — phần khó nằm ở backend.</p>
+      <h1 class="hero-title">🧘 Meditation &amp; <span class="grad">Sleep</span></h1>
+      <p class="hero-sub">Cốt lõi là bài toán nội dung — và nhạc không được tắt khi khóa máy.</p>
       <div class="hero-meta">
-        <span class="pill">CS-9</span>
-        <span class="pill pill--ghost">Mạng xã hội</span>
-        <span class="pill pill--ghost">Quảng cáo</span>
+        <span class="pill">CS-4</span>
+        <span class="pill pill--ghost">Wellness</span>
+        <span class="pill pill--ghost">Content subscription</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Dòng tin cá nhân hóa giữ người dùng cuộn mãi.</p>
+      <p class="lead">Thư giãn theo phiên, có hẹn giờ ngủ.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Mạng xã hội — chia sẻ ảnh, theo dõi, tương tác.</li>
-            <li><strong>Yếu tố then chốt:</strong> Rủi ro sống còn là cold-start (mạng lưới rỗng).</li>
+            <li>Wellness — audio dẫn thiền, âm thanh ru ngủ.</li>
+            <li><strong>Then chốt:</strong> bài toán nội dung; chi phí sản xuất &amp; bản quyền là chính.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Quảng cáo — cần quy mô trước khi có doanh thu.</li>
+            <li>Content subscription — giá trị nằm ở quy mô thư viện và nhịp ra nội dung mới.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Feed ranking</strong> — thuật toán sắp xếp dòng tin.</li>
-        <li><strong>Fan-out on write vs read</strong> — chiến lược phát tán bài đăng.</li>
-        <li><strong>CDN + image cache</strong> — phục vụ ảnh nhanh, prefetch khi cuộn.</li>
-        <li><strong>Optimistic UI</strong> — cập nhật like ngay, đồng bộ sau.</li>
-        <li><strong>Moderation</strong> — bắt buộc, không phải tùy chọn.</li>
+        <li><strong>AVAudioSession</strong> — cấu hình phát nền và mixing.</li>
+        <li><strong>MPNowPlayingInfoCenter</strong> — điều khiển trên Lock Screen.</li>
+        <li><strong>Streaming + offline download</strong> — nghe được khi mất mạng.</li>
+        <li><strong>Sleep timer</strong> — chạy bền khi app vào nền.</li>
+        <li><strong>Background Modes (audio)</strong> — capability bắt buộc.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,27 +64,26 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart LR
-  APP[iOS Client] --> GW[API Gateway]
-  GW --> FEED[Feed Service]
-  GW --> MED[Media Upload]
-  MED --> CDN[CDN]
-  FEED --> RANK[Ranking]
-  GW --> MOD[Moderation]
-  CDN --> APP
+flowchart TD
+  LIB[Content Library / CDN] --> PLAYER[AVPlayer]
+  PLAYER --> SESS[AVAudioSession nen]
+  SESS --> LOCK[NowPlaying / Lock Screen]
+  PLAYER --> CACHE[Offline cache]
+  VM["ViewModel @Observable"] --> PLAYER
+  VM --> TIMER[Sleep timer]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> App mạng xã hội là <strong>bài toán hệ phân tán</strong> khoác áo UI. Cold-start (mạng lưới rỗng) là rủi ro sống còn. Moderation là bắt buộc.</p>
+      <p class="note"><strong>Bài học:</strong> cấu hình background audio rườm rà nhưng quyết định thành bại — nhạc <strong>không được tắt khi khóa máy</strong>. Đây là business nội dung.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-9</div>
-      <h1 class="hero-title">📸 <span class="grad">Social Photo Feed</span></h1>
-      <p class="hero-sub">Một app mạng xã hội là bài toán hệ phân tán khoác áo UI — phần khó nằm ở backend.</p>
+      <div class="kicker">Kết thúc CS-4</div>
+      <h1 class="hero-title">🧘 <span class="grad">Meditation / Sleep</span></h1>
+      <p class="hero-sub">Cốt lõi là bài toán nội dung — và nhạc không được tắt khi khóa máy.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-11.html">‹ CS-8</a>
+        <a class="lnav-btn" href="cs-3.html">‹ CS-3</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-13.html">CS-10 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-5.html">CS-5 ›</a>
       </div>
     </section>
 
@@ -132,5 +131,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

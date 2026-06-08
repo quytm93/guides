@@ -85,7 +85,7 @@
 | Auto Layout phức tạp trong cell | Layout pass đắt mỗi frame. | Hitch khi cuộn list | Đơn giản layout; cache chiều cao; ô tự dựng. |
 | Hitch rate cao | `<5ms/s` mượt · `5–10` tạm · `>10` tệ. | Xcode Organizer › Hitches | Đo & hạ hitch rate ở màn hình cuộn chính. |
 
-## 🔵 CPU, pin & nhiệt
+## 🔵 CPU, pin & nhiệt độ
 
 **Phát hiện bằng:** Instruments › Time Profiler & Energy Log; ProcessInfo.thermalState
 
@@ -95,7 +95,7 @@
 | Timer/loop chạy quá dày | Đốt CPU & pin liên tục. | Time Profiler | Giảm tần suất; dừng khi không cần. |
 | Polling thay vì event | Hỏi liên tục → hao CPU/pin/mạng. | Energy log dày | Dùng push / async stream / callback. |
 | Location accuracy cao luôn bật | Pin tụt nhanh. | Energy Log; biểu tượng location | Giảm accuracy; significant-change; tắt khi nền. |
-| Bỏ qua nhiệt & Low Power Mode | Máy nóng bị throttle, app vẫn chạy hết ga. | `thermalState` = .serious/.critical | Theo dõi `ProcessInfo.thermalState` & `isLowPowerModeEnabled`, giảm tải. |
+| Bỏ qua nhiệt độ & Low Power Mode | Máy nóng bị throttle, app vẫn chạy hết ga. | `thermalState` = .serious/.critical | Theo dõi `ProcessInfo.thermalState` & `isLowPowerModeEnabled`, giảm tải. |
 
 ## 💾 Đĩa & I/O
 
@@ -149,7 +149,7 @@ Khi review một màn hình / một PR (hoặc code AI vừa sinh), quét nhanh 
 1. **Crash / Terminations** — force-unwrap? cập nhật UI sai thread? giữ lock khi vào nền? hết RAM?
 2. **Bộ nhớ** — closure có `[weak self]`? ảnh có downsample? cache có giới hạn?
 3. **Treo (hang) / Giật (hitch)** — việc nặng/I/O trên main? offscreen rendering khi cuộn?
-4. **CPU/pin/nhiệt** — vẽ lại thừa? timer dày? location? có theo dõi `thermalState`?
+4. **CPU/pin/nhiệt độ** — vẽ lại thừa? timer dày? location? có theo dõi `thermalState`?
 5. **Đĩa / Mạng** — ghi đĩa nhiều? request lặp/không cache/không timeout?
 6. **Khởi động / Concurrency** — việc nặng lúc launch? UI state có `@MainActor`? Task tự hủy?
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-14: Language Learning</title>
+  <title>Case study iOS — CS-10: Dating</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🗣️ Language <span class="grad">Learning</span></h1>
-      <p class="hero-sub">Gamification chính là động cơ giữ chân; app phải được đo lường toàn diện.</p>
+      <h1 class="hero-title">💘 <span class="grad">Dating</span></h1>
+      <p class="hero-sub">An toàn và chống tài khoản giả là phần lõi, không phải làm sau.</p>
       <div class="hero-meta">
-        <span class="pill">CS-14</span>
-        <span class="pill pill--ghost">EdTech</span>
-        <span class="pill pill--ghost">Freemium</span>
+        <span class="pill">CS-10</span>
+        <span class="pill pill--ghost">Hẹn hò</span>
+        <span class="pill pill--ghost">Subscription + microtxn</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Học mỗi ngày nhờ streak, XP và phần thưởng.</p>
+      <p class="lead">Tìm người gần bạn, quẹt để ghép cặp, rồi chat.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>EdTech — học ngôn ngữ qua bài ngắn.</li>
-            <li><strong>Yếu tố then chốt:</strong> Gamification chính là động cơ giữ chân.</li>
+            <li>Mạng xã hội / hẹn hò.</li>
+            <li><strong>Yếu tố then chốt:</strong> An toàn và chống tài khoản giả là kỹ thuật cốt lõi.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Freemium — premium gỡ ma sát (hearts, offline, không ads).</li>
+            <li>Subscription theo bậc + microtransaction (boost, super-like).</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>Spaced repetition (SM-2 / FSRS)</strong> — lịch ôn theo trí nhớ.</li>
-        <li><strong>Speech framework</strong> — nhận diện phát âm.</li>
-        <li><strong>Gamification</strong> — streak, XP, hearts.</li>
-        <li><strong>A/B testing infra</strong> — văn hóa thử nghiệm dày đặc.</li>
-        <li><strong>Instrumentation</strong> — đo lường từ đầu tới cuối.</li>
+        <li><strong>Matching algorithm</strong> — thuật toán gợi ý.</li>
+        <li><strong>Geolocation discovery</strong> — tìm người theo khoảng cách.</li>
+        <li><strong>Trust &amp; Safety</strong> — xác minh ảnh, kiểm duyệt, report / block.</li>
+        <li><strong>Anti-fraud</strong> — chống gian lận và bot.</li>
+        <li><strong>Card-swipe performance</strong> — quẹt phải thật mượt.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,26 +64,27 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart LR
-  UI[Lesson UI] --> VM["ViewModel @Observable"]
-  VM --> SRS[Spaced Repetition Scheduler]
-  VM --> SPEECH[Speech Recognition]
-  VM --> GAME["Gamification XP / streak"]
-  VM --> EXP[A/B + Analytics]
-  SRS --> STORE[Progress store]
+flowchart TD
+  APP[iOS App] --> GW[Backend]
+  GW --> MATCH[Matching Engine]
+  GW --> GEO[Geo Discovery]
+  GW --> CHAT[Realtime Chat]
+  GW --> SAFE[Trust and Safety]
+  GW --> FRAUD[Anti-fraud]
+  APP --> IAP[StoreKit boosts]
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Gamification giữ chân mạnh hơn nội dung. Văn hóa thử nghiệm khổng lồ — app phải được <strong>đo lường toàn diện</strong>.</p>
+      <p class="note"><strong>Bài học:</strong> An toàn và chống tài khoản giả là phần lõi. Microtransaction tạo phần lớn doanh thu.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-14</div>
-      <h1 class="hero-title">🗣️ <span class="grad">Language Learning</span></h1>
-      <p class="hero-sub">Gamification chính là động cơ giữ chân; app phải được đo lường toàn diện.</p>
+      <div class="kicker">Kết thúc CS-10</div>
+      <h1 class="hero-title">💘 <span class="grad">Dating</span></h1>
+      <p class="hero-sub">An toàn và chống tài khoản giả là phần lõi, không phải làm sau.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-2.html">‹ CS-13</a>
+        <a class="lnav-btn" href="cs-9.html">‹ CS-9</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-9.html">CS-15 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-11.html">CS-11 ›</a>
       </div>
     </section>
 
@@ -131,5 +132,6 @@ flowchart LR
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Case study iOS — CS-8: Ride-Hailing</title>
+  <title>Case study iOS — CS-11: News / Reading</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,12 +16,12 @@
     <!-- 1. Cover -->
     <section class="slide slide--center slide--hero">
       <div class="kicker">Case study · Ứng dụng thật</div>
-      <h1 class="hero-title">🚗 <span class="grad">Ride-Hailing</span></h1>
-      <p class="hero-sub">Định vị nền vs pin là cân đối thường trực; thanh khoản hai phía mới là vấn đề thật.</p>
+      <h1 class="hero-title">📰 News &amp; <span class="grad">Reading</span></h1>
+      <p class="hero-sub">Paywall và luật subscription của Apple định hình kiến trúc. Push có chừng mực thì giữ chân được người dùng.</p>
       <div class="hero-meta">
-        <span class="pill">CS-8</span>
-        <span class="pill pill--ghost">Di chuyển</span>
-        <span class="pill pill--ghost">Hoa hồng</span>
+        <span class="pill">CS-11</span>
+        <span class="pill pill--ghost">Báo chí</span>
+        <span class="pill pill--ghost">Subscription + ads</span>
       </div>
       <div class="hint">Nhấn <kbd>→</kbd> hoặc <kbd>Space</kbd> để bắt đầu</div>
     </section>
@@ -29,19 +29,19 @@
     <section class="slide">
       <div class="kicker">Slide 1 · Tổng quan</div>
       <h2>Ứng dụng &amp; mô hình</h2>
-      <p class="lead">Gọi xe, ghép tài xế gần nhất, theo dõi hành trình.</p>
+      <p class="lead">Đọc tin, nhận tin nóng, đọc được cả khi offline.</p>
       <div class="req-grid">
         <div class="req">
           <h3>🌐 Lĩnh vực (domain)</h3>
           <ul>
-            <li>Di chuyển — sàn 2 chiều thời gian thực.</li>
-            <li><strong>Yếu tố then chốt:</strong> Thanh khoản (đủ tài xế VÀ khách trong một thành phố) — app là phần dễ.</li>
+            <li>Báo chí / xuất bản — đọc tin, lưu offline.</li>
+            <li><strong>Yếu tố then chốt:</strong> Push có chừng mực thì giữ chân, lạm dụng thì bị gỡ.</li>
           </ul>
         </div>
         <div class="req req--need">
           <h3>💰 Mô hình kinh doanh</h3>
           <ul>
-            <li>Hoa hồng mỗi chuyến.</li>
+            <li>Subscription kết hợp quảng cáo.</li>
           </ul>
         </div>
       </div>
@@ -51,11 +51,11 @@
       <div class="kicker">Slide 2 · Khái niệm &amp; thuật ngữ</div>
       <h2>Từ khóa kỹ thuật cần biết</h2>
       <ul class="checklist">
-        <li><strong>CoreLocation (battery-aware)</strong> — định vị liên tục, cân pin theo độ chính xác.</li>
-        <li><strong>Background location authorization</strong> — đúng cấp quyền.</li>
-        <li><strong>Dispatch / matching</strong> — thuật toán ghép cặp.</li>
-        <li><strong>ETA &amp; surge</strong> — ước tính giờ tới, giá động.</li>
-        <li><strong>Geofencing</strong> — ranh giới khu vực / pháp lý.</li>
+        <li><strong>Content pipeline (CMS)</strong> — dựng và phân phối nội dung.</li>
+        <li><strong>Metered paywall</strong> — giới hạn số bài đọc miễn phí.</li>
+        <li><strong>Reader app entitlement</strong> — quy định subscription của Apple.</li>
+        <li><strong>Rich text / media rendering</strong> — dựng bài có ảnh, video.</li>
+        <li><strong>Smart push</strong> — báo tin nóng mà không spam.</li>
       </ul>
     </section>
     <!-- 4. Kiến trúc -->
@@ -64,27 +64,27 @@
       <h2>Luồng dữ liệu &amp; thành phần</h2>
       <div class="diagram">
         <pre class="mermaid">
-flowchart TD
-  RIDER[App Khach] --> GW[Backend]
-  DRIVER[App Tai xe] --> GW
-  GW --> MATCH[Matching / Dispatch]
-  DRIVER --> LOC[CoreLocation nen]
-  LOC --> GW
-  GW --> ETA[ETA / Surge]
-  GW --> PAY[In-app Payment]
+flowchart LR
+  CMS[CMS / Editorial] --> FEED[Content API]
+  FEED --> APP[iOS App]
+  APP --> PAY[Metered Paywall]
+  PAY --> SK[StoreKit Subscription]
+  APP --> OFF[Offline reading]
+  CMS --> PUSH[Breaking-news push]
+  PUSH --> APP
         </pre>
       </div>
-      <p class="note"><strong>Bài học:</strong> Định vị nền vs pin là cân đối thường trực. <strong>Thanh khoản hai phía</strong> mới là vấn đề thật.</p>
+      <p class="note"><strong>Bài học:</strong> Cách đo lượt đọc và luật subscription của Apple định hình kiến trúc. <strong>Push có chừng mực</strong> quyết định retention.</p>
     </section>
     <!-- 5. Kết -->
     <section class="slide slide--center slide--hero">
-      <div class="kicker">Kết thúc CS-8</div>
-      <h1 class="hero-title">🚗 <span class="grad">Ride-Hailing</span></h1>
-      <p class="hero-sub">Định vị nền vs pin là cân đối thường trực; thanh khoản hai phía mới là vấn đề thật.</p>
+      <div class="kicker">Kết thúc CS-11</div>
+      <h1 class="hero-title">📰 <span class="grad">News / Reading</span></h1>
+      <p class="hero-sub">Paywall và luật subscription của Apple định hình kiến trúc. Push có chừng mực thì giữ chân được người dùng.</p>
       <div class="lesson-nav">
-        <a class="lnav-btn" href="cs-6.html">‹ CS-7</a>
+        <a class="lnav-btn" href="cs-10.html">‹ CS-10</a>
         <a class="lnav-btn" href="../index.html">⌂ Trang chủ</a>
-        <a class="lnav-btn lnav-btn--next" href="cs-4.html">CS-9 ›</a>
+        <a class="lnav-btn lnav-btn--next" href="cs-12.html">CS-12 ›</a>
       </div>
     </section>
 
@@ -132,5 +132,6 @@ flowchart TD
     });
   </script>
   <script src="../js/slideshow.js"></script>
+  <script src="../js/sidebar.js"></script>
 </body>
 </html>
